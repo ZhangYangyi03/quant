@@ -1,0 +1,26 @@
+[
+ {
+  "window": "2016-2021",
+  "names": 2387,
+  "delisted": 46,
+  "complete": 6.6,
+  "survivors": 8.2,
+  "gap_pp": 1.6
+ },
+ {
+  "window": "2018-2023",
+  "names": 3098,
+  "delisted": 96,
+  "complete": 51.3,
+  "survivors": 55.0,
+  "gap_pp": 3.7
+ },
+ {
+  "window": "2020-2025",
+  "names": 3584,
+  "delisted": 172,
+  "complete": 28.0,
+  "survivors": 32.5,
+  "gap_pp": 4.5
+ }
+]

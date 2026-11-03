@@ -1,0 +1,48 @@
+{
+ "date": "2026-11-03",
+ "来源项目": [
+  {
+   "name": "rootSunc/CNEquity",
+   "license": "Apache-2.0",
+   "stars": 927,
+   "吸取": [
+    "幸存者偏差的度量方法（scripts/survivorship_gap.py）—— complete basket vs survivors-only basket，差值即偏差",
+    "PIT 三件套：复权方式要显式选、财报按公告日取不按报告期取、股票池保留退市股",
+    "pit_mode=strict 语义：只返回 as_of 当天已公告并入湖的数据；as_of 不是可选过滤条件而是研究问题的一部分",
+    "ST 历史证据的处理原则：缺失或格式错误是可重试，绝不变成'非 ST'的负面证据（src/cnequity/adapters/tushare/st_history.py）",
+    "Tushare stock_st 起始于 2017-01-01；2016 年切片要用 bak_basic 的 ST/*ST 名称前缀倒推"
+   ]
+  },
+  {
+   "name": "YTZzzzz/Barra_CNE5",
+   "license": "无",
+   "stars": 184,
+   "吸取": [
+    "因子处理链：truncate(5σ) -> winsorize(3σ) -> normalize -> 行业哑变量 -> 加权回归",
+    "NLS（非线性规模）= ln(市值)^3 先标准化，再对 Size 正交化",
+    "10 个风格因子的合成权重（RV=0.74*DASTD+0.16*CMRA+0.10*HSIGMA 等）",
+    "正交化的实现：target - (target·ref / ref·ref) * ref",
+    "行业中性不是减全市场均值，是减行业内均值"
+   ]
+  },
+  {
+   "name": "xxv-byte/size-and-value-in-china-replication",
+   "stars": 2,
+   "吸取": [
+    "论文 Table 4/6 的实现口径：13 个异象信号，EP 只是其中一个",
+    "GRS 检验的用法：CH-3 与 FF-3 互相定价",
+    "一句重要的话：未拒绝零 alpha ≠ 证明 alpha 为零"
+   ]
+  }
+ ],
+ "立刻落地": {
+  "survivorship.py": "用 CNEquity 的方法量出我自己的偏差：1.6pp / 3.7pp / 4.5pp（三个 5 年窗口），且是保守下限",
+  "cne5_exposure.py": "EP 原始 vs CNE5 中性化后秩相关 0.600，说明 EP 信号里一大块来自行业和市值暴露"
+ },
+ "还没落地": [
+  "PIT 财报（我有公告滞后表，但没有版本管理，无法处理财报修订）",
+  "ST 历史（CNEquity 走 Tushare，我没有 token）",
+  "13 个异象横向比较（现在只知道 EP，不知道它在 13 个里排第几）",
+  "真市值（cne5_exposure.py 里用 log(价格) 代理市值，这是那个文件最大的弱点，代码里已标注）"
+ ]
+}
