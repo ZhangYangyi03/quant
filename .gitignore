@@ -1,0 +1,42 @@
+# 数据矩阵：约 1.9GB，用 build_*.py 从 stockdata/ 重建
+*.bin
+*.pkl
+*.db
+
+# 原始与中间数据
+stockdata/
+store/
+shards/
+live/
+data/
+__pycache__/
+
+# 日志与诊断
+*.log
+*.txt
+*.stdout
+*.csv
+dbg_*
+diag_*
+memscan*
+
+# 临时与中间产物
+_*.py
+_*.json
+r1_*.json
+r2_*.json
+r3_*.json
+r4_*.json
+r5_*.json
+r6_*.json
+flat_*.json
+factor_papers.json
+bench_curve_cache.json
+idxcache.json
+sweep.json
+strategy_compare.json
+universe*.json
+universe_all_results.json
+etf_rotate.json
+results_etf.json
+eg_shocks.csv

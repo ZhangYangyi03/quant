@@ -1,0 +1,1242 @@
+{
+ "actor:4d021f5d9c4a": {
+  "label": "美国学派:国家基建+央行调控+关税保工业",
+  "hit": [
+   "税",
+   "基建"
+  ],
+  "domain": "金融"
+ },
+ "concept:bc352f76dd57": {
+  "label": "农反资+最低工资铁律",
+  "hit": [
+   "工资"
+  ],
+  "domain": "domainless"
+ },
+ "actor:e4e7780b2608": {
+  "label": "马克思资本论第一章致敬从俄传教士得知的徽商户部侍郎陕西监察御史王茂荫的货币经济理…",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:ce11e300f050": {
+  "label": "雇工协议只能货币工资",
+  "hit": [
+   "货币",
+   "工资"
+  ],
+  "domain": "金融"
+ },
+ "concept:93d76681a9d8": {
+  "label": "就业不充分物价上涨工人逆来顺受",
+  "hit": [
+   "就业"
+  ],
+  "domain": "domainless"
+ },
+ "concept:d2a6b1dc2d8f": {
+  "label": "重商主义:管制手段+出口倒向+金银本位",
+  "hit": [
+   "出口"
+  ],
+  "domain": "金融"
+ },
+ "concept:d0e41a95ea8c": {
+  "label": "大量海外资产美债",
+  "hit": [
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "concept:7d73bc20940f": {
+  "label": "升值影响出口",
+  "hit": [
+   "出口"
+  ],
+  "domain": "domainless"
+ },
+ "actor:5f1224287ee8": {
+  "label": "降息不如印钞效果立竿见影，还有银行准备金率越低放水越多效果更快",
+  "hit": [
+   "银行",
+   "准备金"
+  ],
+  "domain": "金融"
+ },
+ "actor:6b4ef328bcd2": {
+  "label": "冷战早期欧洲银行不要脸故意放出超额美元，让市场去兑换美国黄金，结果美国当然兑不出…",
+  "hit": [
+   "银行"
+  ],
+  "domain": "金融"
+ },
+ "actor:c32256c27f6e": {
+  "label": "安倍也是像美元霸权一样印钱维持僵尸福利式岗位的就业，信日元的被安倍白嫖，不信的就…",
+  "hit": [
+   "就业"
+  ],
+  "domain": "金融"
+ },
+ "actor:7f9f08394cda": {
+  "label": "相当于政府靠抬高汇率",
+  "hit": [
+   "汇率"
+  ],
+  "domain": "金融"
+ },
+ "actor:af7a42389ecb": {
+  "label": "日本远没到抛售美债这一步就救成了",
+  "hit": [
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "actor:b31c5f3d11df": {
+  "label": "希腊无货币主权卖信用，无老龄化和制造业天然通缩抵消，玩不了这个",
+  "hit": [
+   "货币",
+   "制造"
+  ],
+  "domain": "金融"
+ },
+ "actor:2f302ef20045": {
+  "label": "量化宽松也叫债务货币化，美联储央行要多印钱给政府国债基建兜底，稀释国债却也避免更…",
+  "hit": [
+   "货币",
+   "债",
+   "基建"
+  ],
+  "domain": "金融"
+ },
+ "actor:aae37a9f7eba": {
+  "label": "资本天然短视喜欢虚拟房地产而非长期硬科技，需要政府监管疏导",
+  "hit": [
+   "房",
+   "地产"
+  ],
+  "domain": "金融"
+ },
+ "concept:35974a8ef7d4": {
+  "label": "房地产自有率低",
+  "hit": [
+   "房",
+   "地产"
+  ],
+  "domain": "金融"
+ },
+ "concept:c916a908791d": {
+  "label": "房产税不如租房",
+  "hit": [
+   "房",
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:296a50969c6a": {
+  "label": "放贷中介费极高且禁止房东赶人",
+  "hit": [
+   "房",
+   "贷"
+  ],
+  "domain": "domainless"
+ },
+ "actor:8728d58faf03": {
+  "label": "欧洲除了荷兰风投全靠银行，而银行需要储备金比养老金害怕风险，且欧洲中东大量能源和…",
+  "hit": [
+   "银行",
+   "能源"
+  ],
+  "domain": "金融"
+ },
+ "concept:39353321c78e": {
+  "label": "房地产这种金融模式",
+  "hit": [
+   "房",
+   "地产"
+  ],
+  "domain": "金融"
+ },
+ "concept:0007617014fb": {
+  "label": "一种很适合制造业",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "concept:75a5e1bc515e": {
+  "label": "房地产",
+  "hit": [
+   "房",
+   "地产"
+  ],
+  "domain": "金融"
+ },
+ "concept:64545af70cfb": {
+  "label": "国债+以工代赈",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:2199943ddf5c": {
+  "label": "货币",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:c12785ff1a5e": {
+  "label": "自由主义时代的货币体系：唐：银-铜→宋元：银-铜-纸→明：银-铜→明清：银",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:01c272c338db": {
+  "label": "无货币→多货币→单一贵金属→单一纸币，是个货币秦制化/集中化趋势",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:3be8299ab4b3": {
+  "label": "美-不挂钩贵金属的国际货币-牙买加体系",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "actor:1b7a3e30770e": {
+  "label": "货币发行严格受限于黄金储备，政府无法随意印钞，大萧条后放弃金本位是大众民主短期期…",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:dfae1720623c": {
+  "label": "黄金避险强，流动性差，当市场上国际货币因加息匮乏时，黄金会贬值，",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:e879c34d47e7": {
+  "label": "英镑1925丘吉尔强行恢复绑定黄金，导致高汇率工业流失大罢工",
+  "hit": [
+   "汇率"
+  ],
+  "domain": "金融"
+ },
+ "concept:df298d1ae935": {
+  "label": "死守高汇率",
+  "hit": [
+   "汇率"
+  ],
+  "domain": "金融"
+ },
+ "concept:c672cb3d4129": {
+  "label": "1960s外资疯狂外逃，提高利息留住外资，1967大罢工债务太多绷不住被迫贬值求…",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "actor:705f81d00e3d": {
+  "label": "美国降息＝借贷容易钱多＝美国通胀＝美国物价增＝美国资本输出",
+  "hit": [
+   "通胀",
+   "贷"
+  ],
+  "domain": "金融"
+ },
+ "actor:b31e09cf8f98": {
+  "label": "美债给美元背书，先降息后加息→先外国后美国企业借贷成本增加→先外国后美国物价上涨…",
+  "hit": [
+   "债",
+   "贷"
+  ],
+  "domain": "金融"
+ },
+ "actor:1f5c502f603e": {
+  "label": "美国制造的欧亚大陆战争",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "actor:ee2ab7bce38d": {
+  "label": "富达先锋等主权货币基金存户美国人民和外国美债/主权基金利益一致希望美元加息，而世…",
+  "hit": [
+   "货币",
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "concept:43d107b01f58": {
+  "label": "1.美元在不断放水增加通胀降低信用",
+  "hit": [
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "actor:a7176f67e90a": {
+  "label": "2.中国制造在不断制造通缩，减缓美元放水的通胀效果",
+  "hit": [
+   "制造",
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "actor:3e58bb33e8b7": {
+  "label": "美国通胀+失业/滞涨",
+  "hit": [
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "concept:40f89a4cd1d9": {
+  "label": "不仅得到石油也可以制造混乱",
+  "hit": [
+   "制造"
+  ],
+  "domain": "金融"
+ },
+ "actor:ed96d5c39d3d": {
+  "label": "中国制造业不再无限扩张抛售了40%美债",
+  "hit": [
+   "制造",
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "actor:72cb035fabfd": {
+  "label": "中国和沙特这样抛售美债",
+  "hit": [
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "actor:e819163c0c51": {
+  "label": "给美国制造金融危机",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "actor:9adb24d95136": {
+  "label": "1951《美联储-财政部协议》，朝鲜战争后政府逼美联储压低利率被拒绝，宣布美联储…",
+  "hit": [
+   "利率"
+  ],
+  "domain": "金融"
+ },
+ "concept:2b67e9a4dced": {
+  "label": "国债利息压力加大",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:83865a378ffb": {
+  "label": "超额消费留下巨大泡沫和次贷成08危机",
+  "hit": [
+   "消费",
+   "贷"
+  ],
+  "domain": "domainless"
+ },
+ "concept:433a9a166f13": {
+  "label": "现在中日抛售美元，为避免信用彻底破产，只能顶着关税通胀威胁，缓慢降息输出资本贬值…",
+  "hit": [
+   "通胀",
+   "税"
+  ],
+  "domain": "金融"
+ },
+ "concept:1f3e110cf294": {
+  "label": "通胀型萧条",
+  "hit": [
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "concept:c0b9bf00bbc7": {
+  "label": "80石油美元回流、97亚洲金融危机类似大萧条，低息热钱→债务太高→汇率降低→物价…",
+  "hit": [
+   "汇率",
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "actor:cfba183d0f15": {
+  "label": "92黑色星期三华尔街冲击欧洲，德国、瑞士强行固定汇率扛住，法国国企下场且有核能，…",
+  "hit": [
+   "汇率"
+  ],
+  "domain": "儒政"
+ },
+ "actor:82e697223282": {
+  "label": "国会决定债务上限，在野党经常压低债务上限逼美国国债违约，制造经济危机攻击执政党，…",
+  "hit": [
+   "制造",
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:9f30fab26f05": {
+  "label": "债利率会上升财政紧张",
+  "hit": [
+   "利率",
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "concept:3f21dc57ed05": {
+  "label": "通胀就三个原因，市场少了，原材料人力便宜了，预期太高金融泡沫破了",
+  "hit": [
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "actor:464fcfc918f3": {
+  "label": "东亚中东买美国国债",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:cf11d311f773": {
+  "label": "08因为东亚欧洲美债囤积",
+  "hit": [
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "concept:e4d829e29f12": {
+  "label": "欧债危机后欧猪破产",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:358fdd4b6efd": {
+  "label": "搞量化宽松货币大放水和滞涨情况一样，只能通过科技腾飞解决",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "actor:b83268827944": {
+  "label": "所以说对中国而言，次贷/地方债/石油危机，都一点不重要，遇见市场萎缩随便基建以工…",
+  "hit": [
+   "债",
+   "贷",
+   "基建"
+  ],
+  "domain": "金融"
+ },
+ "concept:24746de12587": {
+  "label": "以工代赈基建的金融化",
+  "hit": [
+   "基建"
+  ],
+  "domain": "domainless"
+ },
+ "actor:30a6357cce5c": {
+  "label": "德国租房房价控制，新加坡直接租房八成国有化",
+  "hit": [
+   "房"
+  ],
+  "domain": "儒政"
+ },
+ "actor:2b3be66b55c1": {
+  "label": "中国多美债",
+  "hit": [
+   "债"
+  ],
+  "domain": "金融"
+ },
+ "actor:90de68c23135": {
+  "label": "蒋介石和埃尔多安加息比美国还猛配合旅游业制造更强避风港",
+  "hit": [
+   "制造"
+  ],
+  "domain": "金融"
+ },
+ "concept:7f81a4f72e34": {
+  "label": "国际货币去中心化对抗华尔街印钞",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:4b69d846032e": {
+  "label": "国际货币",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:69fa2e78f568": {
+  "label": "国债股市",
+  "hit": [
+   "债"
+  ],
+  "domain": "domainless"
+ },
+ "concept:657c87f1dcf1": {
+  "label": "自由贸易——全球化加入WTO",
+  "hit": [
+   "贸易"
+  ],
+  "domain": "domainless"
+ },
+ "concept:43b7cdf692cc": {
+  "label": "1928之前外交＞财政≥军事",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:507f4a35ca4b": {
+  "label": "1960之前外交＞军事＞财政",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:3b9772554473": {
+  "label": "2012之前军事＞外交＞财政",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:8e0c44166e34": {
+  "label": "判断军功建制和权臣篡主的重要分界线",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:fc67b6ac38fe": {
+  "label": "征服的军功",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:df99c93575d7": {
+  "label": "商、周、前秦、唐朝、后汉比较像，前朝的地方军事贵族，在前朝把自己作死之后再统一，…",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:0da389425d4a": {
+  "label": "周礼包括官制、军制、田制、税制，春夏秋冬天地",
+  "hit": [
+   "军",
+   "税"
+  ],
+  "domain": "儒政"
+ },
+ "concept:451ba20f061a": {
+  "label": "风是民间流行音乐，大雅是大贵族音乐，小雅是小贵族音乐，颂是礼官和军乐团的",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:634f9cee8e81": {
+  "label": "府兵制＝军户＝八旗＝兵制兵农合一+田制小农（会兼并，且责任多但权力没多太多甚至还…",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:270a80f37efa": {
+  "label": "贾似道搞军户反倒",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:930d3126ebee": {
+  "label": "张居正彻底废除军户世袭",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:7bd6355c7607": {
+  "label": "海洋天然具有集权属性，因为军舰无法在海上自给自足就像八旗不会种地只能依赖中央拨款",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:e0f4e83f875f": {
+  "label": "秦军爵和周军爵的区别类似察举制和养士制",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:c4c47da17916": {
+  "label": "郡县制基础上的军爵制",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:127adb1bbc81": {
+  "label": "-420魏国募兵不够军事",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:d9c1f28d1d9f": {
+  "label": "赵国只改军事和孙膑魏舒一个范畴",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "actor:e639e5c52b11": {
+  "label": "管仲变法：等级制但中庸有度，废井田私有土地，常备军化，举才标准化，立法集中平等主…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:57001564f2f7": {
+  "label": "抓壮丁程度：楚国：地方世袭贵族兵残余＜汉唐：基层军训＜宋明清：纯农民",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:a12483cb69b9": {
+  "label": "普及军训、兵将关系、渠道兵源三维",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:6da98da15d64": {
+  "label": "基层军事化+公民兵＞明后期",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "actor:1290d0b82956": {
+  "label": "汉唐保甲制皇权下县列宁党，地方有义务军训，有职业军劣根性，要么征兵兵不识将，要么…",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:e8aef113f62f": {
+  "label": "宋保甲制是个基层军事制度",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:a0b8ce477e09": {
+  "label": "宋制流动促进商业，秦制驻扎促进军事",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:5d9dc34657f5": {
+  "label": "西周，大蒐sou礼，多级军政合一",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:1515310e692d": {
+  "label": "​小农破产之后流动性变强，秦制必然变成宋制，税务混乱被迫募兵财政战斗力丧失。",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:80f7805aa12e": {
+  "label": "土地兼并不是问题，制造流民才是问题。",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "concept:292dc543682d": {
+  "label": "消费主义本质上",
+  "hit": [
+   "消费"
+  ],
+  "domain": "domainless"
+ },
+ "concept:a48c537b23e3": {
+  "label": "中朝：汉武帝起源，尚书令→唐朝合法化中书省→内阁→军机处",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:de997910b0f3": {
+  "label": "太保军事，太傅是宰相，太师是皇族导师",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:2c3e63ebda2d": {
+  "label": "禁军财政徭役",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:c0b5a71ab870": {
+  "label": "御史派地方成刺史变成州牧，监察权变军权",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:16955a840715": {
+  "label": "宋朝三合一变军事监察行政三权",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:0effa11cacd6": {
+  "label": "唐朝有亲国郡县*公侯伯子男爵位，把汉朝勋爵虚位荣誉化，如柱国护军骑都尉",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:864f81193ad7": {
+  "label": "司马→太尉→枢密→军机",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:787a1e1d6bac": {
+  "label": "发现这本身是一种人以群分的茧房误判",
+  "hit": [
+   "房"
+  ],
+  "domain": "domainless"
+ },
+ "concept:d1f1c0e09fcc": {
+  "label": "无事可做身体会以为你死了，于是开始制造压力，通过撸生理降压，会导致黄色读物价值观…",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "actor:57297e8b817a": {
+  "label": "男：超额自恋→渴望支配→力量崇拜→微观体育生，宏观党卫军。",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:3e89ba1d2b85": {
+  "label": "封建制下中央收入来自，关税≥王畿直辖领地＞诸侯上贡",
+  "hit": [
+   "税"
+  ],
+  "domain": "金融"
+ },
+ "concept:397f4788a6c3": {
+  "label": "行政立法司法都是虚权，司法永远根植于行政行政根植于军事，立法永远根植于财政，如果…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:60f6e02004b6": {
+  "label": "高成本的军事威慑平衡",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:3d4345bd8238": {
+  "label": "无产阶级需要工作岗位，纳税少。支持加税搞国家工程/开动专制机器提供岗位。越民主，…",
+  "hit": [
+   "税"
+  ],
+  "domain": "儒政"
+ },
+ "concept:a44df375bac9": {
+  "label": "需要岗位越多，越需要扩军和基建",
+  "hit": [
+   "军",
+   "基建"
+  ],
+  "domain": "domainless"
+ },
+ "concept:04d7ca962f92": {
+  "label": "士农工商，贵族官僚，制造业，科技资本，金融资本",
+  "hit": [
+   "制造"
+  ],
+  "domain": "金融"
+ },
+ "concept:af3c431c064e": {
+  "label": "秩序内部的消费者",
+  "hit": [
+   "消费"
+  ],
+  "domain": "domainless"
+ },
+ "concept:24ef55646bb7": {
+  "label": "有自保能力，不纳税，是贵族",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:c297868be376": {
+  "label": "无自保能力，纳税，是豪绅",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:97f8f68bbdba": {
+  "label": "无自保能力，不纳税，是奴隶",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:95e7c8a123d7": {
+  "label": "下等人消费的",
+  "hit": [
+   "消费"
+  ],
+  "domain": "domainless"
+ },
+ "concept:2e33b610064b": {
+  "label": "朝贡体系，上层宫廷以天朝上国为核心以物易物，杜绝了资本主义货币制度。",
+  "hit": [
+   "货币"
+  ],
+  "domain": "金融"
+ },
+ "concept:c1f594b9fb0e": {
+  "label": "1.无加权选票是否对不同纳税额的纳税人公平",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "concept:2b9482741f00": {
+  "label": "阿兹特克封建制：周制遍布军堡可委任，层层民主推荐，间接给社区纳税类似罗马，法典法…",
+  "hit": [
+   "军",
+   "税"
+  ],
+  "domain": "儒政"
+ },
+ "concept:0304169187eb": {
+  "label": "加纳没有常备军，马里有常备军，桑海伊塔克采邑不世袭征兵制",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:d11577453574": {
+  "label": "军事农奴",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:9ec63a2bedca": {
+  "label": "贵族格拉古兄弟保民官，马略平民派改革，苏拉贵族派军队屠杀平民派首次独裁",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:4465fe5941f2": {
+  "label": "军区制",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:56b373060bf1": {
+  "label": "罗马共和国:独立性很强的军区制(退休元老版)任期仅1年,用使节处理司法+采邑:包…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:85a9b5499aba": {
+  "label": "希拉克略：波斯行省制/+卫所＝真.军区制",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "actor:651ecfcb3257": {
+  "label": "上议院＝中国来的骑士军事贵族",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:bcb34da9bdc8": {
+  "label": "行省:郡县制(仅政权，有任期)＞军区制/州/节度(仅军权，有任期)＞分封制(全权…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:fa0f7615724d": {
+  "label": "基层:郡县（无军事义务，任期）＞楚国（有军事义务，任期）伊塔克(无军事义务，终身…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:17928ef6eb70": {
+  "label": "军区制依",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:6315c515cb0f": {
+  "label": "西班牙封建制:军区制(贵族版)+伊塔克:终身/世袭，无军事义务。",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:93127f4df424": {
+  "label": "商税因为无丞相依赖僧侣被架空",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "actor:bc9b85f92113": {
+  "label": "阿克巴发明禁军，扎巴特税制演化出柴明达尔金融统一印度度量衡，莫卧尔在印度普及波斯…",
+  "hit": [
+   "军",
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "actor:f8827118bc8c": {
+  "label": "印度三军没有统一指挥部和后勤分兵严重",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:bba2a9e86463": {
+  "label": "财政＞军事，土豪＞武士",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:282fb7abab15": {
+  "label": "元首＝总统+总理+军委",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "actor:ce3c4bd33e7f": {
+  "label": "天然阿富汗军政府式内讧结构",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:0000fe06a68c": {
+  "label": "西藏贵族大部分也是军功",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:1c05f04dcc64": {
+  "label": "1896年十三达赖废除了死刑，军事上看xz并不是兵农合一，不是民兵，军队归噶厦中…",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:28654991b2fd": {
+  "label": "掌印有军政权",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:b6b398d21cd3": {
+  "label": "军财分权的类罗马制度",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:91c4b568feaf": {
+  "label": "彼得三世废除贵族军事义务，凯瑟琳时期专制巅峰，叶卡捷琳娜《士绅宪章》自治城镇",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:397d5ab2da57": {
+  "label": "亚历山大一世国务院尚书省，尼古拉一世军机处，亚历山大二世34省层级民选自治局但无…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:09fc9038b3bb": {
+  "label": "德川就已经聚集限制宗亲，但是在勋贵来自军功这方面，又是最好的",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:6b46a02c57ba": {
+  "label": "起源于李成桂军功只不过夺了军权",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "actor:30326b89df92": {
+  "label": "欧盟官员不纳税独立教育系统",
+  "hit": [
+   "税"
+  ],
+  "domain": "金融"
+ },
+ "concept:208f87f894b9": {
+  "label": "昂撒传统郡长制，财军权都有，不世袭但也无固定任期，类似楚制",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:e53593c1e831": {
+  "label": "亨利二世剥离司法权，百年战争让民兵军权减弱，爱德华一世禁止郡长世袭，剥离财政权",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "actor:abd80c001e66": {
+  "label": "国会立法依赖财政，总统行政依赖军事",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "actor:88854d3950be": {
+  "label": "中国不如美国贫富纳税差距大，直接税个人所得税占比越高，越大，间接税增值税则相反",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "actor:6ab00f1afb8f": {
+  "label": "国企纳税占12%",
+  "hit": [
+   "税"
+  ],
+  "domain": "domainless"
+ },
+ "actor:5a6a46017495": {
+  "label": "中国私企，制造业40%，传统服务业35%，科技产业20%，金融5%",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "actor:c799173e7f05": {
+  "label": "美国私企，科技产业约35% ，传统服务业约30%，金融业约25%，制造业约10%",
+  "hit": [
+   "制造"
+  ],
+  "domain": "domainless"
+ },
+ "concept:ed4df32acfe7": {
+  "label": "中苏红军早期才是高度民主",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "actor:f1a80cc19f15": {
+  "label": "中国 党政军合一vs苏联、美国，法/党政军分立",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:460ca5f88b3b": {
+  "label": "南斯拉夫只自治省级不自治县级工团无军权且大共同体太弱",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "actor:7990b19b460d": {
+  "label": "智利从一开始就集权，1891议会制1925总统制，1973军政府90民主化",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:2d3489970be3": {
+  "label": "边军成为郡县的滥觞",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:108c7a201907": {
+  "label": "封建制度崩溃因素:边军不定建立郡县",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:b336e21e1fbc": {
+  "label": "│ 金句：\"做题家＝无产阶级知识分子\"\"民主和民族主义都是下等人消费的\"    …",
+  "hit": [
+   "消费"
+  ],
+  "domain": "儒政"
+ },
+ "concept:3765f3da3b99": {
+  "label": "│ 军事制度谱系(征兵/募兵/府兵/卫所) → 土地/流民逻辑         …",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:c83dcd9ee525": {
+  "label": "│ 金句：\"工业社会必然等于奴隶社会\"\"海军天然具有集权属性\"         …",
+  "hit": [
+   "军"
+  ],
+  "domain": "金融"
+ },
+ "concept:f6b562619ea7": {
+  "label": "│  动态均衡论：文明活力＝在军事/财政/行政三权间找到动态平衡        …",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:9cce75a5b08a": {
+  "label": "**妾是对美色诱惑的权宜之计**——人性有色欲，禁之不绝，故以妾为权宜出口。妾可…",
+  "hit": [
+   "出口"
+  ],
+  "domain": "domainless"
+ },
+ "concept:d7ccd5d9f9c8": {
+  "label": "军财循环的延伸",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:ec4e81b79d17": {
+  "label": "**国人为经**（征服者及其后裔，承担军事义务，政治主体）；**野人为权**（被…",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:bc5ba98b68df": {
+  "label": "| 经 | 封建贵族（国人） | 军事安全与礼法秩序 | 政治主体，合法性源头 …",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:394200deb98b": {
+  "label": "废井田、行郡县、定军爵、行连坐——以\"权\"（成文法、军功爵、郡县制）取代\"经\"（…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:030ff2cc40fd": {
+  "label": "三重堕落：**以力代德的恶性循环**（威慑通胀，刑罚不断加重而敬畏递减）、**权…",
+  "hit": [
+   "通胀"
+  ],
+  "domain": "金融"
+ },
+ "concept:b0690be2b48e": {
+  "label": "**财取代军",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:209decb14217": {
+  "label": "**戎祀高度合一**（礼乐封建、早期伊斯兰）——权威集中、行动力强，但军事失败则…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:69168aecb6ad": {
+  "label": "儒政的独特之处在于：既保持\"祀\"（礼乐教化）对\"戎\"（军事征伐）的伦理约束（\"国…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ },
+ "concept:9fdf494992db": {
+  "label": "新的军阀",
+  "hit": [
+   "军"
+  ],
+  "domain": "domainless"
+ },
+ "concept:6db996acf588": {
+  "label": "但技术永远不能单独解释制度变迁——同样的火器在欧洲引发\"军事革命\"并促进绝对君主…",
+  "hit": [
+   "军"
+  ],
+  "domain": "金融"
+ },
+ "concept:8badb8df3e0b": {
+  "label": "**六**：合法性来源唯征服与世袭。正≠润——正为经，润为权。政治实权只有军＞财…",
+  "hit": [
+   "军"
+  ],
+  "domain": "儒政"
+ }
+}
