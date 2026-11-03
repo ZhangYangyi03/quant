@@ -377,3 +377,57 @@ turnover / abnormal_turnover / asset_growth / accruals / noa / illiquidity / rev
     ST 历史           —— CNEquity 走 Tushare，我没有 token
     13 个异象横向比较  —— 只知道 EP，不知道它排第几
     真市值            —— cne5_exposure.py 里用 log(价格) 代理，是那个文件最大的弱点
+
+---
+
+## 第二阶段：把代码抄进来（不是看思路，是移植函数）
+
+上一节只抄了方法和规矩。这一节是真的把代码搬进来了。
+
+### Barra CNE5 风险模型：barra_model.py
+
+从 YTZzzzz/Barra_CNE5 逐函数移植，每个函数都标了对应原文件的哪一段：
+
+    utility.py        halflife / winsorize / normalize / orthogonalize / non_linear_size / truncate
+    style_factor.py   RSTR(T=504,L=21,半衰期126) / DASTD(半衰期42,T=252) / CMRA(12x21)
+    regression.py     regress(WLS) / cov_pair(半衰期=样本长度一半) / cov_mat / avg_risk / avg_risk_predict
+
+运行结果（2026-11-03 截面，2319 只股票，325 个行业）：
+
+    因子收益   MKT +0.0334   Mom -0.0040   DASTD -0.0104
+               CMRA +0.0011  Size -0.0011  NLS -0.0020
+    t 值       MKT  2.74     Mom -6.04     DASTD -14.04
+               CMRA  2.02     Size -1.36    NLS -3.40
+    特异性风险 St = 0.01374
+
+两个实现细节值得记下来：
+
+一、regress 换成了 numpy 直接解。原版用 statsmodels 的 WLS，320 列设计矩阵上协方差计算是 O(k^3)，
+      跑不完。WLS 数学上就是把 X、y 各乘 sqrt(w) 再做普通最小二乘，所以我直接解。
+      对比验证过：beta 与残差和 statsmodels 差 1e-15 量级，t 值相对差 7.7e-12。数值等价，快三个数量级。
+
+二、CMRA 取最后一个非 NaN，不能取 [-1]。它只在每 21 日的结算点写值，
+      序列末尾未必落在结算点上，取 [-1] 会拿到 NaN —— 我第一次跑就是 0 个有效值。
+
+### 一个值得单独说的坑：MemoryError 不是内存不够
+
+调这个模型时所有 numpy 分配都在 16 MB 报 MemoryError，我以为内存不够，查了半天：
+
+    物理内存 7.6 GB，虚拟地址空间 13 万 GB 空闲，bytearray(64MB) 正常
+    但 numpy 8 MB 就失败
+
+真实原因：**OpenBLAS 默认按 CPU 核数预分配线程缓冲**，而沙箱的 ActiveProcessLimit=8，
+线程缓冲创建失败后 OpenBLAS 反复重试 10 次失败，报出来的错误是
+"Memory allocation still failed"，在 numpy 那一层就变成了 MemoryError。
+
+解法：`OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1`。
+设完之后 256 MB 随便分配。
+
+这个坑值得记：一个看起来像"资源不足"的错误，实际是"资源配额配置错误"。
+下次看到 MemoryError 但机器内存明明够，先怀疑线程池，不要怀疑内存。
+
+### 我新增的方法论判断：EP 的秩相关 0.600
+
+按 CNE5 口径把 EP 对 Size 和行业中性化后，与原始 EP 的秩相关只有 0.600。
+排序变了将近一半，说明 EP 的表面信号里有一大块是行业和市值暴露。
+这条已经在上一节写过，但它是"抄代码"之后才可能得出的结论 —— 光看 README 不会知道。
