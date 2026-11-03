@@ -1,0 +1,63 @@
+{
+ "date": "2026-11-03",
+ "开源项目": [
+  {
+   "name": "microsoft/qlib",
+   "stars": 49952,
+   "license": "MIT",
+   "what": "微软的量化平台，AI 导向，有 A 股数据、回测、因子挖掘",
+   "对我": "太重；但它有现成的 A 股数据口径和回测引擎可对照"
+  },
+  {
+   "name": "rootSunc/CNEquity",
+   "stars": 927,
+   "license": "Apache-2.0",
+   "what": "A 股本地数据湖，55 个日更数据集，含 PIT（point-in-time）、复权、历史成分",
+   "对我": "最重要。它做的是 PIT 历史成分 —— 正是我池子覆盖率只有 53% 的病根"
+  },
+  {
+   "name": "YTZzzzz/Barra_CNE5",
+   "stars": 184,
+   "license": "无",
+   "what": "Barra 中国股票风险模型完整实现，10 个风格因子 + 行业因子 + 回归",
+   "对我": "直接可用。补我缺的行业中性化，且是官方口径不是我自己发明的"
+  },
+  {
+   "name": "khscience/OSkhQuant",
+   "stars": 1625,
+   "license": "NOASSERTION",
+   "what": "桌面回测软件，BaoStock/Tushare 数据，DuckDB 本地",
+   "对我": "交互式，不是我要的"
+  },
+  {
+   "name": "qusong0627/QuantMind",
+   "stars": 1857,
+   "license": "AGPL-3.0",
+   "what": "集成 Qlib + 因子演化 + 舆情",
+   "对我": "AGPL 传染，不宜引入"
+  },
+  {
+   "name": "xxv-byte/size-and-value-in-china-replication",
+   "stars": 2,
+   "what": "直接复现 Liu/Stambaugh/Yuan (2019)",
+   "对我": "和我做的是同一件事，可交叉验证数字"
+  }
+ ],
+ "论文": [
+  {
+   "ref": "Liu, Stambaugh, Yuan (2019) Size and Value in China, JFE",
+   "对我": "当前 EP 因子的来源；我用它的定义，但我测出它主张的'排除最小30%'规则在 A 股 2010-2026 判负"
+  },
+  {
+   "ref": "Barra CNE5 风险模型文档",
+   "对我": "行业中性化的官方口径"
+  }
+ ],
+ "结论": "我做的 EP 因子在开源社区有近乎相同的复现（2 星小项目），说明方向不是原创；但我的增量在于：自建 5251 只全市场池、真实市值、退市按零、滚动前推、以及对 EG 因果的安慰剂检验。这些在开源项目里没有看到。",
+ "缺口确认": [
+  "PIT 历史成分（CNEquity 有，我没有）",
+  "Barra 风格因子中性化（CNE5 有，我没有）",
+  "ST 剔除（没找到成熟开源实现）",
+  "涨跌停可成交性（没找到成熟开源实现）"
+ ]
+}
