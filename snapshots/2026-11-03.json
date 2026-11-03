@@ -1,0 +1,1491 @@
+{
+ "date": "2026-11-03",
+ "graphs": {
+  "political_economy.graph.json": {
+   "nodes": 1992,
+   "edges": 536,
+   "domains": {
+    "金融": 150,
+    "domainless": 1328,
+    "儒政": 514
+   },
+   "rels": {
+    "adds_to": 4,
+    "sells": 1,
+    "is_a": 310,
+    "opposes": 21,
+    "because_of": 32,
+    "relies_on": 11,
+    "causes": 71,
+    "means": 21,
+    "invests_in": 5,
+    "incubates": 1,
+    "becomes": 19,
+    "controls": 1,
+    "borrows": 2,
+    "therefore": 4,
+    "replaces": 12,
+    "exceeds": 3,
+    "imitates": 3,
+    "inherits_from": 8,
+    "purpose_is": 7
+   },
+   "digest": "db3e613e7a10145c"
+  },
+  "thesis_finance.graph.json": {
+   "nodes": 309,
+   "edges": 88,
+   "domains": {
+    "null": 309
+   },
+   "rels": {
+    "adds_to": 2,
+    "sells": 1,
+    "is_a": 34,
+    "opposes": 6,
+    "because_of": 9,
+    "relies_on": 4,
+    "causes": 12,
+    "means": 3,
+    "invests_in": 5,
+    "incubates": 1,
+    "becomes": 1,
+    "controls": 1,
+    "borrows": 2,
+    "therefore": 1,
+    "replaces": 1,
+    "exceeds": 2,
+    "imitates": 2,
+    "inherits_from": 1
+   },
+   "digest": "d545a00ca690d91a"
+  },
+  "thesis.graph.json": {
+   "nodes": 314,
+   "edges": 94,
+   "domains": {
+    "null": 314
+   },
+   "rels": {
+    "adds_to": 2,
+    "is_a": 34,
+    "opposes": 7,
+    "because_of": 10,
+    "relies_on": 6,
+    "causes": 12,
+    "means": 3,
+    "sells": 1,
+    "invests_in": 5,
+    "incubates": 1,
+    "becomes": 1,
+    "controls": 1,
+    "borrows": 2,
+    "therefore": 2,
+    "replaces": 1,
+    "exceeds": 3,
+    "imitates": 2,
+    "inherits_from": 1
+   },
+   "digest": "ca2b7ed6e7f0c65c"
+  }
+ },
+ "causal": [
+  {
+   "rel": "because_of",
+   "from": "雇工协议只能货币工资",
+   "to": "就业不充分物价上涨工人逆来顺受",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "信息化",
+   "to": "迁移成本低",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "英镑",
+   "to": "普通法的案例可预测性",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "欧元",
+   "to": "非美元结算体系",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "日元",
+   "to": "大量海外资产美债",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "瑞郎低息是为了减少买入",
+   "to": "升值影响出口",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "相当于政府靠抬高汇率",
+   "to": "泡沫发给民间钱变向还给政府了",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "脱欧",
+   "to": "失去一次性过英欧双层监管的优势",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "学阀是打不完的",
+   "to": "没有人知道一个学术路径是不是对的",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "房地产自有率低",
+   "to": "房产税不如租房",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "放贷中介费极高且禁止房东赶人",
+   "to": "修缮不足",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "容易",
+   "to": "变相腐败",
+   "status": "asserted"
+  },
+  {
+   "rel": "controls",
+   "from": "被一个南非报业公司",
+   "to": "赚了自己市值几十倍",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "拉萨",
+   "to": "西部开发也类似",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "GDP算增值",
+   "to": "和这个无关",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "中国",
+   "to": "纸币普及太早",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "秘鲁",
+   "to": "银贬值牛顿开始金本位",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "死守高汇率",
+   "to": "1949大贬值",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "1.石油危机会",
+   "to": "美国通胀+失业/滞涨",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "解决不了失业",
+   "to": "社会撕裂严重",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "迷信安兰德加剧自由放任金融",
+   "to": "超额消费留下巨大泡沫和次贷成08危机",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "却没想到滞涨是",
+   "to": "石油生产成本",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "08因为东亚欧洲美债囤积",
+   "to": "美元信用暴涨都投资美国金融",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "也是",
+   "to": "欧债危机后欧猪破产",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "南欧",
+   "to": "转移支付",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "美元",
+   "to": "国际货币",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "英国通过专利法和学校私营应用",
+   "to": "法国纯贵族官办学院数理化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "北欧是低淘汰风险",
+   "to": "试错创新",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "美国因为自治传统和种族矛盾",
+   "to": "学北欧模式学失败了",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "美国统一语言有",
+   "to": "英国殖民地、如今欧盟的市场整合度",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "围城原理背后是远香近臭原理",
+   "to": "自己是被规训而无法亲近而祛魅的loser",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "融入了一些",
+   "to": "陌生恐惧产生的排外",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "经济危机",
+   "to": "专制建立",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "豳bin风",
+   "to": "于革命根据地生产",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "认为他",
+   "to": "君主不圣明而感到羞耻",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "满洲人不会种田",
+   "to": "侵吞更早",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "燕王哙",
+   "to": "墨家所以禅让",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "晋国",
+   "to": "重客卿轻宗室",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "兼并",
+   "to": "兵源丧失",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "罗马从来没有建成郡县",
+   "to": "马略没法秦化征兵化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "征/募兵制",
+   "to": "职业兵",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "然而逃亡之后",
+   "to": "其旧有环境是体制塑造的",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "阶级性",
+   "to": "习惯判断",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "铸刑书",
+   "to": "大蒐礼废除",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "匮乏单调不是",
+   "to": "公有制",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "秦制才有小粉红",
+   "to": "他们害怕秦制崩溃",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "扶苏果断自杀",
+   "to": "恐惧无情成文法",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "流官",
+   "to": "制衡无兵",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "开明专制还比大众民主",
+   "to": "谱一些",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "人民过得惨是",
+   "to": "家乡的精英都去了大城市",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "天赋了人权",
+   "to": "人把没有付出的回报当成理所当然",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "必然",
+   "to": "既要又要主义者太多",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "面对民意压力没有回旋余地",
+   "to": "需要政治分寸的谈判无法执行",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "而应该世袭/老红卫兵",
+   "to": "民主精神不稳定",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "无产阶级知识分子必然会",
+   "to": "历史悲观主义",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "像高欢胡化",
+   "to": "他朋友圈一大堆鲜卑人",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "失业是",
+   "to": "末尾淘汰",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "家长擅自期望冒充普世社会",
+   "to": "宏大叙事",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "模仿其他物种",
+   "to": "不符合人性",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "美色是天然模糊尊卑",
+   "to": "不公正的赏罚机制",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "男概崇拜",
+   "to": "油腻爹味重被淘汰",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "都会",
+   "to": "主动对被动者产生依赖性",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "想通过",
+   "to": "自己心目中的完美男人讨好女人",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "出轨社会压力男大女小",
+   "to": "女的被绿概率高",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "出轨＝风流的社会压力小",
+   "to": "女的被绿概率高",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "让怯懦",
+   "to": "无恋爱经验的男人产生女人的焦虑",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "女人",
+   "to": "男人内斗",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "互相回音震荡",
+   "to": "味更大",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "自由主义的崩溃是",
+   "to": "自由的主体在1830年代发生了切换",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "士大夫的反社会人格已经",
+   "to": "距离彻底取缔伦理教育让堕落延伸到基层",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "麻木是底层自然进化淘汰之后",
+   "to": "阶级习惯",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "而不是什么剩余价值（最多说",
+   "to": "新贵特有的德不配位所以配不上剩余价值",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "而理论的抽象",
+   "to": "逆常识宏大叙事",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "搞废奴搞普选会",
+   "to": "封建制崩溃",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "半吊子保守主义最容易",
+   "to": "反社会人格",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "异化是",
+   "to": "一套意识形态脱离了作者阶级被解读",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "资本主义",
+   "to": "异化封建愚民不会异化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "这也",
+   "to": "朱熹哲学和黑格尔哲学的相似性",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "由主义的劣根性、无产阶级性",
+   "to": "必然专制化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "屁民思想的",
+   "to": "除了我之前说过的父子模型中",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "互相拉踩",
+   "to": "趋向屁民主义",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "靠颜值得到的婚姻也持续不了",
+   "to": "颜值没有普遍威慑力",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "绑定了才能",
+   "to": "感情同理心",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "随着成长中幼稚歧视",
+   "to": "否定自己幼稚阶段而遭到贬低",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "进步史观助长成长自贬",
+   "to": "反社会人格泛滥",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "相信苦修具有超越性 1",
+   "to": "自卑2导致他卑",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "礼仪太重确实会",
+   "to": "偏执化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "垃圾信息",
+   "to": "屁民负能量暴增",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "唯一的人道问题就是世袭",
+   "to": "小奴隶不人道",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "秦汉帝国作为第一个总体战帝国",
+   "to": "汉族是世界第一个民族",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "贵族之所以是贵族是",
+   "to": "征服之后提供了安全稳定的社会秩序",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "外国人也等于不会说话",
+   "to": "逆向民族主义可以玩起来",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "从贵族对国王/古自",
+   "to": "平民对贵族/新自",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "弱者的嫉妒",
+   "to": "互害欲",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "3.人民",
+   "to": "福利施舍",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "被迫",
+   "to": "军事农奴",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "上下制度不同",
+   "to": "义务责任不匹配土豪不负责",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "军区制依",
+   "to": "征/募兵制",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "集权但联邦",
+   "to": "各诸侯自己秦制化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "反对民选",
+   "to": "薄伽梵",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "罗湿陀罗拘陀设内阁",
+   "to": "商税因为无丞相依赖僧侣被架空",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "东印度融资依",
+   "to": "孟加拉资本家",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "海外华人自组织",
+   "to": "具体的武当",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "小党也有选票比例的席位",
+   "to": "小党林立",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "瑞士和德国的区别就是没有战败",
+   "to": "封建贵族被清算",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "奥斯曼因民族和行业绑定",
+   "to": "天然阿富汗军政府式内讧结构",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "过度的教权",
+   "to": "封建秩序削弱",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "也是无法三角平衡",
+   "to": "结果比吏制差不了多少",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "选举严格化类似宋明科举严格化",
+   "to": "事务官僚架空议会",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "总统通过广播引导选民国会投票",
+   "to": "立法者",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "幕僚顾问与国会法院",
+   "to": "一种央地关系",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "赤色入侵",
+   "to": "美国被迫成为帝国主义",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "一战后都是大众民主",
+   "to": "个别参议院间接",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "初选只能党内注册选民进行选举",
+   "to": "候选人需要拉到足够联名和捐款",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "东北、加州的后两者区别接近",
+   "to": "给联邦的转移支付巨大",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "政策都为了吸引新选民",
+   "to": "美国陷入了一种远亲近疏",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "十九世纪末黑人和工人结盟",
+   "to": "二十一世纪奴隶主和工人结盟",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "相当于孔子把周礼",
+   "to": "儒家派别",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "美国的专制化是",
+   "to": "美国走出美洲",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "中苏红军早期才是高度民主",
+   "to": "低效率典型而非美国",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "把本来两院制",
+   "to": "中式一院制搞家庭联产",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "最终",
+   "to": "大众民主专制化",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "最终",
+   "to": "天皇专制",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "扩张的停止会",
+   "to": "边军成为郡县的滥觞",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "雍正废奴",
+   "to": "欧洲废奴潮",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "小农经济脆弱容易破产",
+   "to": "佃农/契约农奴",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "每一次集权冲动都会",
+   "to": "小共同体的瓦解和基层治理能力的衰退",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "这一原初强迫",
+   "to": "两种根本性的应激冲动",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "而是",
+   "to": "某个阈值后转化为怨恨和\"应得感\"",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "都会导致主动者对被动者",
+   "to": "依赖性——这正是主奴辩证法",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "靠颜值得到的婚姻持续不了",
+   "to": "漂亮无法避免家暴或出轨——娘家才行",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "把活生生的、有乡评口碑的人",
+   "to": "纸面上的、可批量评分的\"答案\"",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "民主泛滥",
+   "to": "专制、儒家内部异化、战争压力倒逼",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "秦二世而亡**——不是",
+   "to": "不够霸道",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "把法官",
+   "to": "法条的自动售货机——输入案情",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "法律",
+   "to": "只有读过法学院的人才能操作的技术黑箱",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "### 10.3 为何中国未",
+   "to": "\"封建—宪政\"过渡？",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "容易在战争中坐大",
+   "to": "新的军阀",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "技术创新的活力本身",
+   "to": "封建制的多元竞争和贵族赞助结构",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "让家庭能够真正",
+   "to": "\"教养\"的起点而不只是\"生育\"的单位",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "它们会",
+   "to": "对国家权力的制衡力量——不是通过对抗",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "雇工协议只能货币工资",
+   "to": "就业不充分物价上涨工人逆来顺受",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "信息化",
+   "to": "迁移成本低",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "英镑",
+   "to": "普通法的案例可预测性",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "欧元",
+   "to": "非美元结算体系",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "日元",
+   "to": "大量海外资产美债",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "瑞郎低息是为了减少买入",
+   "to": "升值影响出口",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "相当于政府靠抬高汇率",
+   "to": "泡沫发给民间钱变向还给政府了",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "脱欧",
+   "to": "失去一次性过英欧双层监管的优势",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "学阀是打不完的",
+   "to": "没有人知道一个学术路径是不是对的",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "房地产自有率低",
+   "to": "房产税不如租房",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "放贷中介费极高且禁止房东赶人",
+   "to": "修缮不足",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "容易",
+   "to": "变相腐败",
+   "status": "asserted"
+  },
+  {
+   "rel": "controls",
+   "from": "被一个南非报业公司",
+   "to": "赚了自己市值几十倍",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "拉萨",
+   "to": "西部开发也类似",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "GDP算增值",
+   "to": "和这个无关",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "中国",
+   "to": "纸币普及太早",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "秘鲁",
+   "to": "银贬值牛顿开始金本位",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "死守高汇率",
+   "to": "1949大贬值",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "1.石油危机会",
+   "to": "美国通胀+失业/滞涨",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "解决不了失业",
+   "to": "社会撕裂严重",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "迷信安兰德加剧自由放任金融",
+   "to": "超额消费留下巨大泡沫和次贷成08危机",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "却没想到滞涨是",
+   "to": "石油生产成本",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "08因为东亚欧洲美债囤积",
+   "to": "美元信用暴涨都投资美国金融",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "也是",
+   "to": "欧债危机后欧猪破产",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "南欧",
+   "to": "转移支付",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "美元",
+   "to": "国际货币",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "英国通过专利法和学校私营应用",
+   "to": "法国纯贵族官办学院数理化",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "北欧是低淘汰风险",
+   "to": "试错创新",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "美国因为自治传统和种族矛盾",
+   "to": "学北欧模式学失败了",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "美国统一语言有",
+   "to": "英国殖民地、如今欧盟的市场整合度",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "雇工协议只能货币工资",
+   "to": "就业不充分物价上涨工人逆来顺受",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "信息化",
+   "to": "迁移成本低",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "英镑",
+   "to": "普通法的案例可预测性",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "欧元",
+   "to": "非美元结算体系",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "日元",
+   "to": "大量海外资产美债",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "瑞郎低息是为了减少买入",
+   "to": "升值影响出口",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "相当于政府靠抬高汇率",
+   "to": "泡沫发给民间钱变向还给政府了",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "脱欧",
+   "to": "失去一次性过英欧双层监管的优势",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "学阀是打不完的",
+   "to": "没有人知道一个学术路径是不是对的",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "房地产自有率低",
+   "to": "房产税不如租房",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "德国房屋自有率也低",
+   "to": "放贷中介费极高且禁止房东赶人",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "欧洲除了荷兰风投全",
+   "to": "银行",
+   "status": "asserted"
+  },
+  {
+   "rel": "becomes",
+   "from": "容易",
+   "to": "变相腐败",
+   "status": "asserted"
+  },
+  {
+   "rel": "controls",
+   "from": "被一个南非报业公司",
+   "to": "赚了自己市值几十倍",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "拉萨",
+   "to": "西部开发也类似",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "GDP算增值",
+   "to": "和这个无关",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "中国",
+   "to": "纸币普及太早",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "秘鲁",
+   "to": "银贬值牛顿开始金本位",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "死守高汇率",
+   "to": "1949大贬值",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "1.石油危机会",
+   "to": "美国通胀+失业/滞涨",
+   "status": "asserted"
+  },
+  {
+   "rel": "therefore",
+   "from": "现在之",
+   "to": "要崩",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "尼克松试图收回结果降息",
+   "to": "滞涨",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "解决不了失业",
+   "to": "社会撕裂严重",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "迷信安兰德加剧自由放任金融",
+   "to": "超额消费留下巨大泡沫和次贷成08危机",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "却没想到滞涨是",
+   "to": "石油生产成本",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "08因为东亚欧洲美债囤积",
+   "to": "美元信用暴涨都投资美国金融",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "也是",
+   "to": "欧债危机后欧猪破产",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "南欧",
+   "to": "转移支付",
+   "status": "asserted"
+  },
+  {
+   "rel": "because_of",
+   "from": "美元",
+   "to": "是国际货币",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "英国通过专利法和学校私营应用",
+   "to": "法国纯贵族官办学院数理化",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "应用转化",
+   "to": "英国",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "北欧是低淘汰风险",
+   "to": "试错创新",
+   "status": "asserted"
+  },
+  {
+   "rel": "causes",
+   "from": "美国因为自治传统和种族矛盾",
+   "to": "学北欧模式学失败了",
+   "status": "asserted"
+  },
+  {
+   "rel": "relies_on",
+   "from": "英国北欧国家承包",
+   "to": "排队",
+   "status": "asserted"
+  },
+  {
+   "rel": "exceeds",
+   "from": "且美国统一语言有",
+   "to": "英国殖民地、如今欧盟的市场整合度",
+   "status": "asserted"
+  }
+ ],
+ "concepts": {
+  "基建": {
+   "n": 13,
+   "sample": [
+    "美国学派:国家基建+央行调控+关税保工业",
+    "量化宽松也叫债务货币化，美联储央行要多印钱给政府国债基建兜底，稀释国债却也避免更…",
+    "所以说对中国而言，次贷/地方债/石油危机，都一点不重要，遇见市场萎缩随便基建以工…"
+   ]
+  },
+  "关税": {
+   "n": 7,
+   "sample": [
+    "美国学派:国家基建+央行调控+关税保工业",
+    "现在中日抛售美元，为避免信用彻底破产，只能顶着关税通胀威胁，缓慢降息输出资本贬值…",
+    "封建制下中央收入来自，关税≥王畿直辖领地＞诸侯上贡"
+   ]
+  },
+  "税": {
+   "n": 23,
+   "sample": [
+    "美国学派:国家基建+央行调控+关税保工业",
+    "房产税不如租房",
+    "现在中日抛售美元，为避免信用彻底破产，只能顶着关税通胀威胁，缓慢降息输出资本贬值…"
+   ]
+  },
+  "工资": {
+   "n": 6,
+   "sample": [
+    "农反资+最低工资铁律",
+    "雇工协议只能货币工资",
+    "农反资+最低工资铁律"
+   ]
+  },
+  "货币": {
+   "n": 43,
+   "sample": [
+    "马克思资本论第一章致敬从俄传教士得知的徽商户部侍郎陕西监察御史王茂荫的货币经济理…",
+    "雇工协议只能货币工资",
+    "希腊无货币主权卖信用，无老龄化和制造业天然通缩抵消，玩不了这个"
+   ]
+  },
+  "就业": {
+   "n": 6,
+   "sample": [
+    "就业不充分物价上涨工人逆来顺受",
+    "安倍也是像美元霸权一样印钱维持僵尸福利式岗位的就业，信日元的被安倍白嫖，不信的就…",
+    "就业不充分物价上涨工人逆来顺受"
+   ]
+  },
+  "出口": {
+   "n": 7,
+   "sample": [
+    "重商主义:管制手段+出口倒向+金银本位",
+    "升值影响出口",
+    "**妾是对美色诱惑的权宜之计**——人性有色欲，禁之不绝，故以妾为权宜出口。妾可…"
+   ]
+  },
+  "债": {
+   "n": 57,
+   "sample": [
+    "大量海外资产美债",
+    "日本远没到抛售美债这一步就救成了",
+    "量化宽松也叫债务货币化，美联储央行要多印钱给政府国债基建兜底，稀释国债却也避免更…"
+   ]
+  },
+  "准备金": {
+   "n": 3,
+   "sample": [
+    "降息不如印钞效果立竿见影，还有银行准备金率越低放水越多效果更快",
+    "降息不如印钞效果立竿见影，还有银行准备金率越低放水越多效果更快",
+    "降息不如印钞效果立竿见影，还有银行准备金率越低放水越多效果更快"
+   ]
+  },
+  "汇率": {
+   "n": 15,
+   "sample": [
+    "相当于政府靠抬高汇率",
+    "英镑1925丘吉尔强行恢复绑定黄金，导致高汇率工业流失大罢工",
+    "死守高汇率"
+   ]
+  },
+  "制造": {
+   "n": 30,
+   "sample": [
+    "希腊无货币主权卖信用，无老龄化和制造业天然通缩抵消，玩不了这个",
+    "一种很适合制造业",
+    "美国制造的欧亚大陆战争"
+   ]
+  },
+  "房": {
+   "n": 23,
+   "sample": [
+    "资本天然短视喜欢虚拟房地产而非长期硬科技，需要政府监管疏导",
+    "房地产自有率低",
+    "房产税不如租房"
+   ]
+  },
+  "地产": {
+   "n": 12,
+   "sample": [
+    "资本天然短视喜欢虚拟房地产而非长期硬科技，需要政府监管疏导",
+    "房地产自有率低",
+    "房地产这种金融模式"
+   ]
+  },
+  "贷": {
+   "n": 15,
+   "sample": [
+    "放贷中介费极高且禁止房东赶人",
+    "美国降息＝借贷容易钱多＝美国通胀＝美国物价增＝美国资本输出",
+    "美债给美元背书，先降息后加息→先外国后美国企业借贷成本增加→先外国后美国物价上涨…"
+   ]
+  },
+  "能源": {
+   "n": 2,
+   "sample": [
+    "欧洲除了荷兰风投全靠银行，而银行需要储备金比养老金害怕风险，且欧洲中东大量能源和…",
+    "欧洲除了荷兰风投全靠银行，而银行需要储备金比养老金害怕风险，且欧洲中东大量能源和…"
+   ]
+  },
+  "通胀": {
+   "n": 22,
+   "sample": [
+    "美国降息＝借贷容易钱多＝美国通胀＝美国物价增＝美国资本输出",
+    "1.美元在不断放水增加通胀降低信用",
+    "2.中国制造在不断制造通缩，减缓美元放水的通胀效果"
+   ]
+  },
+  "利率": {
+   "n": 5,
+   "sample": [
+    "1951《美联储-财政部协议》，朝鲜战争后政府逼美联储压低利率被拒绝，宣布美联储…",
+    "债利率会上升财政紧张",
+    "1951《美联储-财政部协议》，朝鲜战争后政府逼美联储压低利率被拒绝，宣布美联储…"
+   ]
+  },
+  "消费": {
+   "n": 7,
+   "sample": [
+    "超额消费留下巨大泡沫和次贷成08危机",
+    "消费主义本质上",
+    "秩序内部的消费者"
+   ]
+  },
+  "贸易": {
+   "n": 3,
+   "sample": [
+    "自由贸易——全球化加入WTO",
+    "自由贸易——全球化加入WTO",
+    "自由贸易——全球化加入WTO"
+   ]
+  },
+  "军": {
+   "n": 82,
+   "sample": [
+    "1928之前外交＞财政≥军事",
+    "1960之前外交＞军事＞财政",
+    "2012之前军事＞外交＞财政"
+   ]
+  }
+ }
+}

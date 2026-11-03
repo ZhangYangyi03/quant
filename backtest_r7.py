@@ -178,4 +178,6 @@ def main(which="ep_shell", k=50, cash=1_000_000.0, start="2010-06-01"):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "ep_shell")
+    w = sys.argv[1] if len(sys.argv) > 1 else "ep_shell"
+    k = int(sys.argv[2]) if len(sys.argv) > 2 else 50
+    main(w, k=k)
