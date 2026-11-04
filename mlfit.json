@@ -1,0 +1,47 @@
+[
+ {
+  "label": "等权10因子",
+  "train_ex": 1.72,
+  "train_t": 4.84,
+  "test_ex": 0.43,
+  "test_t": 1.61,
+  "test_win": 0.613,
+  "turn": 59.1
+ },
+ {
+  "label": "低换手4因子",
+  "train_ex": 2.82,
+  "train_t": 6.52,
+  "test_ex": 0.9,
+  "test_t": 3.35,
+  "test_win": 0.688,
+  "turn": 35.0
+ },
+ {
+  "label": "amt20单因子",
+  "train_ex": 2.51,
+  "train_t": 5.71,
+  "test_ex": 0.88,
+  "test_t": 3.4,
+  "test_win": 0.688,
+  "turn": 32.3
+ },
+ {
+  "label": "size单因子",
+  "train_ex": 2.78,
+  "train_t": 5.26,
+  "test_ex": 1.17,
+  "test_t": 4.52,
+  "test_win": 0.763,
+  "turn": 11.5
+ },
+ {
+  "label": "训练段截面回归",
+  "train_ex": 2.07,
+  "train_t": 5.23,
+  "test_ex": 0.51,
+  "test_t": 1.97,
+  "test_win": 0.667,
+  "turn": 56.8
+ }
+]
