@@ -44,3 +44,13 @@ eg_shocks.csv
 # 因子分片缓存（由 factor_lab.py 重建，单机可达 30MB+）
 fl_cache/
 fl_cache_old/
+
+# 面板与分段中间产物（可由 m_*.bin 重建，不进仓库）
+m_compact.bin
+fscan_parts/
+ic_fast.npz
+_sr_ret.npy
+_run_ic.cmd
+_sr_panel*.pkl
+_sr_rets.npy
+_sr_rb.npy
