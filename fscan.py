@@ -57,7 +57,7 @@ def main(argv):
         d0 = os.path.join(PARTS, "meta_%05d.npy" % seg_id[0])
         np.save(d0, np.array([int(x) for x in buf_date]))
         np.save(os.path.join(PARTS, "close_%05d.npy" % seg_id[0]), np.vstack(buf_close))
-        np.save(os.path.join(PARTS, "alive_%05d.npy" % seg_id[0]), np.vstack(buf_alive))
+        np.save(os.path.join(PARTS, "alive_%05d.npy" % seg_id[0]), np.vstack(buf_alive).astype(bool))
         for k in FACTORS:
             np.save(os.path.join(PARTS, "%s_%05d.npy" % (k, seg_id[0])), np.vstack(bufs[k]))
         print("  落盘段 %d (%d 个月, %.1fs)" % (seg_id[0], len(buf_date), time.time() - t0), flush=True)
@@ -79,10 +79,10 @@ def main(argv):
             seen.add(j)
             buf_date.append(j)
             buf_close.append(np.array(F["_close"][i]))
-            al = F["_close"][i] > 2.0
+            al = np.array(F["_close"][i] > 2.0, dtype=bool)
             buf_alive.append(al)
             for name in FACTORS:
-                bufs[name].append(np.array(F[name][i]))
+                bufs[name].append(np.array(F[name][i], dtype=np.float32))
             if len(buf_date) >= CH_M:
                 flush()
         del F

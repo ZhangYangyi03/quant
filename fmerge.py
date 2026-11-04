@@ -42,81 +42,104 @@ def stat(x):
 
 def main():
     ids = sorted(int(os.path.basename(f)[5:-4]) for f in glob.glob(os.path.join(PARTS, "meta_*.npy")))
+    print("段序号:", ids[0], "..", ids[-1], "共", len(ids))
     if not ids:
         print("fscan_parts/ 是空的：先跑 fscan.py")
         return
     p = Panel()
     dates = p.dates
-    ic = {k: [] for k in FACTORS}
-    # 先扫一遍只为拿方向（IC 均值符号）
+
+    # 把所有段拼成一条连续的时间轴（段号升序 = 时间升序，fscan 是按时间顺序落盘的）
+    JJ, CL, AL = [], [], []
     for sid in ids:
         jj = np.load(os.path.join(PARTS, "meta_%05d.npy" % sid))
-        for m in range(len(jj)):
-            j = int(jj[m])
-            j2 = int(jj[m + 1]) if m + 1 < len(jj) else j + 1
-            if j2 >= p.ND:
-                continue
-            cn = p.col("close", j2)
-            cur = np.load(os.path.join(PARTS, "close_%05d.npy" % sid))[m].astype(np.float64)
-            r = np.where((cur > 0) & (cn > 0), cn / np.where(cur > 0, cur, np.nan) - 1.0, np.nan)
-            a = np.load(os.path.join(PARTS, "alive_%05d.npy" % sid))[m] & np.isfinite(r)
-            for k in FACTORS:
-                fv = np.load(os.path.join(PARTS, "%s_%05d.npy" % (k, sid)))[m].astype(np.float64)
-                msk = a & np.isfinite(fv) & (np.abs(fv) < 1e12)
-                ic[k].append(spearman(fv[msk], r[msk]) if msk.sum() >= 300 else np.nan)
+        JJ.append(jj)
+        CL.append(np.load(os.path.join(PARTS, "close_%05d.npy" % sid)))
+        AL.append(np.load(os.path.join(PARTS, "alive_%05d.npy" % sid)))
+    JJ = np.concatenate(JJ).astype(np.int64)
+    order_ = np.argsort(JJ, kind="stable")      # 按交易日排序，段文件是分段乱序的
+    JJ = JJ[order_]
+    CL = np.vstack(CL)[order_]; AL = np.vstack(AL)[order_]
+    print("时间轴 %d 个月：%s ~ %s" % (len(JJ), dates[JJ[0]], dates[JJ[-1]]))
+
+    CN_CACHE = {}
+
+    def close_at(j):
+        if j not in CN_CACHE:
+            if len(CN_CACHE) > 400:
+                CN_CACHE.clear()
+            CN_CACHE[j] = p.col("close", j)
+        return CN_CACHE[j]
+
+    def fwd_ret(m):
+        j, j2 = int(JJ[m]), int(JJ[m + 1])
+        cn = close_at(j2)
+        cur = CL[m].astype(np.float64)
+        return np.where((cur > 0) & (cn > 0), cn / np.where(cur > 0, cur, np.nan) - 1.0, np.nan)
+
+    # 每个分段的因子矩阵只读一次（之前每次按月都重开文件，慢到不可用）
+    MAT = {}
+
+    def seg_mat(k, sid):
+        key = (k, sid)
+        if key not in MAT:
+            MAT[key] = np.load(os.path.join(PARTS, "%s_%05d.npy" % (k, sid)))
+        return MAT[key]
+
+    def load_factor(k, m):
+        return seg_mat(k, SEG_OF[m])[OFF_IN_SEG[m]].astype(np.float64)
+
+    SEG_OF, OFF_IN_SEG = [], []
+    for sid in ids:
+        n = len(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid)))
+        SEG_OF.extend([sid] * n); OFF_IN_SEG.extend(range(n))
+    SEG_OF = [SEG_OF[i] for i in order_]; OFF_IN_SEG = [OFF_IN_SEG[i] for i in order_]
+
+    NM = len(JJ) - 1
+    ic = {k: [] for k in FACTORS}
+    for m in range(NM):
+        r = fwd_ret(m)
+        a = AL[m] & np.isfinite(r)
+        for k in FACTORS:
+            fv = load_factor(k, m)
+            msk = a & np.isfinite(fv) & (np.abs(fv) < 1e12)
+            ic[k].append(spearman(fv[msk], r[msk]) if msk.sum() >= 300 else np.nan)
     dirmap = {}
     for k in FACTORS:
         arr = np.array([x for x in ic[k] if np.isfinite(x)])
         dirmap[k] = -1.0 if (len(arr) and arr.mean() < 0) else 1.0
-    print("方向：", {k: ("+" if v > 0 else "-") for k, v in dirmap.items()})
-    ic = {k: [] for k in FACTORS}
-    per = {k: [] for k in FACTORS}          # 每个因子每个月的 (top, bot, mkt, 换手)
+    print("方向（IC 为负则取反）:", {k: ("+" if v > 0 else "-") for k, v in dirmap.items()})
+
+    per = {k: [] for k in FACTORS}
     prev_top = {k: None for k in FACTORS}
     month_dates = []
-    for sid in ids:
-        jj = np.load(os.path.join(PARTS, "meta_%05d.npy" % sid))
-        close = np.load(os.path.join(PARTS, "close_%05d.npy" % sid))
-        alive = np.load(os.path.join(PARTS, "alive_%05d.npy" % sid))
-        nxt = p.window("close", int(jj[-1]) + 1, int(jj[-1]) + 1 + len(jj) + 1)
-        for m in range(len(jj)):
-            j = int(jj[m])
-            j2 = int(jj[m + 1]) if m + 1 < len(jj) else j + 1
-            if j2 >= p.ND:
-                continue
-            cn = p.col("close", j2)
-            cur = close[m].astype(np.float64)
-            r = np.where((cur > 0) & (cn > 0), cn / np.where(cur > 0, cur, np.nan) - 1.0, np.nan)
-            a = alive[m] & np.isfinite(r)
-            month_dates.append(dates[j])
-            for k in FACTORS:
-                fv = np.load(os.path.join(PARTS, "%s_%05d.npy" % (k, sid)))[m].astype(np.float64)
-                msk = a & np.isfinite(fv) & (np.abs(fv) < 1e12)
-                ic[k].append(spearman(fv[msk], r[msk]) if msk.sum() >= 300 else np.nan)
-                idx = np.flatnonzero(msk)
-                if len(idx) < 500:
-                    per[k].append(None); continue
-                # 方向统一：IC 为负的因子取反，让"Top 组"永远是因子认为最好的那一组。
-                # 不这样做，Top 组就是因子最不看好的一组，多空变成系统性亏钱。
-                if dirmap[k] < 0:
-                    fv = -fv
-                order = idx[np.argsort(fv[idx], kind="stable")]
-                b = np.linspace(0, len(order), Q + 1).astype(int)
-                top = set(order[b[-2]:b[-1]].tolist())
-                bot = order[b[0]:b[1]]
-                t_ret = float(np.nanmean(r[list(top)])) if top else np.nan
-                b_ret = float(np.nanmean(r[bot]))
-                mk = float(np.nanmean(r[idx]))
-                if prev_top[k] is None:
-                    to = 1.0
-                else:
-                    to = len(top - prev_top[k]) / max(1, len(top))
-                prev_top[k] = top
-                per[k].append((t_ret, b_ret, mk, to))
+    for m in range(NM):
+        r = fwd_ret(m)
+        a0 = AL[m] & np.isfinite(r)
+        month_dates.append(dates[JJ[m]])
+        for k in FACTORS:
+            fv = load_factor(k, m) * dirmap[k]
+            msk = a0 & np.isfinite(fv) & (np.abs(fv) < 1e12)
+            idx = np.flatnonzero(msk)
+            if len(idx) < 500:
+                per[k].append(None); continue
+            order = idx[np.argsort(fv[idx], kind="stable")]
+            b = np.linspace(0, len(order), Q + 1).astype(int)
+            top = set(order[b[-2]:b[-1]].tolist())
+            bot = order[b[0]:b[1]]
+            t_ret = float(np.nanmean(r[list(top)]))
+            b_ret = float(np.nanmean(r[bot]))
+            mk = float(np.nanmean(r[idx]))
+            to = 1.0 if prev_top[k] is None else len(top - prev_top[k]) / max(1, len(top))
+            prev_top[k] = top
+            per[k].append((t_ret, b_ret, mk, to))
+
     ic_res, fb_res = {}, {}
-    dirmap = {}
+    # 胜率按月份对齐：不同因子的 None 位置可能不同，直接比 mean(ex>0) 会算错
+    wins = {}
     for k in FACTORS:
-        arr = np.array([x for x in ic[k] if np.isfinite(x)])
-        dirmap[k] = -1.0 if (len(arr) and arr.mean() < 0) else 1.0
+        xs = [(m, x) for m, x in enumerate(per[k]) if x is not None]
+        wins[k] = xs
     for k in FACTORS:
         arr = np.array([x for x in ic[k] if np.isfinite(x)])
         if len(arr) >= 12:
@@ -136,10 +159,10 @@ def main():
             fb_res[k] = {"n": len(rows), "ls_m": round(ls_m * 100, 3), "ls_t": round(ls_t, 2),
                          "top_m": round(float(t_ret.mean()) * 100, 3),
                          "excess_m": round(ex_m * 100, 3), "excess_t": round(ex_t, 2),
-                         "win": round(float((ex > 0).mean()), 3),
+                         "win": round(float(np.nanmean(ex > 0)), 3),
                          "turn": round(float(to.mean()) * 100, 1),
                          "net_m": round(float(net.mean()) * 100, 3)}
-    print("月份 %d：%s ~ %s\n" % (len(month_dates), month_dates[0], month_dates[-1]))
+    print("")
     print("%-10s %4s %8s %7s %7s %7s   | %8s %7s %8s %6s %7s" % (
         "factor", "n", "ic_mean", "icir", "t", "pos", "LS月均%", "LS_t", "超额月均%", "胜率", "月换手%"))
     for k in sorted(FACTORS, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):
@@ -154,7 +177,8 @@ def main():
               ensure_ascii=False, indent=1)
     json.dump(fb_res, open(os.path.join(HERE, "fbeta.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
-    print("\nsaved ic_fast.json / fbeta.json")
+    print("")
+    print("saved ic_fast.json / fbeta.json")
 
 
 if __name__ == "__main__":
