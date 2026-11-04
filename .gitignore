@@ -57,3 +57,9 @@ _sr_rb.npy
 fpanel*.npz
 fpanel_g.npz.tmp
 AL_bool.npy
+
+# 因子分片与财报分页：可由 fcalc.py / fundpull.py 重建，不进仓库
+alpha_parts/
+fund_parts/
+
+*.out
