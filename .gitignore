@@ -54,3 +54,6 @@ _run_ic.cmd
 _sr_panel*.pkl
 _sr_rets.npy
 _sr_rb.npy
+fpanel*.npz
+fpanel_g.npz.tmp
+AL_bool.npy

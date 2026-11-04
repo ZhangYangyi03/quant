@@ -25,6 +25,8 @@ from compact import Panel
 from fastpanel import FACTORS, rolling_features
 
 PARTS = os.path.join(HERE, "fscan_parts")
+if len(sys.argv) > 4:
+    PARTS = os.path.join(HERE, sys.argv[4])
 
 
 def main(argv):

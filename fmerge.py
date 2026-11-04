@@ -48,19 +48,36 @@ def main():
         return
     p = Panel()
     dates = p.dates
+    glue = set(x.rsplit("_", 1)[0] for x in os.listdir(PARTS) if x.endswith(".npy"))
+    FAC = [k for k in FACTORS if k in glue]          # 只算这段扫描里真的算出来的因子
 
-    # 把所有段拼成一条连续的时间轴（段号升序 = 时间升序，fscan 是按时间顺序落盘的）
-    JJ, CL, AL = [], [], []
+    # 拼时间轴：只保留"每个因子文件都在"的段，按交易日排序（段号不一定等于时间顺序）
+    ok_ids = set()
     for sid in ids:
-        jj = np.load(os.path.join(PARTS, "meta_%05d.npy" % sid))
-        JJ.append(jj)
-        CL.append(np.load(os.path.join(PARTS, "close_%05d.npy" % sid)))
-        AL.append(np.load(os.path.join(PARTS, "alive_%05d.npy" % sid)))
-    JJ = np.concatenate(JJ).astype(np.int64)
-    order_ = np.argsort(JJ, kind="stable")      # 按交易日排序，段文件是分段乱序的
-    JJ = JJ[order_]
-    CL = np.vstack(CL)[order_]; AL = np.vstack(AL)[order_]
-    print("时间轴 %d 个月：%s ~ %s" % (len(JJ), dates[JJ[0]], dates[JJ[-1]]))
+        if all(os.path.exists(os.path.join(PARTS, "%s_%05d.npy" % (k, sid))) for k in FAC):
+            ok_ids.add(sid)
+    pairs = []
+    for sid in ids:
+        if sid not in ok_ids:
+            continue
+        n = len(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid)))
+        pairs.extend([(int(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid))[m]), sid, m) for m in range(n)])
+    pairs.sort(key=lambda x: x[0])
+    JJ = np.array([x[0] for x in pairs], dtype=np.int64)
+    SEG_OF = [x[1] for x in pairs]
+    OFF_IN_SEG = [x[2] for x in pairs]
+    CLM = {sid: np.load(os.path.join(PARTS, "close_%05d.npy" % sid)) for sid in ok_ids}
+    ALM = {sid: np.load(os.path.join(PARTS, "alive_%05d.npy" % sid)) for sid in ok_ids}
+
+    class _View:
+        def __getitem__(self, i):
+            return CLM[SEG_OF[i]][OFF_IN_SEG[i]]
+        def __len__(self):
+            return len(SEG_OF)
+    CL = _View()
+    AL = _View()
+    print("时间轴 %d 个月：%s ~ %s，因子 %d 个（跳过 %d 个缺文件的段）" % (
+        len(JJ), dates[JJ[0]], dates[JJ[-1]], len(FAC), len(ids) - len(ok_ids)))
 
     CN_CACHE = {}
 
@@ -74,7 +91,7 @@ def main():
     def fwd_ret(m):
         j, j2 = int(JJ[m]), int(JJ[m + 1])
         cn = close_at(j2)
-        cur = CL[m].astype(np.float64)
+        cur = np.asarray(CL[m], dtype=np.float64)
         return np.where((cur > 0) & (cn > 0), cn / np.where(cur > 0, cur, np.nan) - 1.0, np.nan)
 
     # 每个分段的因子矩阵只读一次（之前每次按月都重开文件，慢到不可用）
@@ -89,23 +106,30 @@ def main():
     def load_factor(k, m):
         return seg_mat(k, SEG_OF[m])[OFF_IN_SEG[m]].astype(np.float64)
 
-    SEG_OF, OFF_IN_SEG = [], []
+    # 只保留"每个因子文件都存在"的段，否则新因子的段和旧段混在一起会读空
+    ok_ids = []
+    for sid in ids:
+        if all(os.path.exists(os.path.join(PARTS, "%s_%05d.npy" % (k, sid))) for k in FAC):
+            ok_ids.append(sid)
+    pairs = []
     for sid in ids:
         n = len(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid)))
-        SEG_OF.extend([sid] * n); OFF_IN_SEG.extend(range(n))
-    SEG_OF = [SEG_OF[i] for i in order_]; OFF_IN_SEG = [OFF_IN_SEG[i] for i in order_]
+        pairs.extend([(int(JJ[m]), sid, m) for m in range(n)])
+    pairs = [x for x in pairs if x[1] in set(ok_ids)]
+    JJ = np.array([x[0] for x in pairs], dtype=np.int64)
+    SEG_OF = [x[1] for x in pairs]; OFF_IN_SEG = [x[2] for x in pairs]
 
     NM = len(JJ) - 1
     ic = {k: [] for k in FACTORS}
     for m in range(NM):
         r = fwd_ret(m)
-        a = AL[m] & np.isfinite(r)
-        for k in FACTORS:
+        a = np.array(AL[m], dtype=bool) & np.isfinite(r)
+        for k in FAC:
             fv = load_factor(k, m)
             msk = a & np.isfinite(fv) & (np.abs(fv) < 1e12)
             ic[k].append(spearman(fv[msk], r[msk]) if msk.sum() >= 300 else np.nan)
     dirmap = {}
-    for k in FACTORS:
+    for k in FAC:
         arr = np.array([x for x in ic[k] if np.isfinite(x)])
         dirmap[k] = -1.0 if (len(arr) and arr.mean() < 0) else 1.0
     print("方向（IC 为负则取反）:", {k: ("+" if v > 0 else "-") for k, v in dirmap.items()})
@@ -115,9 +139,9 @@ def main():
     month_dates = []
     for m in range(NM):
         r = fwd_ret(m)
-        a0 = AL[m] & np.isfinite(r)
+        a0 = np.array(AL[m], dtype=bool) & np.isfinite(r)
         month_dates.append(dates[JJ[m]])
-        for k in FACTORS:
+        for k in FAC:
             fv = load_factor(k, m) * dirmap[k]
             msk = a0 & np.isfinite(fv) & (np.abs(fv) < 1e12)
             idx = np.flatnonzero(msk)
@@ -132,15 +156,16 @@ def main():
             mk = float(np.nanmean(r[idx]))
             to = 1.0 if prev_top[k] is None else len(top - prev_top[k]) / max(1, len(top))
             prev_top[k] = top
-            per[k].append((t_ret, b_ret, mk, to))
+            per[k].append((t_ret, b_ret, mk, to, dates[JJ[m]]))
 
+    _MS = [dates[JJ[m]] for m in range(len(JJ) - 1)]     # 每个 per[k] 元素对应的月份字符串
     ic_res, fb_res = {}, {}
     # 胜率按月份对齐：不同因子的 None 位置可能不同，直接比 mean(ex>0) 会算错
     wins = {}
-    for k in FACTORS:
+    for k in FAC:
         xs = [(m, x) for m, x in enumerate(per[k]) if x is not None]
         wins[k] = xs
-    for k in FACTORS:
+    for k in FAC:
         arr = np.array([x for x in ic[k] if np.isfinite(x)])
         if len(arr) >= 12:
             m_, s_ = arr.mean(), arr.std(ddof=1)
@@ -162,10 +187,31 @@ def main():
                          "win": round(float(np.nanmean(ex > 0)), 3),
                          "turn": round(float(to.mean()) * 100, 1),
                          "net_m": round(float(net.mean()) * 100, 3)}
+    # 分两段：2019 前 / 2019 后，看因子是不是只在某一段成立
+    def seg_stats(m_lo, m_hi):
+        out = {}
+        for k in FAC:
+            rows = [x for x in per[k] if x is not None and m_lo <= x[4] < m_hi]
+            if len(rows) < 24:
+                out[k] = None; continue
+            t_ret = np.array([x[0] for x in rows]); b_ret = np.array([x[1] for x in rows])
+            mk = np.array([x[2] for x in rows]); to = np.array([x[3] for x in rows])
+            ex = (t_ret - to * FEE) - mk
+            out[k] = (ex.mean() * 100, ex.mean() / (ex.std(ddof=1) / math.sqrt(len(ex))), len(ex))
+        return out
+    sp = next((m for m in range(len(month_dates)) if month_dates[m] >= "2019-01-01"), len(month_dates))
+    A = seg_stats("1990-01-01", "2019-01-01"); B_ = seg_stats("2019-01-01", "2099-01-01")
+    print("")
+    print("%-10s %14s %14s %14s" % ("factor", "2019前 超额%/t", "2019后 超额%/t", "IC_t"))
+    for k in sorted(FAC, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):
+        a, b = A.get(k), B_.get(k)
+        fa = ("%7.2f /%5.2f" % (a[0], a[1])) if a else "     n/a     "
+        fb = ("%7.2f /%5.2f" % (b[0], b[1])) if b else "     n/a     "
+        print("%-10s %14s %14s %14.2f" % (k, fa, fb, ic_res.get(k, {}).get("t") or 0))
     print("")
     print("%-10s %4s %8s %7s %7s %7s   | %8s %7s %8s %6s %7s" % (
         "factor", "n", "ic_mean", "icir", "t", "pos", "LS月均%", "LS_t", "超额月均%", "胜率", "月换手%"))
-    for k in sorted(FACTORS, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):
+    for k in sorted(FAC, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):
         a = ic_res.get(k); b = fb_res.get(k)
         if not a:
             continue
@@ -173,6 +219,12 @@ def main():
             k, a["n"], a["ic_mean"], a["icir"] or 0, a["t"] or 0, a["pos_rate"],
             b["ls_m"] if b else 0, b["ls_t"] if b else 0, b["excess_m"] if b else 0,
             b["win"] if b else 0, b["turn"] if b else 0))
+    # 面板级缓存（供 mlfit.py 做截面回归/GBDT 用，不重复扫盘）
+    # 不再落 fpanel.npz：42MB 的 npz 在这台机器上读一次就炸（解压 + json.load 都超限），
+    # mlfit2.py 改成直接读 fscan_parts（fraw.rows 逐行取）。
+    if len(JJ) < 150:
+        print("\n只有 %d 个月（扫描还没跑完），不覆盖全样本结果文件" % len(JJ))
+        return
     json.dump(ic_res, open(os.path.join(HERE, "ic_fast.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     json.dump(fb_res, open(os.path.join(HERE, "fbeta.json"), "w", encoding="utf-8"),

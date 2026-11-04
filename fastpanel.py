@@ -35,7 +35,9 @@ sys.path.insert(0, HERE)
 from compact import Panel
 
 FACTORS = ["size", "turn", "ret20", "ret60", "vol20", "amt20", "hl", "reversal1",
-           "abn_turn", "max20"]
+           "abn_turn", "max20",
+           # 第二轮扩的因子：日内/隔夜结构、偏度、跳空、量价相关
+           "intraday", "overnight", "skew60", "pvcorr", "mom_acc", "vol_ratio", "amt_cv"]
 
 
 def rolling_features(j0, j1, p):
@@ -51,6 +53,11 @@ def rolling_features(j0, j1, p):
     B_TURN = np.full((250, NC), np.nan, dtype=np.float32)
     B_RET = np.full((20, NC), np.nan, dtype=np.float32)
     B_AMT = np.full((20, NC), np.nan, dtype=np.float32)
+    B_GAP = np.full((20, NC), np.nan, dtype=np.float32)        # 隔夜跳空
+    B_IR = np.full((60, NC), np.nan, dtype=np.float32)         # 日内收益，skew60/pvcorr 用
+    B_AM60 = np.full((60, NC), np.nan, dtype=np.float32)
+    B_R60 = np.full((60, NC), np.nan, dtype=np.float32)
+    B_MOM = []                                                  # (r5 截面, r20 的均值) 滚动
     filled = 0
     with np.errstate(invalid="ignore", divide="ignore"):
         for i in range(ND):
@@ -69,6 +76,10 @@ def rolling_features(j0, j1, p):
             B_TURN[slot] = turn
             B_RET[i % 20] = r1
             B_AMT[i % 20] = A
+            B_GAP[i % 20] = np.where((O > 0) & (prev_close > 0), O / np.where(prev_close > 0, prev_close, np.nan) - 1.0, np.nan) if prev_close is not None else np.nan
+            B_IR[i % 60] = np.where((O > 0) & (C > 0), C / np.where(O > 0, O, np.nan) - 1.0, np.nan)
+            B_AM60[i % 60] = A
+            B_R60[i % 60] = r1
             filled += 1
 
             out["size"][i] = np.log(np.where(MK > 0, MK, np.nan))
@@ -80,6 +91,42 @@ def rolling_features(j0, j1, p):
                 if len(dq_close) > n:
                     past = dq_close[-1 - n]
                     out[key][i] = np.where((C > 0) & (past > 0), C / past - 1.0, np.nan)
+            # ---- 第二轮因子 ----
+            if filled >= 1:
+                # 日内：(收盘/开盘-1) 的 20 日均值，正=尾盘被买
+                out["intraday"][i] = np.nanmean(B_IR[:min(filled, 20)], axis=0)
+                # 隔夜：(开盘/昨收-1) 的 20 日均值
+                out["overnight"][i] = np.nanmean(B_GAP[:min(filled, 20)], axis=0)
+            if filled >= 20:
+                base = np.nanmean(B_AMT, axis=0)
+                sd = np.nanstd(B_AMT, axis=0)
+                out["amt_cv"][i] = np.where(base > 0, sd / base, np.nan)
+            # 动量加速度：近 5 日收益 - 近 20 日收益的 1/4；正=加速
+            if filled >= 21:
+                r5 = np.full(NC, np.nan); r20 = np.full(NC, np.nan)
+                if len(dq_close) > 5:
+                    p5 = dq_close[-6]
+                    r5 = np.where((C > 0) & (p5 > 0), C / p5 - 1.0, np.nan)
+                if len(dq_close) > 20:
+                    p20 = dq_close[-21]
+                    r20 = np.where((C > 0) & (p20 > 0), C / p20 - 1.0, np.nan)
+                out["mom_acc"][i] = r5 - r20 / 4.0
+            if filled >= 20:
+                a5 = np.nanmean(B_AMT[:5], axis=0); a20 = np.nanmean(B_AMT, axis=0)
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    out["vol_ratio"][i] = np.where(a20 > 0, a5 / a20, np.nan)
+            if filled >= 60:
+                m = np.nanmean(B_IR, axis=0)
+                sd = np.nanstd(B_IR, axis=0)
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    out["skew60"][i] = np.where(sd > 0, np.nanmean(((B_IR - m) / np.where(sd > 0, sd, 1)) ** 3, axis=0), np.nan)
+                # 量价相关：60 天里 amt 与同日收益的秩相关，简化用标准化后的点积
+                ra = B_R60 - np.nanmean(B_R60, axis=0)
+                aa = B_AM60 - np.nanmean(B_AM60, axis=0)
+                num = np.nansum(ra * aa, axis=0)
+                den = np.sqrt(np.nansum(ra * ra, axis=0) * np.nansum(aa * aa, axis=0))
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    out["pvcorr"][i] = np.where(den > 0, num / np.where(den > 0, den, 1), np.nan)
             if filled >= 21:
                 out["vol20"][i] = np.nanstd(B_RET, axis=0)
                 out["max20"][i] = -np.nanmax(B_RET, axis=0)
