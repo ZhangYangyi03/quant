@@ -40,3 +40,7 @@ universe_all_results.json
 etf_rotate.json
 results_etf.json
 eg_shocks.csv
+
+# 因子分片缓存（由 factor_lab.py 重建，单机可达 30MB+）
+fl_cache/
+fl_cache_old/

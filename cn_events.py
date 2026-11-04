@@ -448,6 +448,10 @@ def replay(day: str, fwd_days: int = 5, ftype: str = "RPTA_WEB_RZRQ", page_size:
             continue
         k = dates.index(day)
         if k + fwd_days >= len(dates):
+            # 需要 D+fwd 那一天真实存在。日线 store 有一半票只到 11-02，
+            # 10-27 之后只剩 4 根 K 线 —— 不够 5 日，这一天就必然是空的。
+            out.setdefault("dropped_no_future", 0)
+            out["dropped_no_future"] += 1
             continue
         d0, d1 = closes[k], closes[k + fwd_days]
         if not d0:
@@ -460,6 +464,18 @@ def replay(day: str, fwd_days: int = 5, ftype: str = "RPTA_WEB_RZRQ", page_size:
         xs["rz_net_10d"].append(r.get("RZJME10D"))
         xs["rz_balance_pct"].append(r.get("RZYEZB"))
     out["stocks_with_price"] = n_px
+    out["in_store"] = sum(1 for c in codes if os.path.exists(os.path.join(HERE, "store", c + ".bin")))
+    def _tail(c):
+        got = _load_close(c)
+        if not got or day not in got[0]:
+            return False
+        return (len(got[0]) - got[0].index(day)) < fwd_days
+
+    out["in_store_tail"] = sum(1 for c in codes
+                               if os.path.exists(os.path.join(HERE, "store", c + ".bin")) and _tail(c))
+    out["in_store_on_day"] = sum(1 for c in codes
+                                 if os.path.exists(os.path.join(HERE, "store", c + ".bin"))
+                                 and day in _load_close(c)[0])
     for f, v in xs.items():
         ic, n = spearman(v, rets)
         out["ic"][f] = {"rank_ic": round(ic, 4) if ic is not None else None, "n": n}
