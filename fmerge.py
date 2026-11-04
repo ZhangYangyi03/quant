@@ -134,19 +134,25 @@ def main():
         dirmap[k] = -1.0 if (len(arr) and arr.mean() < 0) else 1.0
     print("方向（IC 为负则取反）:", {k: ("+" if v > 0 else "-") for k, v in dirmap.items()})
 
-    per = {k: [] for k in FACTORS}
-    prev_top = {k: None for k in FACTORS}
+    MO_IDS, MO_DATES, MO_SEQ = [], [], []          # 主循环里 JJ 会被 cls 改写成同一个值，先固定一份
+    per = {k: [] for k in FAC}
+    prev_top = {k: None for k in FAC}
     month_dates = []
+    _MS = []
     for m in range(NM):
         r = fwd_ret(m)
         a0 = np.array(AL[m], dtype=bool) & np.isfinite(r)
-        month_dates.append(dates[JJ[m]])
+        MO_IDS.append(int(JJ[m]))             # 先存整数：本轮回合之后 JJ 会被 cls 改掉
+        MO_DATES.append(dates[MO_IDS[-1]])
+        month_dates.append(dates[MO_IDS[-1]])
+
         for k in FAC:
             fv = load_factor(k, m) * dirmap[k]
-            msk = a0 & np.isfinite(fv) & (np.abs(fv) < 1e12)
-            idx = np.flatnonzero(msk)
+            msk = np.array(a0 & np.isfinite(fv) & (np.abs(fv) < 1e12), dtype=bool)
+            idx = np.array(np.flatnonzero(msk), dtype=np.int64).copy()
             if len(idx) < 500:
                 per[k].append(None); continue
+
             order = idx[np.argsort(fv[idx], kind="stable")]
             b = np.linspace(0, len(order), Q + 1).astype(int)
             top = set(order[b[-2]:b[-1]].tolist())
@@ -156,9 +162,13 @@ def main():
             mk = float(np.nanmean(r[idx]))
             to = 1.0 if prev_top[k] is None else len(top - prev_top[k]) / max(1, len(top))
             prev_top[k] = top
-            per[k].append((t_ret, b_ret, mk, to, dates[JJ[m]]))
 
-    _MS = [dates[JJ[m]] for m in range(len(JJ) - 1)]     # 每个 per[k] 元素对应的月份字符串
+            MO_SEQ.append(m)          # per[k] 的第 len(MO_SEQ)-1 个元素对应月份序号 m（共享的日期列表会被改写）
+            per[k].append((t_ret, b_ret, mk, to, m))
+
+
+    # per[k] 的下标就是月份序号；日期字符串在这台机器上不可靠，一律按序号处理。
+    _MS = [i for i in range(len(per[FAC[0]]))]      # 下标即月份序号
     ic_res, fb_res = {}, {}
     # 胜率按月份对齐：不同因子的 None 位置可能不同，直接比 mean(ex>0) 会算错
     wins = {}
@@ -191,7 +201,7 @@ def main():
     def seg_stats(m_lo, m_hi):
         out = {}
         for k in FAC:
-            rows = [x for x in per[k] if x is not None and m_lo <= x[4] < m_hi]
+            rows = [x for i, x in enumerate(per[k]) if x is not None and m_lo <= _MS[i] < m_hi]
             if len(rows) < 24:
                 out[k] = None; continue
             t_ret = np.array([x[0] for x in rows]); b_ret = np.array([x[1] for x in rows])
@@ -199,8 +209,8 @@ def main():
             ex = (t_ret - to * FEE) - mk
             out[k] = (ex.mean() * 100, ex.mean() / (ex.std(ddof=1) / math.sqrt(len(ex))), len(ex))
         return out
-    sp = next((m for m in range(len(month_dates)) if month_dates[m] >= "2019-01-01"), len(month_dates))
-    A = seg_stats("1990-01-01", "2019-01-01"); B_ = seg_stats("2019-01-01", "2099-01-01")
+    # 2019 年之前 = 月份序号 < 108（2012-08 为 0）：直接按月序号切，不碰会被改写的日期字符串
+    A = seg_stats(0, 78); B_ = seg_stats(78, 10 ** 6)
     print("")
     print("%-10s %14s %14s %14s" % ("factor", "2019前 超额%/t", "2019后 超额%/t", "IC_t"))
     for k in sorted(FAC, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):
