@@ -22,24 +22,34 @@ FEE = 0.001
 Q = 5
 SPLIT = "2019-01-01"
 NAMES = ["size", "turn", "ret20", "ret60", "vol20", "amt20", "hl", "reversal1", "abn_turn", "max20"]
+# 两段（2019 前 / 2019 后）同向、且后段 t>5 的因子；reversal1、mom_acc 两段皆负，剔除
+STABLE = ["size", "turn", "ret20", "ret60", "vol20", "amt20", "hl", "max20", "pvcorr", "overnight"]
+EXTRA = ["pvcorr", "overnight", "skew60", "amt_cv", "vol_ratio", "intraday", "mom_acc"]
 
 
 def main():
     M = fraw.meta()
-    JJ = fraw.rows("JJ")[:, 0] if False else np.load(os.path.join(HERE, "JJ.npy"))
-    NS = M["CL"]["shape"][0] - 1
+    JJF = M["dates"]               # 全部交易日序号（183 个）
+    NS = len(JJF) - 1              # 用"当月收盘 -> 下月收盘"，最后一截没有下月
+    JJ = JJF[:-1]
+    CLALL = fraw.matrix("_close".replace("_", "")) if False else None
     icj = json.load(open(os.path.join(HERE, "ic_fast.json"), encoding="utf-8"))
     dirn = {k: (1.0 if icj[k]["ic_mean"] >= 0 else -1.0) for k in NAMES}
     meta = json.load(open(os.path.join(HERE, "px_index_meta.json"), encoding="utf-8"))["dates"]
     FULL = compact.Panel()
-    CLr = fraw.rows("CL", 0, NS + 1).astype(np.float64)
-    ALr = fraw.rows("AL", 0, NS + 1)
-    tr = [m for m in range(NS) if meta[int(JJ[m])] < SPLIT]
-    te = [m for m in range(NS) if meta[int(JJ[m])] >= SPLIT]
-    print("训练 %d 月，测试 %d 月（%s 起）" % (len(tr), len(te), meta[int(JJ[te[0]])]))
+    CLr = fraw.rows("close", 0, NS + 1).astype(np.float64)
+    ALr = fraw.rows("alive", 0, NS + 1)
+    tr = [m for m in range(NS) if meta[int(JJF[m])] < SPLIT]
+    te = [m for m in range(NS) if meta[int(JJF[m])] >= SPLIT]
+    print("训练 %d 月，测试 %d 月（%s 起）" % (len(tr), len(te), meta[int(JJF[te[0]])]))
     Z = {}
-    for k in NAMES:
-        A = fraw.rows(k, 0, NS).astype(np.float64) * dirn[k]     # 一次一个因子，中间量立刻释放
+    USE = NAMES + [k for k in EXTRA if k in icj]
+    for k in USE:
+        d = dirn.get(k)
+        if d is None:
+            d = 1.0 if icj[k]["ic_mean"] >= 0 else -1.0
+            dirn[k] = d
+        A = fraw.rows(k, 0, NS).astype(np.float64) * d     # 一次一个因子，中间量立刻释放
         for m in range(NS):
             v = A[m]
             ok = np.isfinite(v) & (np.abs(v) < 1e12)
@@ -50,7 +60,7 @@ def main():
         Z[k] = A
     RET = np.empty((NS, CLr.shape[1]), dtype=np.float32)
     for m in range(NS):
-        cn = FULL.col("close", int(JJ[m + 1])); cur = CLr[m]
+        cn = FULL.col("close", int(JJF[m + 1])); cur = CLr[m]
         RET[m] = np.where((cur > 0) & (cn > 0), cn / np.where(cur > 0, cur, np.nan) - 1.0, np.nan)
     ALIVE = ALr[:NS]
 
@@ -92,6 +102,8 @@ def main():
     res.append(run({k: 1.0 for k in ("size", "turn", "amt20", "vol20")}, "低换手4因子"))
     res.append(run({"amt20": 1.0}, "amt20单因子"))
     res.append(run({"size": 1.0}, "size单因子"))
+    res.append(run({k: 1.0 for k in STABLE if k in Z}, "两段稳定10因子"))
+    res.append(run({k: 1.0 for k in ("pvcorr", "overnight", "amt_cv") if k in Z}, "新因子3个"))
     # 训练段截面回归
     # 每期截面回归：先把"所有因子都有效"的股票挑出来，再用两次矩阵乘法求系数
     # （这台机器上 n×p 的 float64 分配就会失败，float32 的 90k 元素还能拿到）
@@ -128,6 +140,12 @@ def main():
         w = {k: v / sc for k, v in w.items()}
         print("训练段回归权重:", {k: round(v, 3) for k, v in sorted(w.items(), key=lambda x: -abs(x[1]))})
         res.append(run(w, "训练段截面回归"))
+    # 关键对照：回归权重原封不动拿到测试段用，和重估权重的结果比
+    if coefs:
+        res.append(run(w, "回归权重复用"))
+        res.append(run({"size": 1.0, "amt20": 1.0, "turn": 1.0, "vol20": 1.0, "max20": 1.0}, "五因子等权"))
+        res.append(run({"size": 1.0, "amt20": 1.0}, "size+amt20"))
+        res.append(run({"size": 1.0, "amt20": 1.0, "pvcorr": 1.0}, "size+amt20+pvcorr"))
     json.dump(res, open(os.path.join(HERE, "mlfit.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     print("saved mlfit.json")

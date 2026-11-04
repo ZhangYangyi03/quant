@@ -235,6 +235,8 @@ def main():
     if len(JJ) < 150:
         print("\n只有 %d 个月（扫描还没跑完），不覆盖全样本结果文件" % len(JJ))
         return
+    seg_out = {k: {"pre": A.get(k), "post": B_.get(k)} for k in FAC}
+    json.dump(seg_out, open(os.path.join(HERE, "fseg.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     json.dump(ic_res, open(os.path.join(HERE, "ic_fast.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     json.dump(fb_res, open(os.path.join(HERE, "fbeta.json"), "w", encoding="utf-8"),
