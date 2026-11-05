@@ -1,5 +1,5 @@
 import os, json, struct, mmap, time, sys, bisect
-HERE = r"D:\Users\china\Desktop\项目_开发\quant"
+HERE = os.path.dirname(os.path.abspath(__file__))
 meta = json.load(open(os.path.join(HERE, "px_index_meta.json"), encoding="utf-8"))
 dates = meta["dates"]; codes = meta["codes"]; ND = len(dates); NC = len(codes)
 sh = json.load(open(os.path.join(HERE, "shares.json"), encoding="utf-8"))

@@ -18,7 +18,7 @@ import os, json, hashlib, time, datetime
 from collections import Counter, defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EG = r"D:\Users\china\Desktop\项目_开发\entity-graph"
+EG = os.path.join(HERE, "..", "entity-graph")
 SNAP = os.path.join(HERE, "snapshots")
 
 GRAPHS = ["political_economy.graph.json", "thesis_finance.graph.json", "thesis.graph.json"]

@@ -1,5 +1,5 @@
 import os, csv, json, struct, mmap, time, sys
-HERE = r"D:\Users\china\Desktop\项目_开发\quant"
+HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "stockdata")
 COLS = {"open": 1, "close": 2, "low": 4, "high": 3, "amount": 6, "volume": 5}
 

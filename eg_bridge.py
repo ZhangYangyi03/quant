@@ -1,6 +1,7 @@
 import json, os, csv
+HERE = os.path.dirname(os.path.abspath(__file__))
 
-EG = r"D:\Users\china\Desktop\项目_开发\entity-graph"
+EG = os.path.join(HERE, "..", "entity-graph")
 GRAPH = os.path.join(EG, "political_economy.graph.json")
 OUT = os.path.dirname(os.path.abspath(__file__))
 

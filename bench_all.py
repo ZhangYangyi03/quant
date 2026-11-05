@@ -1,8 +1,9 @@
 import sys, os, json, time, struct
-sys.path.insert(0, r"D:\Users\china\Desktop\项目_开发\quant")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 t0 = time.time()
 import market_engine as ME
-b = ME.StockBars(r"D:\Users\china\Desktop\项目_开发\quant\store")
+HERE = os.path.dirname(os.path.abspath(__file__))
+b = ME.StockBars(os.path.join(HERE, "store"))
 n = b.load_dir(); b.finalize()
 print("载入 %d 只 %d 天 %.1fs" % (n, len(b.dates), time.time() - t0), flush=True)
 dates = [d for d in b.dates if d >= "2010-01-01"]
@@ -27,5 +28,5 @@ eq = 1.0; curve = []
 for i, d in enumerate(dates):
     if cnts[i]: eq *= 1 + rets[i] / cnts[i]
     curve.append([d, round(1_000_000.0 * eq, 2)])
-json.dump(curve, open(r"D:\Users\china\Desktop\项目_开发\quant\bench_all_a.json", "w", encoding="utf-8"), ensure_ascii=False)
+json.dump(curve, open(os.path.join(HERE, "bench_all_a.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("写出 %d 天 %.0f 倍 总 %.1fs" % (len(curve), eq, time.time() - t0), flush=True)

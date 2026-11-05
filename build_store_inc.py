@@ -1,5 +1,5 @@
 import sys, os, time, struct, csv
-sys.path.insert(0, r"D:\Users\china\Desktop\项目_开发\quant")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_store as B
 
 def needs(code):

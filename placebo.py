@@ -5,7 +5,7 @@
 """
 import os, json, struct, mmap, math, random
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+
 from event_study import CUT_RRR, load, cum
 
 
