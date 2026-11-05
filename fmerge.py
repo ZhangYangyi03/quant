@@ -56,14 +56,15 @@ def main():
     for sid in ids:
         if all(os.path.exists(os.path.join(PARTS, "%s_%05d.npy" % (k, sid))) for k in FAC):
             ok_ids.add(sid)
-    pairs = []
-    for sid in ids:
-        if sid not in ok_ids:
-            continue
-        n = len(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid)))
-        pairs.extend([(int(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid))[m]), sid, m) for m in range(n)])
-    pairs.sort(key=lambda x: x[0])
-    JJ = np.array([x[0] for x in pairs], dtype=np.int64)
+    # 去重与排序统一交给 fraw.meta_unique()，fmerge / mlfit2 / risk_portfolio 共用一条轴。
+    import fraw
+    MU = fraw.meta_unique()
+    JJ = np.array(MU["dates"], dtype=np.int64)
+    SEG_OF = [MU["seg"][m] for m in range(MU["n"])]
+    OFF_IN_SEG = [MU["off"][m] for m in range(MU["n"])]
+    pairs = list(zip(JJ, SEG_OF, OFF_IN_SEG))
+    print("时间轴 %d 个唯一月（fraw 原始 %d，重复 %d）" % (
+        MU["n"], fraw.meta()["n"], fraw.meta()["n"] - MU["n"]))
     SEG_OF = [x[1] for x in pairs]
     OFF_IN_SEG = [x[2] for x in pairs]
     CLM = {sid: np.load(os.path.join(PARTS, "close_%05d.npy" % sid)) for sid in ok_ids}
@@ -106,18 +107,14 @@ def main():
     def load_factor(k, m):
         return seg_mat(k, SEG_OF[m])[OFF_IN_SEG[m]].astype(np.float64)
 
-    # 只保留"每个因子文件都存在"的段，否则新因子的段和旧段混在一起会读空
-    ok_ids = []
-    for sid in ids:
-        if all(os.path.exists(os.path.join(PARTS, "%s_%05d.npy" % (k, sid))) for k in FAC):
-            ok_ids.append(sid)
-    pairs = []
-    for sid in ids:
-        n = len(np.load(os.path.join(PARTS, "meta_%05d.npy" % sid)))
-        pairs.extend([(int(JJ[m]), sid, m) for m in range(n)])
-    pairs = [x for x in pairs if x[1] in set(ok_ids)]
-    JJ = np.array([x[0] for x in pairs], dtype=np.int64)
-    SEG_OF = [x[1] for x in pairs]; OFF_IN_SEG = [x[2] for x in pairs]
+    # 时间轴在上面已经按 (交易日, 段号, 段内行号) 排好并存在 JJ/SEG_OF/OFF_IN_SEG 里。
+    # 9d437f3 曾在这里第二次重建 pairs，写成 (int(JJ[m]), sid, m)：把"已排序的
+    # 日期"和"段内行号"错配，结果 JJ 变成 5377,5397,...,5514,5377,5397,... 的重复序列，
+    # 183 个月里混进重复月份；用那条错轴算出的 amt20 IC 是 -0.2631（对应当时的
+    # ic_fast.json -0.2658），正确时间轴是 -0.1058。不要再重建，直接保留已排好的三元组。
+    # 只补一件事：确认这三条数组等长且日期严格递增，错配立刻报错而不是静默出结果。
+    assert len(JJ) == len(SEG_OF) == len(OFF_IN_SEG), "时间轴与段索引长度不一致"
+    assert np.all(np.diff(JJ) > 0), "时间轴必须严格递增（出现重复月份说明段索引错配）"
 
     NM = len(JJ) - 1
     ic = {k: [] for k in FACTORS}
@@ -209,8 +206,11 @@ def main():
             ex = (t_ret - to * FEE) - mk
             out[k] = (ex.mean() * 100, ex.mean() / (ex.std(ddof=1) / math.sqrt(len(ex))), len(ex))
         return out
-    # 2019 年之前 = 月份序号 < 108（2012-08 为 0）：直接按月序号切，不碰会被改写的日期字符串
-    A = seg_stats(0, 78); B_ = seg_stats(78, 10 ** 6)
+    # 按真实日期找 2019-01-01 的切分位置，不再硬编码月份序号。
+    # 原来写死 78 是按 183 行（含重复月）算的；去重后只有 166 行，位置会漂。
+    _split = next((m for m in range(NM) if month_dates[m] >= "2019-01-01"), NM)
+    print("两段切分：2019 前 %d 月 / 2019 后 %d 月" % (_split, NM - _split))
+    A = seg_stats(0, _split); B_ = seg_stats(_split, 10 ** 6)
     print("")
     print("%-10s %14s %14s %14s" % ("factor", "2019前 超额%/t", "2019后 超额%/t", "IC_t"))
     for k in sorted(FAC, key=lambda x: -(ic_res.get(x, {}).get("t") or -9)):

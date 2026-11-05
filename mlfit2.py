@@ -28,17 +28,16 @@ EXTRA = ["pvcorr", "overnight", "skew60", "amt_cv", "vol_ratio", "intraday", "mo
 
 
 def main():
-    M = fraw.meta()
+    M = fraw.meta_unique()
     JJF = M["dates"]               # 全部交易日序号（183 个）
     NS = len(JJF) - 1              # 用"当月收盘 -> 下月收盘"，最后一截没有下月
     JJ = JJF[:-1]
-    CLALL = fraw.matrix("_close".replace("_", "")) if False else None
     icj = json.load(open(os.path.join(HERE, "ic_fast.json"), encoding="utf-8"))
     dirn = {k: (1.0 if icj[k]["ic_mean"] >= 0 else -1.0) for k in NAMES}
     meta = json.load(open(os.path.join(HERE, "px_index_meta.json"), encoding="utf-8"))["dates"]
     FULL = compact.Panel()
-    CLr = fraw.rows("close", 0, NS + 1).astype(np.float64)
-    ALr = fraw.rows("alive", 0, NS + 1)
+    CLr = fraw.rows("close", 0, NS + 1, M).astype(np.float64)
+    ALr = fraw.rows("alive", 0, NS + 1, M)
     tr = [m for m in range(NS) if meta[int(JJF[m])] < SPLIT]
     te = [m for m in range(NS) if meta[int(JJF[m])] >= SPLIT]
     print("训练 %d 月，测试 %d 月（%s 起）" % (len(tr), len(te), meta[int(JJF[te[0]])]))
@@ -49,7 +48,7 @@ def main():
         if d is None:
             d = 1.0 if icj[k]["ic_mean"] >= 0 else -1.0
             dirn[k] = d
-        A = fraw.rows(k, 0, NS).astype(np.float64) * d     # 一次一个因子，中间量立刻释放
+        A = fraw.rows(k, 0, NS, M).astype(np.float64) * d     # 一次一个因子，中间量立刻释放
         for m in range(NS):
             v = A[m]
             ok = np.isfinite(v) & (np.abs(v) < 1e12)

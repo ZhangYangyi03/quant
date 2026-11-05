@@ -1,0 +1,141 @@
+{
+ "generated": "2026-11-05T13:35:42",
+ "basis": "逐月对 [1, size, amt20] 做 OLS，取残差算 Spearman IC；r2_on_pair 是被两因子解释的方差比例",
+ "factors": {
+  "turn": {
+   "raw_ic": 0.0792,
+   "raw_t": 6.03,
+   "n": 165,
+   "resid_ic": 0.0372,
+   "resid_t": 5.37,
+   "r2_on_pair": 0.365,
+   "kept": 0.47
+  },
+  "ret20": {
+   "raw_ic": 0.0713,
+   "raw_t": 6.16,
+   "n": 165,
+   "resid_ic": 0.0467,
+   "resid_t": 4.58,
+   "r2_on_pair": 0.064,
+   "kept": 0.655
+  },
+  "ret60": {
+   "raw_ic": 0.0739,
+   "raw_t": 6.54,
+   "n": 165,
+   "resid_ic": 0.034,
+   "resid_t": 3.59,
+   "r2_on_pair": 0.119,
+   "kept": 0.46
+  },
+  "vol20": {
+   "raw_ic": 0.0837,
+   "raw_t": 6.09,
+   "n": 165,
+   "resid_ic": 0.0278,
+   "resid_t": 4.28,
+   "r2_on_pair": 0.371,
+   "kept": 0.332
+  },
+  "hl": {
+   "raw_ic": 0.0408,
+   "raw_t": 4.68,
+   "n": 165,
+   "resid_ic": 0.013,
+   "resid_t": 2.25,
+   "r2_on_pair": 0.064,
+   "kept": 0.319
+  },
+  "reversal1": {
+   "raw_ic": 0.0114,
+   "raw_t": 1.18,
+   "n": 165,
+   "resid_ic": 0.0201,
+   "resid_t": 2.65,
+   "r2_on_pair": 0.044,
+   "kept": 1.763
+  },
+  "abn_turn": {
+   "raw_ic": 0.0,
+   "raw_t": 0.0,
+   "n": 0,
+   "resid_ic": 0.0,
+   "resid_t": 0.0,
+   "r2_on_pair": null,
+   "kept": null
+  },
+  "max20": {
+   "raw_ic": 0.0785,
+   "raw_t": 7.28,
+   "n": 165,
+   "resid_ic": 0.0381,
+   "resid_t": 6.91,
+   "r2_on_pair": 0.236,
+   "kept": 0.485
+  },
+  "intraday": {
+   "raw_ic": 0.0615,
+   "raw_t": 6.75,
+   "n": 165,
+   "resid_ic": 0.0391,
+   "resid_t": 5.04,
+   "r2_on_pair": 0.073,
+   "kept": 0.636
+  },
+  "overnight": {
+   "raw_ic": 0.0275,
+   "raw_t": 4.87,
+   "n": 165,
+   "resid_ic": -0.002,
+   "resid_t": -0.3,
+   "r2_on_pair": 0.062,
+   "kept": -0.073
+  },
+  "skew60": {
+   "raw_ic": 0.0482,
+   "raw_t": 8.99,
+   "n": 165,
+   "resid_ic": 0.0284,
+   "resid_t": 7.18,
+   "r2_on_pair": 0.05,
+   "kept": 0.589
+  },
+  "pvcorr": {
+   "raw_ic": 0.0347,
+   "raw_t": 5.05,
+   "n": 165,
+   "resid_ic": 0.0169,
+   "resid_t": 3.34,
+   "r2_on_pair": 0.045,
+   "kept": 0.487
+  },
+  "mom_acc": {
+   "raw_ic": 0.0143,
+   "raw_t": 1.59,
+   "n": 165,
+   "resid_ic": 0.0352,
+   "resid_t": 4.73,
+   "r2_on_pair": 0.053,
+   "kept": 2.462
+  },
+  "vol_ratio": {
+   "raw_ic": 0.0038,
+   "raw_t": 0.59,
+   "n": 165,
+   "resid_ic": 0.0142,
+   "resid_t": 2.32,
+   "r2_on_pair": 0.039,
+   "kept": 3.737
+  },
+  "amt_cv": {
+   "raw_ic": 0.0557,
+   "raw_t": 9.98,
+   "n": 165,
+   "resid_ic": 0.0644,
+   "resid_t": 11.7,
+   "r2_on_pair": 0.067,
+   "kept": 1.156
+  }
+ }
+}

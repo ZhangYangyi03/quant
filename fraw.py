@@ -24,14 +24,45 @@ def meta():
     return {"dates": JJ, "seg": seg, "off": off, "n": len(pairs), "ids": ids}
 
 
+def meta_unique():
+    """按交易日去重的时间轴。
+
+    本机 fscan_parts 有重复落盘的段（26 与 29 是同一批 8 个月，24 与 34 有 5 个月
+    重叠），直接 meta() 会得到 183 行里 166 个唯一交易日；相邻重复月会让"当月收盘
+    -> 下月收盘"的远期收益恒为 0，IC 与组合超额都被稀释。所有下游一律用这个。
+    """
+    _M = meta()
+    seen, keep = set(), []
+    for m in range(_M["n"]):
+        j = int(_M["dates"][m])
+        if j in seen:
+            continue
+        seen.add(j)
+        keep.append(m)
+    out = {"dates": [_M["dates"][m] for m in keep],
+           "seg": {}, "off": {}, "n": len(keep), "ids": _M["ids"]}
+    for new, old in enumerate(keep):
+        out["seg"][new] = _M["seg"][old]
+        out["off"][new] = _M["off"][old]
+    return out
+
+
 def row(name, m, _M=None):
-    _M = meta() if _M is None else _M
+    # _M 必须显式传：默认 meta() 是含重复月的原始轴，与 meta_unique() 的下标不通用。
+    # 9d437f3 那次事故正是把两条轴混用，IC 被算成两倍。
+    if _M is None:
+        raise ValueError("fraw.row 需要显式传 _M（meta() 或 meta_unique()）")
+    if not (0 <= m < _M["n"]):
+        raise IndexError("fraw.row 月序号越界: %d" % m)
     a = np.load(os.path.join(PARTS, "%s_%05d.npy" % (name, _M["seg"][m])))
     return a[_M["off"][m]]
 
 
 def rows(name, i0, i1, _M=None):
-    _M = meta() if _M is None else _M
+    if _M is None:
+        raise ValueError("fraw.rows 需要显式传 _M（meta() 或 meta_unique()）")
+    if not (0 <= i0 <= i1 <= _M["n"]):
+        raise IndexError("fraw.rows 月区间越界")
     out = None
     for m in range(i0, i1):
         r = row(name, m, _M)[None, :]
@@ -41,7 +72,8 @@ def rows(name, i0, i1, _M=None):
     return out
 
 
-def matrix(name):
+def matrix(name, _M=None):
     """整段读进来（8 x 5251 x float32 = 168KB），拼成 (月数, 股票数)。"""
-    _M = meta()
+    if _M is None:
+        raise ValueError("fraw.matrix 需要显式传 _M")
     return rows(name, 0, _M["n"], _M)

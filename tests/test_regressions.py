@@ -69,6 +69,47 @@ class TestP0Fixes(unittest.TestCase):
                     offenders.append((os.path.relpath(path, ROOT), bad))
         self.assertEqual(offenders, [], f"仍有硬编码旧机器路径: {offenders}")
 
+    def test_fmerge_does_not_rebuild_timeline(self):
+        """9d437f3 的 P0：第二次 pairs 把 JJ[m] 与 (sid,m) 错配，IC 虚高一倍。"""
+        src = _read("fmerge.py")
+        # 注释里会引用这个反例，所以只禁"代码行"，不能整文件禁字符串
+        bad = [l for l in src.splitlines()
+               if "pairs.extend" in l and "(int(JJ[m]), sid, m)" in l]
+        self.assertEqual(bad, [], "fmerge 仍在用错配的第二次时间轴重建")
+        self.assertIn("assert np.all(np.diff(JJ) > 0)", src)
+        self.assertIn("时间轴与段索引长度不一致", src)
+
+    def test_fraw_requires_explicit_meta(self):
+        """meta() 与 meta_unique() 的下标不通用，混用会静默算错因子行。"""
+        src = _read("fraw.py")
+        self.assertIn("def meta_unique()", src)
+        self.assertIn('raise ValueError("fraw.row 需要显式传 _M', src)
+        self.assertIn('raise ValueError("fraw.rows 需要显式传 _M', src)
+        self.assertIn('raise ValueError("fraw.matrix 需要显式传 _M', src)
+        self.assertNotIn("_M = meta() if _M is None else _M", src)
+
+    def test_downstream_scripts_thread_meta_unique(self):
+        import re
+        for name in ("mlfit2.py", "risk_portfolio.py"):
+            src = _read(name)
+            self.assertIn("fraw.meta_unique()", src)
+            # 只检查真正调用 fraw.rows/row/matrix 的代码行，跳过文档字符串
+            import ast
+            tree = ast.parse(src)
+            code_lines = []
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call):
+                    continue
+                f = node.func
+                if (isinstance(f, ast.Attribute)
+                        and isinstance(f.value, ast.Name)
+                        and f.value.id == "fraw"
+                        and f.attr in ("rows", "row", "matrix")):
+                    code_lines.append(ast.get_source_segment(src, node) or "")
+            for call in code_lines:
+                self.assertTrue(re.search(r",\s*(M|C\[\"M\"\])\s*\)", call),
+                                f"{name} 的 {call.strip()} 没传去重时间轴")
+
     def test_bat_scripts_use_portable_python(self):
         for name in ("_fund.bat", "_run.bat", "_tick.bat"):
             src = _read(name)

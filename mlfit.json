@@ -1,101 +1,101 @@
 [
  {
   "label": "等权10因子",
-  "train_ex": 1.5,
-  "train_t": 4.22,
+  "train_ex": 1.83,
+  "train_t": 4.31,
   "test_ex": 0.44,
   "test_t": 1.57,
   "test_win": 0.64,
-  "turn": 54.2
+  "turn": 59.8
  },
  {
   "label": "低换手4因子",
-  "train_ex": 2.65,
-  "train_t": 5.99,
+  "train_ex": 3.24,
+  "train_t": 6.27,
   "test_ex": 0.95,
   "test_t": 3.41,
   "test_win": 0.708,
-  "turn": 33.2
+  "turn": 36.5
  },
  {
   "label": "amt20单因子",
-  "train_ex": 2.39,
-  "train_t": 5.31,
+  "train_ex": 2.92,
+  "train_t": 5.5,
   "test_ex": 0.91,
   "test_t": 3.36,
   "test_win": 0.697,
-  "turn": 29.4
+  "turn": 32.4
  },
  {
   "label": "size单因子",
-  "train_ex": 2.63,
-  "train_t": 4.95,
+  "train_ex": 3.22,
+  "train_t": 5.1,
   "test_ex": 1.19,
   "test_t": 4.38,
   "test_win": 0.787,
-  "turn": 10.6
+  "turn": 11.6
  },
  {
   "label": "两段稳定10因子",
-  "train_ex": 1.26,
-  "train_t": 3.93,
-  "test_ex": 0.36,
-  "test_t": 1.33,
-  "test_win": 0.573,
-  "turn": 51.8
+  "train_ex": 2.58,
+  "train_t": 5.3,
+  "test_ex": 0.59,
+  "test_t": 2.26,
+  "test_win": 0.64,
+  "turn": 55.4
  },
  {
   "label": "新因子3个",
-  "train_ex": 0.28,
-  "train_t": 1.28,
-  "test_ex": -0.7,
-  "test_t": -4.67,
-  "test_win": 0.303,
-  "turn": 56.8
+  "train_ex": 1.33,
+  "train_t": 3.09,
+  "test_ex": 0.33,
+  "test_t": 2.22,
+  "test_win": 0.618,
+  "turn": 57.2
  },
  {
   "label": "训练段截面回归",
-  "train_ex": 2.16,
-  "train_t": 5.05,
+  "train_ex": 2.64,
+  "train_t": 5.21,
   "test_ex": 0.8,
   "test_t": 3.27,
   "test_win": 0.674,
-  "turn": 51.8
+  "turn": 57.1
  },
  {
   "label": "回归权重复用",
-  "train_ex": 2.16,
-  "train_t": 5.05,
+  "train_ex": 2.64,
+  "train_t": 5.21,
   "test_ex": 0.8,
   "test_t": 3.27,
   "test_win": 0.674,
-  "turn": 51.8
+  "turn": 57.1
  },
  {
   "label": "五因子等权",
-  "train_ex": 2.44,
-  "train_t": 5.76,
+  "train_ex": 2.99,
+  "train_t": 6.0,
   "test_ex": 0.7,
   "test_t": 2.48,
   "test_win": 0.697,
-  "turn": 38.9
+  "turn": 42.8
  },
  {
   "label": "size+amt20",
-  "train_ex": 2.85,
-  "train_t": 5.26,
+  "train_ex": 3.49,
+  "train_t": 5.44,
   "test_ex": 1.27,
   "test_t": 4.66,
   "test_win": 0.787,
-  "turn": 13.3
+  "turn": 14.6
  },
  {
   "label": "size+amt20+pvcorr",
-  "train_ex": 2.38,
-  "train_t": 4.8,
+  "train_ex": 2.92,
+  "train_t": 4.94,
   "test_ex": 0.77,
   "test_t": 3.31,
   "test_win": 0.764,
-  "turn": 35.6
+  "turn": 39.3
  }
 ]
