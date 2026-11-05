@@ -1,5 +1,6 @@
 """回归测试：锁死上一轮诊断出的三个 P0 缺陷与全仓路径清理，防止改回去。"""
 import os
+import subprocess
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -11,15 +12,30 @@ def _read(name):
 
 
 def _code_files():
-    out = []
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        # tests/ 里的断言本身就包含这些反例字符串，扫描时排除，避免自指误报
-        dirnames[:] = [d for d in dirnames
-                       if d not in ("__pycache__", ".git", ".workbuddy-ai", "tests")]
-        for fn in filenames:
-            if fn.endswith((".py", ".bat")):
-                out.append(os.path.join(dirpath, fn))
-    return out
+    """只扫仓库里的可执行文件。
+
+    原实现走 os.walk，把工作区里 .gitignore 明确忽略的本地诊断脚本
+    （_dbg_one.py、_probe3.bat 之类）也算成违规；那些文件根本不进仓库，
+    拿它们判定交付质量是误报。改用 git ls-files，语义是"这个提交里
+    真正会被别人克隆到的文件"。没有 git 时退回 os.walk 并排除临时目录。
+    """
+    try:
+        out = subprocess.run(["git", "ls-files", "*.py", "*.bat"],
+                             cwd=ROOT, capture_output=True, text=True,
+                             timeout=20, check=True).stdout.splitlines()
+        # 断言本身带有这些反例字符串，tests/ 必须排除，否则自指误报
+        return [os.path.join(ROOT, rel) for rel in out
+                if rel.endswith((".py", ".bat"))
+                and not rel.replace("\\", "/").startswith("tests/")]
+    except (OSError, subprocess.SubprocessError):
+        out = []
+        for dirpath, dirnames, filenames in os.walk(ROOT):
+            dirnames[:] = [d for d in dirnames
+                           if d not in ("__pycache__", ".git", ".workbuddy-ai", "tests")]
+            for fn in filenames:
+                if fn.endswith((".py", ".bat")):
+                    out.append(os.path.join(dirpath, fn))
+        return out
 
 
 class TestP0Fixes(unittest.TestCase):
