@@ -72,3 +72,7 @@ fund_parts/
 quantlab/data/__pycache__/
 *.pyc
 !__init__.py
+
+# qlib 桥接层
+.qlibenv/
+qlib_bridge/qlib_data/

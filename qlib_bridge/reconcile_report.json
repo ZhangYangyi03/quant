@@ -1,0 +1,46 @@
+{
+ "price_check": {
+  "n_pairs": 232,
+  "max_abs_err": 0.0,
+  "ok": true
+ },
+ "curve": {
+  "qlib_days": 1159,
+  "qlib_final_nav": 1.1298,
+  "qlib_test": [
+   "2022-01-01",
+   "2026-10-20"
+  ],
+  "qlib_pool": 300,
+  "qlib_monthly": 57,
+  "vs_ours": {
+   "size_amt20_top50": {
+    "n_common_months": 57,
+    "corr": 0.7549,
+    "same_sign": 0.7544,
+    "own_cagr_pct": 38.26,
+    "own_sharpe": 1.199
+   },
+   "ep_top50": {
+    "n_common_months": 57,
+    "corr": 0.7135,
+    "same_sign": 0.7193,
+    "own_cagr_pct": 16.66,
+    "own_sharpe": 0.732
+   },
+   "random_k_equal": {
+    "n_common_months": 57,
+    "corr": 0.8157,
+    "same_sign": 0.8947,
+    "own_cagr_pct": 5.68,
+    "own_sharpe": 0.343
+   }
+  },
+  "note": "qlib 侧是 300 只池、日频 TopkDropout、LGB 信号；本项目是 5251 只池、月度调仓、手写因子。策略不同，只验数据层与量级，不要求收益一致。"
+ },
+ "quality": {
+  "corrupt_days_checked": 11,
+  "close_is_nan": 11,
+  "ok": true
+ }
+}
