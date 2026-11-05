@@ -1,0 +1,24 @@
+{
+ "ICIR_t12": {
+  "months": 196,
+  "alpha_annual": 10.25,
+  "alpha_monthly": 0.816,
+  "alpha_t": 3.02,
+  "beta_mkt": 0.778,
+  "beta_t": 10.91,
+  "r2": 0.731,
+  "excess_annual": 22.7,
+  "mkt_annual": 15.08
+ },
+ "ICIR+涨跌停+冲击": {
+  "months": 196,
+  "alpha_annual": 2.34,
+  "alpha_monthly": 0.193,
+  "alpha_t": 0.7,
+  "beta_mkt": 0.754,
+  "beta_t": 11.12,
+  "r2": 0.739,
+  "excess_annual": 13.77,
+  "mkt_annual": 15.08
+ }
+}

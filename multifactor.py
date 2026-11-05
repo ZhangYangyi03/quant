@@ -47,7 +47,13 @@ def zscore(x):
     return np.clip(out, -3, 3)
 
 
-def main(k=50, start="2010-06-01"):
+def main(k=50, start="2010-06-01", only_sets=None):
+    """only_sets: 只跑指定的几套配置（名字列表），None = 全跑。
+
+    这台机器物理内存 13.7 GB、常年用掉 9 GB。全跑 11 套时进程在因子算完后
+    被系统无声回收（实测：日志停在 illiquidity，无异常、无结果）。只跑一套的
+    峰值内存约 1/5，能稳定出结果。
+    """
     t0 = time.time()
     C, ND, NC = AR.load_panel("m_close.bin")
     O, _, _ = AR.load_panel("m_open.bin")
@@ -263,9 +269,13 @@ def main(k=50, start="2010-06-01"):
             y = dates[rebal[ri]][:4]
             yr.setdefault(y, []).append(sv[ri] / sv[ri - 1] - 1)
         yearly = {y: round((float(np.prod([1 + x for x in v])) - 1) * 100, 1) for y, v in yr.items()}
+        # 净值曲线存档：归因（attrib.py）要月度收益序列，而指标汇总不了曲线。
+        # 每条曲线 ~200 个 (日期, 净值)，十几套配置也就几十 KB。
+        curve_out = [[dates[rebal[i]], round(float(sv[i]), 2)] for i in range(len(sv))]
         return {"cagr": round(cagr * 100, 2), "sharpe": round(float(sharpe), 3),
                 "mdd": round(mdd * 100, 1), "total": round(float(sv[-1] / sv[0]), 2), "seg": segs,
-                "yearly": yearly, "avg_age": round(float(np.mean(AGE)), 0) if AGE else None}
+                "yearly": yearly, "avg_age": round(float(np.mean(AGE)), 0) if AGE else None,
+                "curve": curve_out}
 
     def run_bench(mode="all"):
         """同口径基准：同一个股票池、同样剔除新股、同样月度调仓，但全买（等权）。
@@ -318,6 +328,7 @@ def main(k=50, start="2010-06-01"):
         ("单因子bm", "equal", 12, "bm"),
         ("单因子illiquidity", "equal", 12, "illiquidity"),
     ]:
+        if only_sets is not None and label not in only_sets: continue
         r = run(mode, win, only)
         out[label] = r
         print("%-14s %7.2f%% %8.3f %7.1f%% %7.2fx  上市日均 %s  %s" % (
@@ -326,21 +337,27 @@ def main(k=50, start="2010-06-01"):
     for label, kw in [("ICIR+涨跌停", {"limit_check": True}),
                       ("ICIR+涨跌停+冲击", {"limit_check": True, "impact": 0.1}),
                       ("ICIR+涨跌停+大冲击", {"limit_check": True, "impact": 0.5})]:
+        if only_sets is not None and label not in only_sets: continue
         r = run("icir_t12", 12, None, **kw)
         out[label] = r
         print("%-14s %7.2f%% %8.3f %7.1f%% %7.2fx  %s" % (
             label, r["cagr"], r["sharpe"], r["mdd"], r["total"], r["seg"]), flush=True)
 
     for label, mode in [("基准:同池全部等权", "all"), ("基准:市值前3000等权", "top3000")]:
+        if only_sets is not None and label not in only_sets: continue
         r = run_bench(mode)
         out[label] = r
         print("%-14s %7.2f%% %8.3f %7.1f%% %7.2fx  %s" % (
             label, r["cagr"], r["sharpe"], r["mdd"], r["total"], r["seg"]), flush=True)
 
     print("\n逐年：策略 vs 同池等权基准", flush=True)
-    ky = sorted(set(out["ICIR_t12"]["yearly"]) | set(out["基准:同池全部等权"]["yearly"]))
+    if "ICIR_t12" not in out or "基准:同池全部等权" not in out:
+        ky = []
+    else:
+        ky = sorted(set(out["ICIR_t12"]["yearly"]) | set(out["基准:同池全部等权"]["yearly"]))
     print("%-6s %10s %10s %10s" % ("年份", "ICIR_t12", "基准", "超额"), flush=True)
     for y in ky:
+        if not ky: break
         a = out["ICIR_t12"]["yearly"].get(y); b = out["基准:同池全部等权"]["yearly"].get(y)
         if a is None or b is None: continue
         print("%-6s %9.1f%% %9.1f%% %9.1f%%" % (y, a, b, a - b), flush=True)
