@@ -69,4 +69,6 @@ fund_parts/
 # 「_*.py」本意排除临时脚本，不应吃掉各包的 __init__.py（否则包无法导入）。
 !quantlab/data/
 !quantlab/data/**
+quantlab/data/__pycache__/
+*.pyc
 !__init__.py
