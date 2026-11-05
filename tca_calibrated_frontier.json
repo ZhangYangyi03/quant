@@ -1,0 +1,187 @@
+{
+ "generated": "2026-11-05T12:31:07",
+ "eta": 0.00975,
+ "basis": "t+1开盘 + 双侧冲击 + 涨跌停过滤 + 5分钟线校准eta",
+ "rows": [
+  {
+   "tag": "baseline",
+   "buffer": 0,
+   "hold_months": 1,
+   "eta": 0.00975,
+   "cagr": 17.7,
+   "alpha_annual": 6.28,
+   "alpha_t": 1.93,
+   "beta": 0.737,
+   "turnover": 0.633,
+   "cost_bps": 15.88,
+   "fees_by": {
+    "commission_buy": 211760.97,
+    "commission_sell": 211510.97,
+    "stamp": 423021.97,
+    "transfer": 16930.84,
+    "impact_buy": 791499.12,
+    "impact_sell": 669280.58
+   }
+  },
+  {
+   "tag": "band25",
+   "buffer": 0.25,
+   "hold_months": 1,
+   "eta": 0.00975,
+   "cagr": 17.86,
+   "alpha_annual": 6.42,
+   "alpha_t": 1.96,
+   "beta": 0.739,
+   "turnover": 0.5865,
+   "cost_bps": 14.78,
+   "fees_by": {
+    "commission_buy": 200027.38,
+    "commission_sell": 199777.38,
+    "stamp": 399554.63,
+    "transfer": 15992.23,
+    "impact_buy": 758453.86,
+    "impact_sell": 637678.33
+   }
+  },
+  {
+   "tag": "band50",
+   "buffer": 0.5,
+   "hold_months": 1,
+   "eta": 0.00975,
+   "cagr": 18.28,
+   "alpha_annual": 6.74,
+   "alpha_t": 2.06,
+   "beta": 0.746,
+   "turnover": 0.5414,
+   "cost_bps": 13.86,
+   "fees_by": {
+    "commission_buy": 195247.91,
+    "commission_sell": 194997.91,
+    "stamp": 389995.67,
+    "transfer": 15609.84,
+    "impact_buy": 768211.58,
+    "impact_sell": 638719.35
+   }
+  },
+  {
+   "tag": "band100",
+   "buffer": 1.0,
+   "hold_months": 1,
+   "eta": 0.00975,
+   "cagr": 18.59,
+   "alpha_annual": 6.96,
+   "alpha_t": 2.09,
+   "beta": 0.75,
+   "turnover": 0.4826,
+   "cost_bps": 12.39,
+   "fees_by": {
+    "commission_buy": 179088.59,
+    "commission_sell": 178838.59,
+    "stamp": 357677.25,
+    "transfer": 14317.04,
+    "impact_buy": 719405.06,
+    "impact_sell": 586924.72
+   }
+  },
+  {
+   "tag": "band50_h2",
+   "buffer": 0.5,
+   "hold_months": 2,
+   "eta": 0.00975,
+   "cagr": 17.37,
+   "alpha_annual": 6.11,
+   "alpha_t": 1.98,
+   "beta": 0.74,
+   "turnover": 0.332,
+   "cost_bps": 8.14,
+   "fees_by": {
+    "commission_buy": 112429.28,
+    "commission_sell": 112179.28,
+    "stamp": 224358.64,
+    "transfer": 8984.35,
+    "impact_buy": 408043.81,
+    "impact_sell": 338802.98
+   }
+  },
+  {
+   "tag": "band50_h3",
+   "buffer": 0.5,
+   "hold_months": 3,
+   "eta": 0.00975,
+   "cagr": 15.96,
+   "alpha_annual": 5.07,
+   "alpha_t": 1.6,
+   "beta": 0.717,
+   "turnover": 0.2371,
+   "cost_bps": 5.68,
+   "fees_by": {
+    "commission_buy": 71212.95,
+    "commission_sell": 70962.95,
+    "stamp": 141925.93,
+    "transfer": 5687.03,
+    "impact_buy": 252347.17,
+    "impact_sell": 203595.29
+   }
+  },
+  {
+   "tag": "band100_h3",
+   "buffer": 1.0,
+   "hold_months": 3,
+   "eta": 0.00975,
+   "cagr": 16.17,
+   "alpha_annual": 5.27,
+   "alpha_t": 1.67,
+   "beta": 0.717,
+   "turnover": 0.2229,
+   "cost_bps": 5.38,
+   "fees_by": {
+    "commission_buy": 68115.75,
+    "commission_sell": 67865.75,
+    "stamp": 135731.52,
+    "transfer": 5439.3,
+    "impact_buy": 246310.89,
+    "impact_sell": 197144.88
+   }
+  },
+  {
+   "tag": "band100_h6",
+   "buffer": 1.0,
+   "hold_months": 6,
+   "eta": 0.00975,
+   "cagr": 13.86,
+   "alpha_annual": 3.37,
+   "alpha_t": 1.11,
+   "beta": 0.698,
+   "turnover": 0.1267,
+   "cost_bps": 2.81,
+   "fees_by": {
+    "commission_buy": 27568.45,
+    "commission_sell": 27318.45,
+    "stamp": 54636.85,
+    "transfer": 2195.46,
+    "impact_buy": 77404.05,
+    "impact_sell": 67534.7
+   }
+  },
+  {
+   "tag": "band150_h3",
+   "buffer": 1.5,
+   "hold_months": 3,
+   "eta": 0.00975,
+   "cagr": 15.92,
+   "alpha_annual": 5.06,
+   "alpha_t": 1.59,
+   "beta": 0.719,
+   "turnover": 0.2103,
+   "cost_bps": 5.01,
+   "fees_by": {
+    "commission_buy": 61910.26,
+    "commission_sell": 61660.26,
+    "stamp": 123320.52,
+    "transfer": 4942.81,
+    "impact_buy": 220354.85,
+    "impact_sell": 174447.46
+   }
+  }
+ ]
+}

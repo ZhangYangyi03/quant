@@ -1,0 +1,86 @@
+{
+ "generated": "2026-11-05T12:30:26",
+ "basis": "S5_exec_open 口径（t+1开盘成交+双侧冲击+涨跌停过滤+全分项费用）",
+ "rows": [
+  {
+   "tag": "校准中位",
+   "eta": 0.00975,
+   "cagr": 17.7,
+   "alpha_annual": 6.28,
+   "alpha_t": 1.93,
+   "cost_bps": 15.88,
+   "fees_by": {
+    "commission_buy": 211760.97,
+    "commission_sell": 211510.97,
+    "stamp": 423021.97,
+    "transfer": 16930.84,
+    "impact_buy": 791499.12,
+    "impact_sell": 669280.58
+   }
+  },
+  {
+   "tag": "校准p25",
+   "eta": 0.00669,
+   "cagr": 18.11,
+   "alpha_annual": 6.65,
+   "alpha_t": 2.04,
+   "cost_bps": 13.01,
+   "fees_by": {
+    "commission_buy": 219206.35,
+    "commission_sell": 218956.35,
+    "stamp": 437912.81,
+    "transfer": 17526.5,
+    "impact_buy": 574758.86,
+    "impact_sell": 485405.92
+   }
+  },
+  {
+   "tag": "校准p75",
+   "eta": 0.01492,
+   "cagr": 17.04,
+   "alpha_annual": 5.68,
+   "alpha_t": 1.75,
+   "cost_bps": 20.55,
+   "fees_by": {
+    "commission_buy": 200159.31,
+    "commission_sell": 199909.31,
+    "stamp": 399818.53,
+    "transfer": 16002.78,
+    "impact_buy": 1104429.32,
+    "impact_sell": 935891.97
+   }
+  },
+  {
+   "tag": "保守0.02",
+   "eta": 0.02,
+   "cagr": 16.42,
+   "alpha_annual": 5.12,
+   "alpha_t": 1.58,
+   "cost_bps": 24.94,
+   "fees_by": {
+    "commission_buy": 189816.56,
+    "commission_sell": 189566.56,
+    "stamp": 379133.04,
+    "transfer": 15175.28,
+    "impact_buy": 1357522.97,
+    "impact_sell": 1152788.27
+   }
+  },
+  {
+   "tag": "原设0.10",
+   "eta": 0.1,
+   "cagr": 9.34,
+   "alpha_annual": -1.3,
+   "alpha_t": -0.4,
+   "cost_bps": 76.83,
+   "fees_by": {
+    "commission_buy": 100591.82,
+    "commission_sell": 100341.82,
+    "stamp": 200683.64,
+    "transfer": 8037.38,
+    "impact_buy": 2446254.9,
+    "impact_sell": 2136459.7
+   }
+  }
+ ]
+}

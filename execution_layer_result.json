@@ -1,0 +1,211 @@
+{
+ "generated": "2026-11-05T12:29:48",
+ "sample": {
+  "stocks": 26,
+  "bars": 26000,
+  "full_days": 520,
+  "window": [
+   "2026-09-30 13:45",
+   "2026-11-05 11:30"
+  ],
+  "sigma_5min_bps": 25.15,
+  "open30_share": 0.2319,
+  "close30_share": 0.1426
+ },
+ "gap": {
+  "n": 111161,
+  "median_bps": 0.0,
+  "sd_bps": 140.33
+ },
+ "is_decomposition_bps": {
+  "is_bps": 95.06,
+  "delay_bps": 0.0,
+  "market_impact_bps": 2.81,
+  "timing_bps": 15.419,
+  "fee_bps": 76.831
+ },
+ "is_note": "IS = delay + market_impact + timing + fee。delay 用真实日线隔夜跳空；market 用 AC 平方根冲击，eta 取5 分钟线校准值；timing 用 U 型成交量加权的随机游走漂移；fee 直接来自 tca_ledger 的 S5_exec_open。",
+ "ac_cost_curve": [
+  {
+   "aum": 1000000.0,
+   "per_stock_notional": 20000.0,
+   "eta": 0.00975,
+   "eta_tag": "calibrated",
+   "ac_cost_bps": 0.32,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.001
+  },
+  {
+   "aum": 1000000.0,
+   "per_stock_notional": 20000.0,
+   "eta": 0.1,
+   "eta_tag": "tca_original",
+   "ac_cost_bps": 3.29,
+   "ac_cost_sd_bps": 4.64,
+   "participation_pct": 0.001
+  },
+  {
+   "aum": 1000000.0,
+   "per_stock_notional": 20000.0,
+   "eta": 0.02,
+   "eta_tag": "conservative",
+   "ac_cost_bps": 0.66,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.001
+  },
+  {
+   "aum": 1000000.0,
+   "per_stock_notional": 20000.0,
+   "eta": 0.005,
+   "eta_tag": "optimistic",
+   "ac_cost_bps": 0.16,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.001
+  },
+  {
+   "aum": 5000000.0,
+   "per_stock_notional": 100000.0,
+   "eta": 0.00975,
+   "eta_tag": "calibrated",
+   "ac_cost_bps": 0.72,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.004
+  },
+  {
+   "aum": 5000000.0,
+   "per_stock_notional": 100000.0,
+   "eta": 0.1,
+   "eta_tag": "tca_original",
+   "ac_cost_bps": 7.36,
+   "ac_cost_sd_bps": 4.8,
+   "participation_pct": 0.004
+  },
+  {
+   "aum": 5000000.0,
+   "per_stock_notional": 100000.0,
+   "eta": 0.02,
+   "eta_tag": "conservative",
+   "ac_cost_bps": 1.47,
+   "ac_cost_sd_bps": 4.61,
+   "participation_pct": 0.004
+  },
+  {
+   "aum": 5000000.0,
+   "per_stock_notional": 100000.0,
+   "eta": 0.005,
+   "eta_tag": "optimistic",
+   "ac_cost_bps": 0.37,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.004
+  },
+  {
+   "aum": 20000000.0,
+   "per_stock_notional": 400000.0,
+   "eta": 0.00975,
+   "eta_tag": "calibrated",
+   "ac_cost_bps": 1.43,
+   "ac_cost_sd_bps": 4.61,
+   "participation_pct": 0.017
+  },
+  {
+   "aum": 20000000.0,
+   "per_stock_notional": 400000.0,
+   "eta": 0.1,
+   "eta_tag": "tca_original",
+   "ac_cost_bps": 14.71,
+   "ac_cost_sd_bps": 5.37,
+   "participation_pct": 0.017
+  },
+  {
+   "aum": 20000000.0,
+   "per_stock_notional": 400000.0,
+   "eta": 0.02,
+   "eta_tag": "conservative",
+   "ac_cost_bps": 2.94,
+   "ac_cost_sd_bps": 4.63,
+   "participation_pct": 0.017
+  },
+  {
+   "aum": 20000000.0,
+   "per_stock_notional": 400000.0,
+   "eta": 0.005,
+   "eta_tag": "optimistic",
+   "ac_cost_bps": 0.74,
+   "ac_cost_sd_bps": 4.6,
+   "participation_pct": 0.017
+  },
+  {
+   "aum": 100000000.0,
+   "per_stock_notional": 2000000.0,
+   "eta": 0.00975,
+   "eta_tag": "calibrated",
+   "ac_cost_bps": 3.21,
+   "ac_cost_sd_bps": 4.64,
+   "participation_pct": 0.087
+  },
+  {
+   "aum": 100000000.0,
+   "per_stock_notional": 2000000.0,
+   "eta": 0.1,
+   "eta_tag": "tca_original",
+   "ac_cost_bps": 32.9,
+   "ac_cost_sd_bps": 7.72,
+   "participation_pct": 0.087
+  },
+  {
+   "aum": 100000000.0,
+   "per_stock_notional": 2000000.0,
+   "eta": 0.02,
+   "eta_tag": "conservative",
+   "ac_cost_bps": 6.58,
+   "ac_cost_sd_bps": 4.76,
+   "participation_pct": 0.087
+  },
+  {
+   "aum": 100000000.0,
+   "per_stock_notional": 2000000.0,
+   "eta": 0.005,
+   "eta_tag": "optimistic",
+   "ac_cost_bps": 1.65,
+   "ac_cost_sd_bps": 4.61,
+   "participation_pct": 0.087
+  }
+ ],
+ "eta": {
+  "calibrated_impact": 0.00975,
+  "tca_original_impact": 0.1,
+  "conversion": {
+   "formula": "impact = hl_half / sqrt(p_ref)",
+   "p_ref": 0.02,
+   "at_p_2pct_p25": 0.00669,
+   "at_p_2pct_median": 0.00975,
+   "at_p_2pct_p75": 0.01492,
+   "unit": "tca.py 的 impact 系数（无量纲）",
+   "why_p_2pct": "50只等权、单票AUM 100万、ADV中位约20亿时参与率约0.01%；2% 是策略规模放大到 2000万~1亿时的现实参与率，取它做压力锚"
+  },
+  "honest_limit": "免费 5 分钟线没有委托簿/成交回报，半振幅只是可承受成本上界，不是真实市场冲击。真实 TCA 需要券商成交回报逐笔对齐；这里给出的是 eta 的量级锚与它对结论的敏感性区间。"
+ },
+ "order_book_rows": 197,
+ "wall_street_gap": {
+  "have": [
+   "5分钟线",
+   "日内U型成交量",
+   "sigma_bar",
+   "隔夜跳空",
+   "AC最优切分",
+   "IS四分解",
+   "分项费用账",
+   "逐期下单账簿",
+   "容量约束敏感性"
+  ],
+  "missing": [
+   "逐笔委托簿/盘口",
+   "真实成交回报逐笔对齐（滑点实证）",
+   "FIX/券商API下单",
+   "盘中实时风控与kill switch",
+   "T+0对账与结算",
+   "交易记录合规留存"
+  ],
+  "why_missing": "个人投资者无券商接口与成交回报数据；需 QMT/Ptrade 账户才能补"
+ }
+}
