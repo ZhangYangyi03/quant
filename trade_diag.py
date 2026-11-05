@@ -1,6 +1,7 @@
+import os
 """交易诊断：换手、盈亏分布、费用占比。"""
 import sys, collections
-sys.path.insert(0, r"D:\Users\china\Desktop\项目_开发\quant")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import run_backtest as rb
 from engine import run_backtest as _run
 

@@ -140,6 +140,16 @@ def main(which="ep_shell", k=50, cash=1_000_000.0, start="2010-06-01"):
             cand.sort(key=lambda x: x[1])
         elif which == "roe":
             cand.sort(key=lambda x: -(x[2] or -99))
+        elif which.startswith("eq_"):
+            # 2026-11-05 修复（见 INSTITUTIONAL.md）：原实现让 eq 组既不排序也不抽样，
+            # cand[:k] 落在 fundamentals.json 键序的前 k 只固定老股上
+            # （r7_eq_nofilter.json 只有 993 笔成交 vs EP 组 10085 笔），
+            # 根本不是 README 声称的「同池、同费用、同调仓频率的可执行基准」。
+            # 现在按 (调仓月, 代码) 的确定性哈希抽样：每期强制换仓、无选股偏差、
+            # 同种子完全可复现；eq_shell 仍保留前一步的排除最小 30% 口径。
+            import hashlib
+            cand.sort(key=lambda c: hashlib.sha256(
+                (d[:7] + "|" + c[0]).encode("utf-8")).digest())
         live = [c[0] for c in cand[:k]]
         if not live: continue
         per = equity / len(live); keep = set(live)

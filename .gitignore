@@ -63,3 +63,10 @@ alpha_parts/
 fund_parts/
 
 *.out
+
+# 2026-11-05 机构级改造：上面的通用规则会误伤新增的 quantlab 包。
+# 「data/」本意只排除仓库根目录的原始 CSV 数据，不应吃掉 quantlab/data/ 源码；
+# 「_*.py」本意排除临时脚本，不应吃掉各包的 __init__.py（否则包无法导入）。
+!quantlab/data/
+!quantlab/data/**
+!__init__.py

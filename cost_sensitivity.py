@@ -1,6 +1,7 @@
+import os
 """成本敏感性：同一策略在三档费率下的表现。"""
 import sys
-sys.path.insert(0, r"D:\Users\china\Desktop\项目_开发\quant")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import run_backtest as rb
 from engine import Cost, run_backtest as _run
 import perf

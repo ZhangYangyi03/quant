@@ -14,7 +14,7 @@ EG 提供的是"什么导致什么"的推理框架（参考系），事件流提
 import os, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EG = r"D:\Users\china\Desktop\项目_开发\entity-graph"
+EG = os.path.join(HERE, "..", "entity-graph")
 
 # 事件类型 -> EG 概念关键词。这是"现实 -> EG"的入口。
 # 每一行的含义：这种公告在 EG 的因果框架里，说的是哪一类事。

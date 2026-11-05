@@ -1,17 +1,18 @@
-"""滚动前推（walk-forward）：唯一能接近"预测"的检验。
+"""逐年独立资金的 EP 策略分年收益（不是参数 walk-forward）。
 
-规则：
-  第 N 年年初，只用截至那一年的信息决定参数（持仓数 k、是否排除小市值），
-  然后拿这一套去打第 N 年，不许回头改。
-  每年的选择在"上一年"就算好，再往前推 —— 这是真正的时间外。
+2026-11-05 修订说明（见 INSTITUTIONAL.md）：
+  原 docstring 声称「每年按过去 3 年夏普在 A/B/C 三个配置中选一个」，
+  但代码从未实现该逻辑：Sim 类未使用、ind 行业映射传入后未使用。
+  更严重的是 build() 在 cand[:50] 之前缺少按 EP 排序，实际取到的是
+  fundamentals.json 键序里代码最小的 50 只老股 —— 逐年成绩测的不是 EP 策略。
+  本次已补上排序；walkforward.json 与 README 中基于旧代码的历史数字作废，需重跑。
 
-与之前所有回测的区别：那些都是"我先看完 16 年，再挑一个最好看的参数"。
-这里参数每年重选一次，且只用过去的成绩。
+  真正的参数型 walk-forward（只用历史信息选参、样本外结算、可注入反例检测）
+  请见 quantlab/validate/walkforward.py，附带单元测试。
 
-三个候选配置，每年按过去 3 年的实测夏普选一个：
-  A  EP 不排除，k=50
-  B  行业内 EP 排名合并，k=50（行业中性）
-  C  等权（基准）
+本文件实际做的事：把日期按年分组，每年用一套新的 100 万资金、固定 k=50 的
+EP 策略独立跑一遍，用来观察逐年体验的离散度。它不能证明样本外可预测，
+只能说明单年波动有多大。
 """
 import os, json, struct, mmap, math, sys
 from collections import defaultdict
@@ -121,6 +122,10 @@ def build(dates_sub, fund, meta, ind, last_j, C, O, ND, NC, codes, ci_of):
             if px <= 2.0 or O(base + jn) <= 0 or not ttm: continue
             cand.append((code, ttm / px, ind.get(code)))
         if not cand: continue
+        # 2026-11-05 修复：必须按 EP 降序选股。此前缺失这一行，cand[:50]
+        # 取的是 fundamentals.json 键序（股票代码升序）的前 50 只，
+        # 导致 walkforward.json 的 17 个年度数字测的不是 EP 策略。
+        cand.sort(key=lambda x: -x[1])
         live = [c[0] for c in cand[:50]]
         per = equity / len(live); keep = set(live)
         for ci in list(pos):

@@ -1,10 +1,11 @@
 import sys, os, time, json, bisect
-sys.path.insert(0, 'D:\\Users\\china\\Desktop\\项目_开发\\quant')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import market_engine as ME
 import perf
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 t0 = time.time()
-b = ME.StockBars('D:\\Users\\china\\Desktop\\项目_开发\\quant\\store'); nc = b.load_dir(); b.finalize()
+b = ME.StockBars(os.path.join(HERE, "store")); nc = b.load_dir(); b.finalize()
 print("载入 %d 只 %.1fs" % (nc, time.time()-t0), flush=True)
 dates = [d for d in b.dates if d >= "2010-01-01"]
 dset = set(dates)
@@ -28,5 +29,5 @@ for d in dates:
     curve.append((d, 1_000_000.0*eq))
 p = perf.perf_py(curve)
 print(json.dumps({k: p[k] for k in ("cagr_pct","sharpe","max_drawdown_pct","ann_vol_pct","days","start","end")}, ensure_ascii=False), flush=True)
-json.dump(curve, open(os.path.join('D:\\Users\\china\\Desktop\\项目_开发\\quant', "bench_equal_weight.json"), "w"), ensure_ascii=False)
+json.dump(curve, open(os.path.join(HERE, "bench_equal_weight.json"), "w"), ensure_ascii=False)
 print("完成 %.0fs" % (time.time()-t0))

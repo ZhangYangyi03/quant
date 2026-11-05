@@ -1,5 +1,5 @@
 import os, csv, json, struct, mmap, time
-HERE = r"D:\Users\china\Desktop\项目_开发\quant"
+HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "stockdata")
 meta = json.load(open(os.path.join(HERE, "px_index_meta.json"), encoding="utf-8"))
 dates = meta["dates"]; codes = meta["codes"]
