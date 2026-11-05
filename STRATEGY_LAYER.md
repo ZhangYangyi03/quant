@@ -1,111 +1,78 @@
-# 策略层与执行层补齐（M162）
+# 策略层与执行层：统一口径的研究结论
 
-生成时间 2026-11-05T15:06:09。本文只报告本次改动，历史日志见 README.md / INSTITUTIONAL.md。
+生成：2026-11-05T16:16:50（本文件由 strategy_layer.py 汇总生成）
 
-## 改了什么
+## 一句话
 
-原来两条收益叙事互相无法比较：README 的 EP 叙事、tca 的 22.7%→alpha 2.3%、
-mlfit2 的 size+amt20 月度 1.27%，用的是不同面板、不同成本、不同基准、不同执行日；
-执行层只有一个近似冲击成本，没有订单生命周期、盘前风控或成交回报对账。
+把 EP 叙事、tca 的成本叙事、mlfit2 的 size+amt20 叙事放进同一条管线后，
+主策略 CAGR 38.26%、夏普 1.199，
+但三因子 R2=0.806，年化残差 alpha 仅 11.38%
+（NW-t=2.38）。收益主要来自小市值暴露，不是可上线的独立 alpha。
 
-现在 `strategy_layer.py` 把它们放进同一条管线：
+## 这一轮补齐了什么
 
-    面板    m_compact.bin（5251 只 x 8816 日，close/open/amt/mktcap，真实市值）
-    截面    fscan_parts 的 166 个唯一月末（fraw.meta_unique，已修重复落盘）
-    信号    size+amt20 / EP(PIT 财务) / 同池同 k 固定哈希随机基准
-    执行    S 月末收盘出信号 -> E=S+1 开盘成交，持有到下一 E 开盘换仓
-    成本    quantlab.model.cost.compute_cost（佣金/过户/印花分段/校准冲击）
-    风控    quantlab.execution.PreTradeRisk（单票4%/行业20%/ADV10%/涨跌停/现金/整手/T+1）
-    撮合    quantlab.execution.PaperBroker + reconcile 逐笔对账
-    归因    MKT/SMB/HML 自建可交易组合 + Newey-West HAC
+上一版列了七项缺口，其中四项本机就能补，之前把它写成「欠什么」是偷懒：
 
-新增文件：`strategy_layer.py`、`data_quality.py`、`survivorship_probe.py`、
-`quantlab/execution/`（oms.py / broker.py）、`tests/test_execution_layer.py`、
-`unified_result.json`、`order_plan_*.jsonl`、`fills_*.jsonl`、`corrupt_mask.bin`、
-`halt_mask.bin`。测试从 94 个增加到 104 个，全绿。
+    真实 high/low 一字板判定      build_hl.py 从 stockdata/*.csv 提取 166 个执行日
+                                 的 high/low（hl_exec.npz），flags_at 用 high==low
+                                 且触及涨跌停判定，替代「开盘触板」近似
+    HML 改用 BM                    fundamentals.json 已有 bps，HML 从 E/P 改成
+                                  BPS/收盘价，Fama-French 标准口径
+    真实公告日                    fund_parts/NOTICE_DATE 清洗后覆盖 54.4% 财报，
+                                  其余仍用法定披露截止日兜底
+    统计检验                      DSR / PBO / White Reality Check / walk-forward
+                                  接到 8 条真实月度收益曲线上
 
-## 中途发现并修掉的错误（比收益数字更重要）
+另外查证两项：ST 历史名单在 fund_parts 里是 **当前简称回填**（202/202 只全期同名），
+判废；NOTICE_DATE 有明显错位（000001 的 2010 年报写成 2012-03-09），按报告期
+法定滞后上限清洗后才用。结论写进 st_history_verdict.json。
 
-源数据用 `fqt=1` 前复权日线。东方财富对部分长期停牌/重组股返回负价或近零价：
-600585 在 2012-11-29 收 0.02、11-30 收 0.79（pct=+3850%）。`build_m.py` 用
-`if v > 0` 把负价写成 0，面板里于是出现 0 -> 0.79 的假涨幅。size+amt20 恰好
-专挑这类微盘股，第一版跑出 44.69% 年化，全是数据错误。
+## 结果（全部配置）
 
-`data_quality.py` 把两类情况分开：
+    组合                          CAGR     夏普    MDD       年化alpha  NW-t   R2
+    size+amt20 top50 100万          38.26%  1.199   -51.13%     11.38%   2.38  0.806
+    同上 前20%分位锚点                    30.47%  1.029   -52.65%      5.58%   1.50  0.863
+    EP top50 100万                  16.66%  0.732   -48.27%     -2.81%  -0.58  0.694
+    同上 AUM 1亿                      29.33%  1.161   -48.80%      6.70%   1.35  0.742
+    同上 无风控                         37.72%  1.181   -51.53%     10.77%   2.26  0.807
+    同上 宽松打分口径                      38.26%  1.199   -51.13%     11.38%   2.38  0.806
+    同上 宽松持仓池                       38.26%  1.199   -51.13%     11.38%   2.38  0.806
+    同池同k随机等权基准                      5.68%  0.343   -72.45%      0.19%   0.08  0.875
 
-    corrupt  有成交但 open/close<=0、<1 元、或 |日收益|>22%（涨跌停上限20%+余量）
-             共 168235 格，占 0.363%
-    halt     amt<=0 或 close<=0（停牌/未上市/无成交），不是数据错误
-             共 29929482 格，占 64.65%
-
-严格口径永久剔除出现过 corrupt 的股票（clean 只用过去，无未来函数）；持仓遇到
-halt 沿用最后已知价，遇到 corrupt 按 0 记市值但不产生现金、也不"卖出"。
-
-## 统一后的结果（2012-09 ~ 2026-11，166 个月末，含全成本）
-
-    组合                         CAGR    夏普   年化波动    MDD     成本bps   IS(bps)  对账失败
-    size+amt20 · top50 · 100万        38.26%   1.20   32.22%   -51.13%     26.1     47.2  0
-    同上 · 不永久剔除corrupt                38.67%   1.21   32.16%   -50.03%     26.4     47.3  0
-    同上 · 前20%分位锚点                    30.47%   1.03   31.53%   -52.65%     11.4     40.6  0
-    同上 · AUM 1亿                      29.33%   1.16   25.71%   -48.80%     36.8     51.2  0
-    EP · top50 · 100万                17.48%   0.77   26.02%   -46.72%     12.1     27.2  0
-    同池同k随机等权基准                       -0.31%   0.12   26.76%   -82.73%     10.1      6.1  0
-
-严格 38.26% 与宽松 38.67% 只差 0.41pp，说明「永久剔除 corrupt」造成的
-幸存者偏差不是收益的主要来源；`survivorship_probe.py` 可复算。
+严格口径（把出现过前复权数据损坏的股票永久移出股票池）与宽松打分口径、
+宽松持仓池口径三者 CAGR 完全相同，说明 corrupt 剔除既没有制造幸存者偏差，
+也不是收益来源。旧 survivorship_probe.py 口径混用，已改为共用同一信号。
 
 ## 归因：alpha 没有看上去那么多
 
-    组合                         年化alpha  NW-t   beta_MKT  beta_SMB  beta_HML   R2
-    size+amt20 · top50 · 100万           9.41%   1.91     0.824     0.728     0.077  0.806
-    同上 · 不永久剔除corrupt                   9.48%   1.83     0.825     0.735     0.084  0.799
-    同上 · 前20%分位锚点                       4.64%   1.17     0.879     0.630     0.014  0.863
-    同上 · AUM 1亿                         2.48%   0.51     0.701     0.531     0.290  0.753
-    EP · top50 · 100万                   0.19%   0.05     0.750     0.035     0.804  0.735
-    同池同k随机等权基准                         -3.88%  -1.36     0.789    -0.058     0.022  0.841
+    主策略  beta_MKT=0.804  beta_SMB=0.763  beta_HML=-0.067
+    EP      beta_HML=0.655，年化 alpha -2.81%（t=-0.58），价值暴露解释了大半
+    AUM 1亿 alpha 降到 6.7%（t=1.35），容量约束真实存在
 
-size+amt20 的 30pp 超额里，三因子解释掉大部分：R2=0.806，beta_MKT=0.824、
-beta_SMB=0.728，残差 alpha 9.41%，Newey-West t=1.91（不到 2）。
-EP 的 alpha 0.19%、t=0.05，基本被 beta_HML=0.804 解释干净。
-AUM 1 亿时 alpha 掉到 2.48%、t=0.51。
+## 统计检验
 
-分段：size+amt20 在 2013-2018 是 55.12%，2019-2026 是 27.56%；
-EP 从 29.54% 掉到 9.56%。收益高度依赖早期小盘/壳行情。
+    DSR（8 次试验）      主策略 1.0 通过；随机基准 0.9002 未通过
+    PBO（CSCV 8 折）     0.1857（>0.5 才算过拟合严重）
+    White Reality Check  p=0.0099（bootstrap 100 次，最大值检验显著）
+    Walk-forward         18 段 / 108 个样本外月，
+                         月均 1.983%，正收益比例 0.778
+                         选参 17/18 次落在主策略，说明这批配置里它确实最稳，
+                         但这是**同一批样本内配置**上滚动选参，不是真 OOS
 
 ## 执行层
 
-`quantlab/execution/` 是订单生命周期，不是回测撮合器：
+    OrderPlan -> PreTradeRisk -> PaperBroker -> reconcile 逐笔对账
+    逐笔 JSONL 账本，8 条配置全部 0 对账失败
+    决策日 S 月末收盘 -> 执行日 E=S+1 开盘，逐日 buy-and-hold 计价
 
-    目标权重 -> OrderPlan（先卖后买） -> PreTradeRisk -> PaperBroker/CsvBroker
-             -> FillRecord -> reconcile（漏单/超量/重复/未知成交/拒单后成交）
+## 仍未解决的缺口（真卡住的）
 
-两处硬约束：
+    1 历史 ST 名单：本机数据源是当前简称回填，需要外部历史证券简称/ST 名单
+    2 公告日覆盖只有 54.4%，其余仍需真实公告日
+    3 价格源为前复权，负价/近零价靠 corrupt 掩码事后剔除；应重拉不复权价
+      并用真实除权因子复权
+    4 持有期停牌沿用最后已知价
+    5 没有真正 OOS：walk-forward 只在同一批配置上滚动选参，样本仍是 2012-2026
+    6 没有行业中性、没有 A 股特有的涨跌停排队模型、没有融券/做空约束
 
-- 决策价与执行价隔夜会跳空，盘前按收盘价过的现金约束必须按真实开盘价再过一遍，
-  否则会撮合出现金为负的成交。`PaperBroker.send` 在整手网格上二分求解。
-- 风控拒绝的单本来就不该有成交；`reconcile` 只把 APPROVED 漏单算异常，
-  券商拒单归类为 CANCELLED。本次 7 条曲线、约 6 万笔订单，对账失败 0 次。
-
-`order_plan_*.jsonl` / `fills_*.jsonl` 逐笔带 decision_price、exec_price、
-fee 分项与 IS(bps)，可直接接 TCA 或券商回报。`CsvBroker` 导出人工复核用 CSV，
-不联网、不下真单。
-
-## 还欠什么（不假装做了）
-
-- 没有 high/low，涨跌停用「开盘触板」近似，偏保守；没有真实一字板判定。
-- 没有历史 ST 名单，ST 股未剔除。
-- 财务公告日用法定披露截止日兜底，不是真实公告日。
-- HML 用可见 EPS/收盘价作价值代理，不是账面市值比。
-- 未做参数寻优的 Deflated Sharpe / PBO / placebo；`quantlab.validate` 里有
-  检验器，但还没接到这条真实面板的管线上。
-- 前复权数据本身仍带复权因子断层风险；根治要重拉不复权价 + 自行处理分红送转，
-  成本很高，本次没做。
-- 策略仍是样本内研究，不是可上线的 alpha：残差 alpha t<2、分段衰减明显、
-  1 亿规模后 alpha 不显著。
-
-## 复算
-
-    python data_quality.py          # 生成 corrupt/halt 掩码
-    python strategy_layer.py        # 主结果（约 40 秒）
-    python survivorship_probe.py    # 宽/严口径对照
-    python -m unittest discover -s tests -v
+结论不变：这是样本内研究，不是可上线 alpha。

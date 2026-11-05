@@ -20,7 +20,7 @@
 输出 unified_result.json / order_plan_<cfg>.jsonl / fills_<cfg>.jsonl / STRATEGY_LAYER.md
 """
 from __future__ import annotations
-import os, sys, json, math, struct, bisect, datetime
+import os, sys, json, math, struct, bisect, datetime, time
 for _k in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ[_k] = "1"
 import numpy as np
@@ -38,6 +38,18 @@ from quantlab.data.pit import disclosure_deadline
 from dataclasses import replace, asdict
 
 np.random.seed(20261105)
+
+
+def visible_date(rp, code: str, period: str) -> str:
+    """真实公告日优先，缺失时退回法定披露截止日（覆盖 54.4% 的真实公告）。
+
+    report_ann_dates.json 由 fund_parts/NOTICE_DATE 清洗而来：只保留相对报告期
+    0~法定上限+余量天内的公告日，剔除明显错位（如 000001 的 2010 年报写成 2012-03-09）。
+    """
+    nd = rp.ann(code, period)
+    if nd:
+        return nd
+    return disclosure_deadline(period)
 
 
 class RealPanel:
@@ -60,6 +72,21 @@ class RealPanel:
                             mode="r", shape=(self.ND, self.NC))
         self.halt = np.memmap(os.path.join(HERE, "halt_mask.bin"), dtype=np.uint8,
                              mode="r", shape=(self.ND, self.NC))
+        _hl = np.load(os.path.join(HERE, "hl_exec.npz"))
+        self.hl_date_idx = {str(d): i for i, d in enumerate(_hl["dates"])}
+        self.hl_high, self.hl_low = _hl["high"], _hl["low"]
+        # 公告日历 18 万条若常驻会再吃掉 ~40MB，叠加大面板刚好撞本机 512MB
+        # 提交上限；改成按需加载，用完即释放。
+        self._ann_cache = None
+
+    def ann(self, code, period):
+        if self._ann_cache is None:
+            self._ann_cache = json.load(open(os.path.join(HERE, "report_ann_dates.json"),
+                                             encoding="utf-8"))
+        return self._ann_cache.get(code, {}).get(period)
+
+    def drop_ann(self):
+        self._ann_cache = None
 
     def rows(self, field, j0, j1):
         n = (j1 - j0) * self.NC
@@ -169,7 +196,7 @@ def build_signals(rp, M, JJ, NS, icj):
         rec = []
         for r in rows:
             try:
-                ann = disclosure_deadline(r["d"])
+                ann = visible_date(rp, code, r["d"])
             except (ValueError, KeyError):
                 continue
             if r.get("eps") is None or r.get("bps") is None:
@@ -203,19 +230,37 @@ def build_signals(rp, M, JJ, NS, icj):
 
 
 def flags_at(rp, S, E, idxs, limit_main=0.10, limit_gem=0.20):
-    """执行日开盘的涨跌停/停牌近似，以及决策价。没有 high/low，用开盘触板近似，偏保守。
-    idxs 是股票的整数列号。"""
+    """执行日 E 的涨跌停/停牌/一字板，以及决策价。
+
+    用 stockdata/*.csv 的 high/low 判一字板（high==low 且触及涨跌停），
+    比"开盘触板"精确：开盘触板但盘中有成交的票仍可买卖。
+    """
     cs = rp.col("close", S); op = rp.col("open", E); am = rp.col("amt", E)
+    k = rp.hl_date_idx.get(rp.dates[E])
+    H = rp.hl_high[k] if k is not None else None
+    L = rp.hl_low[k] if k is not None else None
     out = {}
     for i in idxs:
         i = int(i)
         lim = limit_gem if (rp.codes[i][:3] in ("300", "301", "688")) else limit_main
         px_prev = float(cs[i]) if np.isfinite(cs[i]) else 0.0
         px = float(op[i]) if np.isfinite(op[i]) else 0.0
+        up_px = px_prev * (1 + lim) if px_prev > 0 else 0.0
+        dn_px = px_prev * (1 - lim) if px_prev > 0 else 0.0
         ratio = px / px_prev - 1.0 if px_prev > 0 and px > 0 else 0.0
+        # 一字涨停：最高=最低=涨停价；一字跌停：最高=最低=跌停价
+        one_up = bool(H is not None and np.isfinite(H[i]) and np.isfinite(L[i])
+                      and up_px > 0 and abs(H[i] - L[i]) < 1e-6
+                      and abs(H[i] - up_px) <= max(0.011, up_px * 0.005))
+        one_dn = bool(H is not None and np.isfinite(H[i]) and np.isfinite(L[i])
+                      and dn_px > 0 and abs(H[i] - L[i]) < 1e-6
+                      and abs(H[i] - dn_px) <= max(0.011, dn_px * 0.005))
         bad = bool(rp.bad[E, i]) or (not rp.clean[S][i])
-        out[i] = {"decision_price": px_prev, "suspended": bool(px <= 0 or am[i] <= 0 or bad),
-                  "limit_up": bool(ratio >= lim - 0.005), "limit_down": bool(ratio <= -lim + 0.005)}
+        out[i] = {"decision_price": px_prev,
+                  "suspended": bool(px <= 0 or am[i] <= 0 or bad),
+                  "limit_up": bool(ratio >= lim - 0.005 or one_up),
+                  "limit_down": bool(ratio <= -lim + 0.005 or one_dn),
+                  "one_word_board": bool(one_up or one_dn)}
     return out
 
 
@@ -224,7 +269,7 @@ def market_and_style_factors(rp, M, JJ, NS):
 
     MKT  全池等权，E 开盘 -> 下一 E 开盘
     SMB  小市值 30% 等权 - 大市值 30% 等权
-    HML  高 E/P 30% 等权 - 低 E/P 30% 等权（价值的代理，明确标注）
+    HML  高 BM（BPS/收盘价）30% 等权 - 低 BM 30% 等权，Fama-French 标准口径
     """
     fund = json.load(open(os.path.join(HERE, "fundamentals.json"), encoding="utf-8"))
     epi = rp.code_idx
@@ -236,14 +281,14 @@ def market_and_style_factors(rp, M, JJ, NS):
         rs = []
         for r in rows:
             try:
-                ann = disclosure_deadline(r["d"])
+                ann = visible_date(rp, code, r["d"])
             except (ValueError, KeyError):
                 continue
-            if r.get("eps") is not None:
-                rs.append((ann, float(r["eps"])))
+            if r.get("bps") is not None:
+                rs.append((ann, float(r["bps"])))
         rs.sort()
         recs[ci] = rs
-    ep_ann = {ci: [x[0] for x in rr] for ci, rr in recs.items()}
+    bps_ann = {ci: [x[0] for x in rr] for ci, rr in recs.items()}
     keys, mk, smb, hml = [], [], [], []
     for m in range(NS):
         S, E = int(JJ[m]), int(JJ[m]) + 1
@@ -266,20 +311,20 @@ def market_and_style_factors(rp, M, JJ, NS):
         c = cap[good]
         q = np.quantile(c, [0.3, 0.7])
         smb.append(float(ret[c <= q[0]].mean() - ret[c >= q[1]].mean()))
-        # E/P：可见最新一期 EPS / 决策日收盘（bisect 定位，避免逐股列表推导）
-        ep = np.full(len(gidx), np.nan)
+        # BM：可见最新一期 BPS / 决策日收盘（bisect 定位，避免逐股列表推导）
+        bm = np.full(len(gidx), np.nan)
         d = rp.dates[S]
         for t, ci in enumerate(gidx):
             rr = recs.get(int(ci), ())
             if not rr or cS[ci] <= 0:
                 continue
-            lo = bisect.bisect_right(ep_ann[int(ci)], d) - 1
+            lo = bisect.bisect_right(bps_ann[int(ci)], d) - 1
             if lo >= 0:
-                ep[t] = rr[lo][1] / cS[ci]
-        v = np.isfinite(ep)
+                bm[t] = rr[lo][1] / cS[ci]
+        v = np.isfinite(bm) & (bm > 0)
         if v.sum() > 100:
-            qq = np.quantile(ep[v], [0.3, 0.7])
-            hml.append(float(ret[v][ep[v] >= qq[1]].mean() - ret[v][ep[v] <= qq[0]].mean()))
+            qq = np.quantile(bm[v], [0.3, 0.7])
+            hml.append(float(ret[v][bm[v] >= qq[1]].mean() - ret[v][bm[v] <= qq[0]].mean()))
         else:
             hml.append(0.0)
     return keys, np.array(mk), np.array(smb), np.array(hml)
@@ -455,70 +500,115 @@ def run_config(name, score, rp, M, JJ, EX, NS, cfg, *, aum, top_k=50,
 
 
 def main():
-    rp, M, JJ, EX, NS, icj, cal = load_context()
-    industries = json.load(open(os.path.join(HERE, "stock_industry.json"), encoding="utf-8"))
-    print("[load] %d 个唯一月末 %s ~ %s，%d 只股票，%d 个交易日" % (
-        len(JJ), rp.dates[int(JJ[0])], rp.dates[int(JJ[-1])], rp.NC, rp.ND), flush=True)
-    # 质量闸门预计算：坏样本前后各 60 日整段剔除，一次扫描代替每月重复扫描
-    # clean[S] = 截至 S 从未出现过前复权数据损坏（只用过去，无未来函数）
-    # 逐行累计，避免 8816x5251 的 int64 临时数组撞本机 512MB 提交上限
-    clean = np.empty((rp.ND, rp.NC), dtype=bool)
-    running = np.zeros(rp.NC, dtype=bool)
-    for j in range(rp.ND):
-        running |= rp.bad[j].astype(bool)
-        clean[j] = ~running
-    rp.clean = clean
-    sig = build_signals(rp, M, JJ, NS, icj)
-    # 宽松口径：不因「历史上出现过前复权数据损坏」永久剔除股票，只在使用当日
-    # corrupt 时跳过计价。两种口径并列输出，用来量化幸存者偏差。
-    rp.clean = np.ones((rp.ND, rp.NC), dtype=bool)
-    sig_loose = build_signals(rp, M, JJ, NS, icj)
-    rp.clean = clean
-    print("[signals] strict", {k: int(np.isfinite(v).sum()) for k, v in sig.items()},
-          "loose", {k: int(np.isfinite(v).sum()) for k, v in sig_loose.items()}, flush=True)
-    cfg = Config()
-    # 同池、同 k、同频率、同成本的可交易随机基准（固定哈希，可复现）
-    rnd = np.full((NS, rp.NC), np.nan)
-    for m in range(NS):
-        h = np.array([int.from_bytes(__import__("hashlib").sha256(
-            ("20261105|%s|%s" % (rp.dates[int(JJ[m])], c)).encode()).digest()[:8], "big")
-            for c in rp.codes], dtype=np.float64) / 2 ** 64
-        rnd[m] = h
+    """纯调度：面板与配置都不在主进程展开，规避本机 512MB 提交上限。"""
+    import subprocess
     results, curves = {}, {}
-    jobs = [
-        ("size_amt20_top50", sig["size_amt20"], 1e6, 50, False, True),
-        ("size_amt20_quintile_anchor", sig["size_amt20"], 1e6, 50, True, True),
-        ("ep_top50", sig["ep"], 1e6, 50, False, True),
-        ("size_amt20_aum1e8", sig["size_amt20"], 1e8, 50, False, True),
-        ("size_amt20_no_risk", sig["size_amt20"], 1e6, 50, False, False),
-        ("loose_size_amt20_top50", sig_loose["size_amt20"], 1e6, 50, False, True),
+    JOBS = [
+        ("size_amt20_top50", "size_amt20", "strict", 1e6, 50, False, True),
+        ("size_amt20_quintile_anchor", "size_amt20", "strict", 1e6, 50, True, True),
+        ("ep_top50", "ep", "strict", 1e6, 50, False, True),
+        ("size_amt20_aum1e8", "size_amt20", "strict", 1e8, 50, False, True),
+        ("size_amt20_no_risk", "size_amt20", "strict", 1e6, 50, False, False),
+        ("loose_size_amt20_top50", "size_amt20", "loose", 1e6, 50, False, True),
+        ("pool_loose_size_amt20_top50", "size_amt20", "strict", 1e6, 50, False, True),
+        ("random_k_equal", "random", "loose", 1e6, 50, False, True),
     ]
-    for name, score, aum, k, quin, rk in jobs:
-        r, c = run_config(name, score, rp, M, JJ, EX, NS, cfg, aum=aum, top_k=k,
-                          quintile=quin, industries=industries, risk_on=rk,
-                          write_ledger=name in ("size_amt20_top50", "size_amt20_aum1e8",
-                                                "loose_size_amt20_top50"))
-        results[name] = {k2: v for k2, v in r.items() if k2 != "curve"}
-        curves[name] = c
-        print("%-30s CAGR %6s%%  夏普 %5s  MDD %7s%%  成本 %.0f元  IS %.1fbps  拒单 %s  对账失败 %d" % (
-            name, r["stats"].get("cagr_pct"), r["stats"].get("sharpe"), r["stats"].get("mdd_pct"),
-            r["cost"]["total"], r["is_bps_mean"] or 0, sum(r["rejects"].values()), r["recon_failures"]), flush=True)
+    CACHE = os.path.join(HERE, "_config_cache")
+    os.makedirs(CACHE, exist_ok=True)
+    for name, which, uni, aum, k, quin, rk in JOBS:
+        cf = os.path.join(CACHE, name + ".json")
+        if os.path.exists(cf):
+            got = json.load(open(cf, encoding="utf-8"))
+            results[got["name"]] = {k2: v for k2, v in got.items() if k2 != "curve"}
+            curves[got["name"]] = [tuple(x) for x in got["curve"]]
+            print("%-30s (cached)" % name, flush=True)
+            continue
+        env = dict(os.environ, OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1",
+                   MKL_NUM_THREADS="1")
+        args = [sys.executable, "-u", os.path.abspath(__file__), "--config", name,
+                "--signal", which, "--universe", uni, "--aum", repr(aum),
+                "--topk", str(k), "--quintile", "1" if quin else "0",
+                "--risk", "1" if rk else "0", "--pool",
+                "loose" if name.startswith("pool_loose_") else "strict"]
+        t0 = time.time()
+        r = subprocess.run(args, cwd=HERE, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", env=env)
+        if r.returncode != 0:
+            print("[fail] %s rc=%d\n%s" % (name, r.returncode, r.stderr[-1500:]), flush=True)
+            continue
+        got = json.loads(r.stdout.strip().splitlines()[-1])
+        json.dump(got, open(cf, "w", encoding="utf-8"), ensure_ascii=False)
+        results[got["name"]] = {k2: v for k2, v in got.items() if k2 != "curve"}
+        curves[got["name"]] = [tuple(x) for x in got["curve"]]
+        print("%-30s CAGR %6s%%  夏普 %5s  MDD %7s%%  成本 %.0f元  IS %.1fbps  拒单 %s  对账失败 %d  (%.1fs)" % (
+            name, got["stats"].get("cagr_pct"), got["stats"].get("sharpe"),
+            got["stats"].get("mdd_pct"), got["cost"]["total"], got["is_bps_mean"] or 0,
+            sum(got["rejects"].values()), got["recon_failures"], time.time() - t0), flush=True)
 
-    # 可执行基准：同池、同频率、同成本的全池等权（不排序、不抽样，修掉历史基准 bug）
-    # 基准也用宽松口径（不引入 corrupt 剔除带来的选股偏差）
-    rp_clean_before = rp.clean
-    rp.clean = np.ones((rp.ND, rp.NC), dtype=bool)
-    base, base_curve = run_config("random_k_equal", rnd, rp, M, JJ, EX, NS, cfg,
-                                  aum=1e6, top_k=50, industries=industries,
-                                  risk_on=True, write_ledger=False)
-    results["random_k_equal"] = {k: v for k, v in base.items() if k != "curve"}
-    curves["random_k_equal"] = base_curve
-    rp.clean = rp_clean_before
-    print("%-30s CAGR %6s%%  夏普 %5s" % ("random_k_equal",
-          base["stats"].get("cagr_pct"), base["stats"].get("sharpe")), flush=True)
+    # 风格因子也交给子进程
+    env = dict(os.environ, OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
+    ff = os.path.join(CACHE, "_factors.json")
+    if os.path.exists(ff):
+        fac = json.load(open(ff, encoding="utf-8"))
+    else:
+        r = subprocess.run([sys.executable, "-u", os.path.abspath(__file__), "--factors", "1"],
+                           cwd=HERE, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", env=env)
+        if r.returncode != 0:
+            raise RuntimeError("因子子进程失败: " + r.stderr[-1500:])
+        fac = json.loads(r.stdout.strip().splitlines()[-1])
+        json.dump(fac, open(ff, "w", encoding="utf-8"), ensure_ascii=False)
+    fkeys, F_MKT, F_SMB, F_HML = (fac["keys"], np.array(fac["mkt"]),
+                                  np.array(fac["smb"]), np.array(fac["hml"]))
+    print("[load] %d 个配置，%d 个因子月" % (len(curves), len(fkeys)), flush=True)
+
+    # 统计检验：把多重检验/过拟合/样本外三道关接到真实月度收益上
+    from quantlab.validate.stats import (deflated_sharpe, pbo,
+                                        bootstrap_max_sharpe_p)
+    from quantlab.validate.walkforward import run_walkforward
+    monthly_by_cfg = {}
+    for name, c in curves.items():
+        ks, rs = monthly_returns(c)
+        monthly_by_cfg[name] = [float(x) for x in rs]
+    # 只用真正"试过的策略配置"计数：主线 5 条 + 宽松口径 + 随机对照 + 基准
+    n_trials = 8
+    validation = {"n_trials": n_trials, "per_config": {}}
+    for name, rs in monthly_by_cfg.items():
+        if len(rs) < 24:
+            continue
+        n = len(rs)
+        mu = float(np.mean(rs)); sd = float(np.std(rs, ddof=1))
+        sr_m = mu / sd if sd > 0 else 0.0
+        skew = float(np.mean(((np.array(rs) - mu) / sd) ** 3)) if sd > 0 else 0.0
+        kurt = float(np.mean(((np.array(rs) - mu) / sd) ** 4)) if sd > 0 else 3.0
+        # DSR 的 sr_daily 用日频 Sharpe（月度 Sharpe / sqrt(21)）
+        sr_d = sr_m / math.sqrt(21.0)
+        dsr = deflated_sharpe(sr_d, n_trials=n_trials, n_obs=n * 21,
+                              skew=skew, kurtosis=kurt)
+        validation["per_config"][name] = {
+            "n_months": n, "sharpe_monthly": round(sr_m, 3),
+            "dsr_prob": round(dsr, 4),
+            "dsr_pass": bool(dsr > 0.95)}
+    # PBO / WRC：把所有配置摆在同一张收益矩阵上
+    validation["pbo"] = round(pbo(monthly_by_cfg, slices=8), 4)
+    validation["wrc_p"] = round(bootstrap_max_sharpe_p(monthly_by_cfg, draws=100, seed=7), 4)
+    # Walk-forward：每月用过去 60 个月选夏普最高的配置，下 6 个月样本外结算
+    def _choose(hist):
+        return max(hist, key=lambda k: (np.mean(hist[k]) / np.std(hist[k], ddof=1)
+                                        if len(hist[k]) > 1 and np.std(hist[k], ddof=1) > 0 else -9))
+    wf = run_walkforward(monthly_by_cfg, _choose, min_history=60, oos_len=6, strict=True)
+    if wf:
+        oos = np.array([x.oos_return for x in wf])
+        validation["walkforward"] = {"periods": len(wf),
+                                    "oos_months": int(len(wf) * 6),
+                                    "oos_sum_ret_pct": round(float(oos.sum()) * 100, 2),
+                                    "oos_mean_monthly_pct": round(float(oos.mean()) / 6 * 100, 3),
+                                    "oos_positive_rate": round(float((oos > 0).mean()), 3),
+                                    "chosen_counts": {k: sum(1 for x in wf if x.chosen == k)
+                                                      for k in sorted(set(x.chosen for x in wf))}}
+    print("[validation] done", flush=True)
 
     # 归因：月度超额对 MKT/SMB/HML 回归 + Newey-West HAC
-    fkeys, F_MKT, F_SMB, F_HML = market_and_style_factors(rp, M, JJ, NS)
     fmap = {k: (F_MKT[i], F_SMB[i], F_HML[i]) for i, k in enumerate(fkeys)}
     attrib = {}
     for name, c in curves.items():
@@ -542,21 +632,109 @@ def main():
     print("[attribution] 因子月数 %d, 归因组合 %d" % (len(fkeys), len(attrib)), flush=True)
 
     out = {"generated": datetime.datetime.now().isoformat(timespec="seconds"),
-           "panel": {"file": "m_compact.bin", "stocks": rp.NC, "days": rp.ND,
-                     "unique_months": len(JJ), "range": [rp.dates[int(JJ[0])], rp.dates[int(JJ[-1])]],
+           "panel": {"file": "m_compact.bin", "stocks": 5251, "days": 8816,
+                     "unique_months": 166,
+                     "range": [fac["range"][0], fac["range"][1]],
                      "signal_day": "S=月末收盘", "exec_day": "E=S+1 开盘",
-                     "cost": "quantlab.model.cost（佣金/过户/印花分段/校准冲击 eta=%.5f）" % 0.00975,
+                     "cost": "quantlab.model.cost（佣金/过户/印花分段/校准冲击 eta=0.00975）",
                      "risk": "单票4%/行业20%/ADV参与率10%/涨跌停/现金/整手/T+1",
-                     "known_gaps": ["无 high/low，涨跌停用开盘触板近似（偏保守）",
-                                    "未剔除 ST（无历史 ST 名单）",
-                                    "财务公告日用法定披露截止日兜底，非真实公告日",
-                                    "持有期停牌沿用最后已知价"]},
-           "results": results, "attribution": attrib,
-           "curves": {k: v for k, v in curves.items()}}
+                     "resolved": ["真实 high/low 一字板判定（hl_exec.npz）",
+                                  "HML 改用 BPS/收盘价 BM，Fama-French 标准口径",
+                                  "54.4% 财报用真实 NOTICE_DATE，其余法定截止日兜底",
+                                  "DSR / PBO / White Reality Check / walk-forward 检验"],
+                     "known_gaps": ["历史 ST 名单：fund_parts 的 SECURITY_NAME_ABBR 是当前简称回填（202/202 只全期同名），仍需外部源",
+                                    "真实公告日覆盖 54.4%，其余仍用法定截止日",
+                                    "价格源为前复权，未用不复权价重拉",
+                                    "持有期停牌沿用最后已知价",
+                                    "未做真正 OOS（walk-forward 仅在同一批配置上滚动选参）"]},
+           "results": results, "attribution": attrib, "validation": validation,
+           "curves": {k: [list(x) for x in v] for k, v in curves.items()}}
     json.dump(out, open(os.path.join(HERE, "unified_result.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     print("saved unified_result.json", flush=True)
     return out
+
+
+def _random_score(rp, M, JJ, NS):
+    import hashlib
+    rnd = np.full((NS, rp.NC), np.nan)
+    for m in range(NS):
+        rnd[m] = np.array([int.from_bytes(hashlib.sha256(
+            ("20261105|%s|%s" % (rp.dates[int(JJ[m])], c)).encode()).digest()[:8], "big")
+            for c in rp.codes], dtype=np.float64) / 2 ** 64
+    return rnd
+
+
+def _clean_from_bad(rp):
+    """clean[S] = 截至 S 从未出现过前复权数据损坏（只用过去，无未来函数）。"""
+    clean = np.empty((rp.ND, rp.NC), dtype=bool)
+    running = np.zeros(rp.NC, dtype=bool)
+    for j in range(rp.ND):
+        running |= rp.bad[j].astype(bool)
+        clean[j] = ~running
+    return clean
+
+
+def run_one(args):
+    """单条配置的独立进程入口：跑完把结果 JSON 打到 stdout 最后一行。"""
+    import gc
+    rp, M, JJ, EX, NS, icj, cal = load_context()
+    industries = json.load(open(os.path.join(HERE, "stock_industry.json"), encoding="utf-8"))
+    clean = _clean_from_bad(rp)
+    # signal_universe：打分时是否把 corrupt 股票排除（宽松信号）
+    # pool_universe：持仓池是否排除 corrupt 股票（严格口径）
+    sig_clean = clean if args.universe == "strict" else np.ones((rp.ND, rp.NC), dtype=bool)
+    pool_clean = clean if args.pool != "loose" else np.ones((rp.ND, rp.NC), dtype=bool)
+    rp.clean = sig_clean
+    if args.signal == "random":
+        score = _random_score(rp, M, JJ, NS)
+    else:
+        sig = build_signals(rp, M, JJ, NS, icj)
+        score = sig[args.signal]
+        del sig
+    rp.drop_ann(); rp.clean = pool_clean; gc.collect()
+    cfg = Config()
+    r, c = run_config(args.config, score, rp, M, JJ, EX, NS, cfg, aum=args.aum,
+                      top_k=args.topk, quintile=bool(int(args.quintile)),
+                      industries=industries, risk_on=bool(int(args.risk)),
+                      write_ledger=args.config in ("size_amt20_top50", "size_amt20_aum1e8",
+                                                   "loose_size_amt20_top50"))
+    r["curve"] = [[d, float(v)] for d, v in c]
+    print(json.dumps(r, ensure_ascii=False), flush=True)
+
+
+def _parse_one(argv):
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", required=True)
+    ap.add_argument("--signal", required=True)
+    ap.add_argument("--universe", default="strict")
+    ap.add_argument("--pool", default="strict")
+    ap.add_argument("--aum", type=float, default=1e6)
+    ap.add_argument("--topk", type=int, default=50)
+    ap.add_argument("--quintile", default="0")
+    ap.add_argument("--risk", default="1")
+    return ap.parse_args(argv)
+
+
+if __name__ == "__main__" and "--config" in sys.argv:
+    run_one(_parse_one(sys.argv[1:]))
+    sys.exit(0)
+
+
+def run_factors():
+    rp, M, JJ, EX, NS, icj, cal = load_context()
+    rp.clean = _clean_from_bad(rp)
+    k, mk, smb, hml = market_and_style_factors(rp, M, JJ, NS)
+    rp.drop_ann()
+    print(json.dumps({"keys": k, "range": [rp.dates[int(JJ[0])], rp.dates[int(JJ[-1])]], "mkt": [float(x) for x in mk],
+                      "smb": [float(x) for x in smb], "hml": [float(x) for x in hml]},
+                     ensure_ascii=False), flush=True)
+
+
+if __name__ == "__main__" and "--factors" in sys.argv:
+    run_factors()
+    sys.exit(0)
 
 
 if __name__ == "__main__":

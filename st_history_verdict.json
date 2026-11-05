@@ -1,0 +1,6 @@
+{
+ "verdict": "UNUSABLE for historical ST",
+ "reason": "SECURITY_NAME_ABBR 是当前证券简称回填到所有历史 REPORT_DATE；202/202 只股票全期同名，无法还原历史 ST 状态",
+ "coverage_codes": 202,
+ "note": "真实历史 ST 名单仍需外部数据源"
+}

@@ -1,6 +1,7 @@
 {
- "generated": "2026-11-05T15:03:24",
+ "generated": "2026-11-05T16:14:13",
  "question": "永久剔除 corrupt 股票是否制造幸存者偏差？",
+ "method": "严格与宽松共用同一 size+amt20 信号；仅 rp.clean 不同",
  "strict": {
   "name": "strict",
   "aum": 1000000.0,
@@ -45,37 +46,37 @@
   "top_k": 50,
   "quintile": false,
   "stats": {
-   "cagr_pct": 19.17,
-   "sharpe": 0.722,
-   "ann_vol_pct": 32.42,
-   "mdd_pct": -72.28,
-   "total_mult": 11.993,
+   "cagr_pct": 38.26,
+   "sharpe": 1.199,
+   "ann_vol_pct": 32.22,
+   "mdd_pct": -51.13,
+   "total_mult": 98.289,
    "n_days": 3437
   },
   "cost": {
-   "commission": 168536.91,
-   "transfer": 63070.06,
-   "stamp": 265205.88,
+   "commission": 718710.87,
+   "transfer": 285048.75,
+   "stamp": 1025687.77,
    "slippage": 0.0,
-   "impact": 457530.94,
-   "total": 954343.79
+   "impact": 5421551.93,
+   "total": 7450999.33
   },
-  "turnover_notional": 630700599.01,
-  "is_bps_mean": 41.97,
+  "turnover_notional": 2850487503.16,
+  "is_bps_mean": 47.2,
   "rejects": {
-   "insufficient_cash": 564,
-   "limit_up_cannot_buy": 127,
-   "adv_capacity_zero": 38,
-   "suspended": 48,
-   "limit_down_cannot_sell": 11,
-   "industry_cap_breach": 122,
-   "below_lot_size": 4
+   "insufficient_cash": 290,
+   "adv_capacity_zero": 41,
+   "limit_up_cannot_buy": 137,
+   "suspended": 36,
+   "limit_down_cannot_sell": 13,
+   "industry_cap_breach": 66,
+   "below_lot_size": 1
   },
   "recon_failures": 0,
-  "n_orders": 8813,
-  "n_fills": 7895,
-  "plan_fingerprint": "4069996c62dffb0c",
-  "delisted_mark_events": 48
+  "n_orders": 9220,
+  "n_fills": 8630,
+  "plan_fingerprint": "c4f540ef71ee0f72",
+  "delisted_mark_events": 30
  },
- "cagr_gap_pp": -19.09
+ "cagr_gap_pp": 0.0
 }
