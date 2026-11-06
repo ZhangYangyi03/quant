@@ -8,8 +8,11 @@ stockdata/
 store/
 shards/
 live/
-data/
+# data/ 与 data_extra/ 的 CSV 是 ETF 审计输入，需入库；目录内的中间产物仍忽略
+data/*
 !data/*.csv
+data_extra/*
+!data_extra/*.csv
 __pycache__/
 
 # 日志与诊断
