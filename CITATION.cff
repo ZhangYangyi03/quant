@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "quant: a PIT, no-lookahead A-share research codebase (quantlab)"
+authors:
+  - family-names: Zhang
+    given-names: Yangyi
+    affiliation: Georgetown University
+repository-code: "https://github.com/ZhangYangyi03/quant"
+license: MIT
+type: software

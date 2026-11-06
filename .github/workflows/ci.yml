@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ matrix.python-version }}"}
+
+      # The reproducible core is standard library only. If a test ever starts
+      # importing numpy/pandas, this fails before the suite does.
+      - name: the core needs no third-party package
+        run: python -c "import sys; assert 'numpy' not in sys.modules and 'pandas' not in sys.modules"
+
+      - name: quantlab unit tests
+        run: python -B -m unittest discover -s tests -v
+
+      # Six gates: no lookahead, no future-dependent tuning, true walk-forward,
+      # reproducibility, non-trivial benchmark, complete run record. Output goes
+      # outside the checkout so CI never leaves a dirty result file behind.
+      - name: six-gate institutional demo on synthetic data
+        run: python -B run_institutional.py --codes 20 --days 200 --out /tmp/institutional_run.json

@@ -1,7 +1,13 @@
 # quant
 
+[![ci](https://github.com/ZhangYangyi03/quant/actions/workflows/ci.yml/badge.svg)](https://github.com/ZhangYangyi03/quant/actions/workflows/ci.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 回测可信度审计工具 + 可复现的量化研究底座。**不是能赚钱的策略库**，
 核心价值是把「回测里那些假的收益」一层层查出来，并把正面和负面结论一起留下。
+
+CI 每次 push 会在 Python 3.11 / 3.13 上跑完 110 个单元测试（缺 1.9GB 矩阵时
+2 个自动 skip），再用合成数据跑一遍六道闸门（无前视 / 选参不用未来 / 真 walk-forward /
+可复现 / 基准非固定篮子 / 运行留痕）。核心层只依赖标准库，clone 后不需要装包就能验。
 
 ## 部署（clone 后三步）
 
