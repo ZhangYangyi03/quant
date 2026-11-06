@@ -128,6 +128,19 @@ def test_H_ic_fingerprint():
     print("[H] IC fingerprint ->", ic, "collapse",
           r["L2_alignment"]["ic_collapse"])
 
+def test_I_remedies():
+    C, O, A, cal, codes = base()
+    S = np.full((T, N), np.nan)
+    R = np.diff(C, axis=0) / C[:-1]
+    S[:T-1] = R
+    rep = audit(S, C, O, A, cal, codes, topk=TOPK, cost_bp=COST)
+    rem = rep["remedies"]
+    assert rem and any(x["layer"] == "L2" for x in rem), rem
+    l2 = [x for x in rem if x["layer"] == "L2"][0]
+    assert "shift=1" in l2["fix"] and "lag0" in l2["cost_hint"]
+    print("[I] remedies ->", [x["layer"] for x in rem],
+          "L2 hint", l2["cost_hint"][:110])
+
 def test_E_multi_year():
     reps = [(2022, {"executable_alpha_nav": 0.94, "fails": ["L3_untradable"]}),
             (2023, {"executable_alpha_nav": 1.20, "fails": []}),
@@ -142,6 +155,6 @@ def test_E_multi_year():
 if __name__ == "__main__":
     for fn in (test_A_clean, test_B_index_shift, test_C_lookahead,
                test_D_untradable, test_E_multi_year, test_F_index_mismatch,
-               test_G_index_ok, test_H_ic_fingerprint):
+               test_G_index_ok, test_H_ic_fingerprint, test_I_remedies):
         fn()
     print("ALL TESTS PASSED")

@@ -213,7 +213,49 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
     out["executable_alpha_nav"] = round(n_o2o_f, 4)
     out["scope_warning"] = ("单年结果不构成可信度结论：需逐年 audit 后看跨年度稳定性，"
                             "一年通过不等于策略可用")
+    out["remedies"] = _remedies(out)
     return out
+
+
+def _remedies(out):
+    """把每层失败映射成具体修法 + 量化影响。给人看的，不是给机器判的。"""
+    r = []
+    l1, l2, l3 = out["L1_signal_index"], out["L2_alignment"], out["L3_untradable"]
+    if not l1["pass"] or not l1.get("index_checked"):
+        r.append({
+            "layer": "L1", "problem": "信号索引未核对或发现错配",
+            "fix": ("不要 np.asarray(pred) 后按行号拼面板。用 model.predict() 的 "
+                    "(datetime,instrument) MultiIndex 做 unstack().reindex(index=日历, columns=股票池)，"
+                    "并把该索引传给 audit(signal_index=...)。"),
+            "cost_hint": "本项目实测：修正后同一模型净值 1.1298 -> 4.2774（错配把好信号配丢了，也可能反过来虚高）",
+        })
+    if not l2["pass"]:
+        nav = l2["nav_by_lag"]
+        r.append({
+            "layer": "L2", "problem": "前视 / 时间对齐错误",
+            "fix": ("把回测改成 SIG[t] 配 R[t+1]（qlib 的 shift=1），"
+                    "并检查特征是否用了当日收盘价；池子用当年真实已上市股票、保留后来退市的。"),
+            "cost_hint": "lag0 %.4f -> lag1 %.4f，虚高 %.4f；RankIC %s" %
+                         (nav.get(0, 0), nav.get(1, 0), l2["lag0_minus_lag1"],
+                          l2.get("rankic_by_lag")),
+        })
+    if not l3["pass"]:
+        r.append({
+            "layer": "L3", "problem": "涨停/停牌股按收盘价虚假成交",
+            "fix": ("次日开盘/前收-1 > 9.5%、或开盘价缺失、或成交额为 0 的股票，"
+                    "在生成订单前从候选中剔除；用次日 open 成交而非当日 close。"),
+            "cost_hint": ("C2C %.4f -> 过滤后 %.4f（掉 %.4f）；"
+                          "被排除股票日均收益 %.4f vs 留下 %.4f，"
+                          "top50 只换了 %.2f 只") %
+                         (l3["c2c_nav"], l3["c2c_filtered_nav"], l3["filtered_drop"],
+                          l3["excluded_mean_daily_ret"], l3["kept_mean_daily_ret"],
+                          50 - l3["top50_overlap_mean"]),
+        })
+    if not r:
+        r.append({"layer": "-", "problem": "三层都过",
+                  "fix": "仍需跑 multi_year_verdict() 看跨年度稳定性，单年通过不算数",
+                  "cost_hint": ""})
+    return r
 
 
 def multi_year_verdict(reports):

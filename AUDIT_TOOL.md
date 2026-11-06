@@ -51,7 +51,7 @@ L2 另加**统计指纹**：逐 lag 算信号与未来收益的横截面 RankIC�
     DY_YEAR=2022 python qlib_bridge/audit_year.py
     # 跨年度判定
     python audit_all.py
-    # 合成数据单元测试（8 个用例）
+    # 合成数据单元测试（9 个用例）
     python test_audit_backtest.py
 
 ## 当前判定
@@ -61,6 +61,18 @@ L2 另加**统计指纹**：逐 lag 算信号与未来收益的横截面 RankIC�
 
 逐年可执行净值（O2O + 排除涨停/停牌 + 3.65bp 成本）：
 2022 0.9451 / 2023 1.2014 / 2024 0.7948 / 2025 1.6189 / 2026 0.9576。
+
+## 自动修复建议
+
+`audit()` 返回的 `remedies` 把每层失败映射成具体修法 + 量化影响，例如 2022 实测：
+
+    [L2] 前视 / 时间对齐错误
+      修法: SIG[t] 配 R[t+1]（qlib shift=1），特征别用当日收盘价
+      影响: lag0 1.3463 -> lag1 1.1017，虚高 0.2446；RankIC {0: 0.0502, 1: 0.0413, ...}
+    [L3] 涨停/停牌股按收盘价虚假成交
+      修法: 剔除次日高开>9.5%/无开盘价/零成交，用次日 open 成交
+      影响: C2C 1.1017 -> 0.9616（掉 0.1401）；被排除日均 +9.04% vs 留下 +0.04%，
+            top50 只换了 0.40 只
 
 ## 单元测试覆盖（test_audit_backtest.py）
 
@@ -72,5 +84,6 @@ L2 另加**统计指纹**：逐 lag 算信号与未来收益的横截面 RankIC�
     F 显式索引错配        -> L1 不通过
     G 显式索引正确        -> 三层通过
     H 完美前视 IC 指纹    -> lag0 RankIC 1.0, lag1 -0.0003, ic_collapse=True
+    I 修复建议 remedies    -> L2 提示含 shift=1 与量化掉水
 
 注意：本机 `miniconda3` 的 numpy 导入即 OOM，用 `.qlibenv/Scripts/python.exe` 跑。
