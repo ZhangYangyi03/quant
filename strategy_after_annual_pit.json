@@ -1,0 +1,38 @@
+{
+ "name": "size_amt20_top50",
+ "aum": 1000000.0,
+ "top_k": 50,
+ "quintile": false,
+ "stats": {
+  "cagr_pct": 17.79,
+  "sharpe": 0.779,
+  "ann_vol_pct": 26.06,
+  "mdd_pct": -46.67,
+  "total_mult": 10.169,
+  "n_days": 3437
+ },
+ "cost": {
+  "commission": 99104.9,
+  "transfer": 34031.71,
+  "stamp": 152190.97,
+  "slippage": 0.0,
+  "impact": 129189.46,
+  "total": 414517.04
+ },
+ "turnover_notional": 340317121.19,
+ "is_bps_mean": 28.29,
+ "rejects": {
+  "insufficient_cash": 228,
+  "suspended": 16,
+  "adv_capacity_zero": 20,
+  "limit_down_cannot_sell": 32,
+  "limit_up_cannot_buy": 68,
+  "below_lot_size": 12,
+  "industry_cap_breach": 149
+ },
+ "recon_failures": 0,
+ "n_orders": 7971,
+ "n_fills": 7441,
+ "plan_fingerprint": "ff6c6329012cc7fe",
+ "delisted_mark_events": 13
+}

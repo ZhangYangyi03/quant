@@ -50,3 +50,27 @@
 
 留档复跑：`python build_annual_ann.py` → `annual_ann_dates.json`，
 再合并进 `report_ann_dates.json`（合并脚本逻辑见本文件，已执行）。
+
+
+## 严格 A/B：这份缺口值多少钱
+
+把 `report_ann_dates.json` 临时换回补齐前版本（`git show HEAD~2:...`），
+同一命令重跑，再换回，隔离出「年报 PIT」这一个变量：
+
+    python strategy_layer.py --config size_amt20_top50 --signal ep         --universe strict --pool loose
+
+| 指标 | 补齐前 | 补齐后 | 变化 |
+|---|---|---|---|
+| CAGR | 16.66% | 17.79% | +1.13pp |
+| 总倍数 | 8.863 | 10.169 | +1.306 |
+| 夏普 | 0.732 | 0.779 | +0.047 |
+| 年化波动 | 26.55% | 26.06% | -0.49pp |
+| 最大回撤 | -48.27% | -46.67% | 改善 1.60pp |
+| 交易日 | 3437 | 3437 | 不变 |
+
+方向合理：此前年报一律用法定截止日 4-30 兜底，等于让年报信息系统性晚生效；
+换成真实（多在次年 2~3 月）披露日后，EP/TTM 更早可用，收益上升。
+`annual_pit_ab.json` 留档，`strategy_after_annual_pit.json` 是补齐后完整结果。
+
+注意：这 +1.13pp **不是新增 alpha**，是修正了一个会让财报晚生效的 PIT 缺陷。
+它同时也说明，此前所有基于法定截止日的历史数字都系统性偏低。

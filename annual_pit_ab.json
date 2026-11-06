@@ -1,0 +1,18 @@
+{
+ "before": {
+  "cagr_pct": 16.66,
+  "sharpe": 0.732,
+  "ann_vol_pct": 26.55,
+  "mdd_pct": -48.27,
+  "total_mult": 8.863,
+  "n_days": 3437
+ },
+ "after": {
+  "cagr_pct": 17.79,
+  "sharpe": 0.779,
+  "ann_vol_pct": 26.06,
+  "mdd_pct": -46.67,
+  "total_mult": 10.169,
+  "n_days": 3437
+ }
+}
