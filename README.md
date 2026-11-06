@@ -10,7 +10,7 @@
     pip install -r requirements.txt       # 核心层：numpy / scipy / pandas
     python check_env.py                  # 自检：缺什么、哪些能跑
 
-核心层（ETF 审计、三层审计、110 个测试、一键判定）**开箱即跑**，
+核心层（ETF 审计、三层审计、110 个测试[缺大数据时 2 个自动 skip]、一键判定）**开箱即跑**，
 `data/*.csv`(8 只) 与 `data_extra/*.csv`(29 只) 已入库。
 
 个股线 / qlib 线额外需要 `stockdata/`、`store/`、`qlib_bridge/qlib_data/`、
@@ -26,7 +26,7 @@
     python verdict_all.py                          # 三条结论（个股/ETF/ETF容量）
     python test_audit_backtest.py                  # 10 个审计单元测试
     python test_etf_alpha.py                      # 7 个 ETF 回归测试
-    python -m unittest discover -s tests          # 110 个 quantlab 测试
+    python -m unittest discover -s tests          # 110 个 quantlab 测试（2 个可选 skip）
 
 结论文档：`ETF_ALPHA.md`（正面结论）、`ETF_EXPANDED.md`（换池子判负与判据修正）、
 `ETF_CAPACITY.md`（容量上限）、`BENCHMARK.md`（对标标尺）、`QLIB_AUDIT.md`（qlib 接审计）。

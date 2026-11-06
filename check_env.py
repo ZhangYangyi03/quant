@@ -68,7 +68,7 @@ def main():
 
     print("\n[6] 现在能跑什么")
     can = ["verdict_all.py", "audit_backtest.py 库", "test_audit_backtest.py",
-           "test_etf_alpha.py", "tests/ (110)", "etf_year_audit.py",
+           "test_etf_alpha.py", "tests/ (110，缺大数据时 2 个 skip)", "etf_year_audit.py",
            "etf_holdout.py", "etf_capacity.py", "etf_universe_expanded.py"]
     if ok_core and ok_data:
         for c in can:
