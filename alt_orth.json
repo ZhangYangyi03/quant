@@ -1,0 +1,67 @@
+{
+ "generated": "2026-11-06T11:02:44",
+ "basis": "与 factor_orth.json 完全同口径：逐月对 [1, size, amt20] 做 OLS，取残差算 Spearman IC",
+ "note": "非价量数据来自东财免费接口；lhb/margin 滞后 1 月，holdernum/orghold 按真实公告日可见",
+ "factors": {
+  "lhb_net_pct": {
+   "raw_ic": -0.0076,
+   "raw_t": -1.22,
+   "n": 144,
+   "resid_ic": 0.0037,
+   "resid_t": 0.71,
+   "r2_on_pair": 0.016,
+   "kept": -0.487,
+   "median_coverage": 438
+  },
+  "lhb_count": {
+   "raw_ic": -0.0545,
+   "raw_t": -5.42,
+   "n": 144,
+   "resid_ic": 0.0069,
+   "resid_t": 0.86,
+   "r2_on_pair": 0.122,
+   "kept": -0.127,
+   "median_coverage": 438
+  },
+  "margin_pct": {
+   "raw_ic": -0.0218,
+   "raw_t": -1.66,
+   "n": 148,
+   "resid_ic": -0.0034,
+   "resid_t": -0.48,
+   "r2_on_pair": 0.245,
+   "kept": 0.156,
+   "median_coverage": 1475
+  },
+  "margin_buy_pct": {
+   "raw_ic": -0.0532,
+   "raw_t": -3.69,
+   "n": 148,
+   "resid_ic": -0.0052,
+   "resid_t": -0.9,
+   "r2_on_pair": 0.274,
+   "kept": 0.098,
+   "median_coverage": 1475
+  },
+  "holder_concent": {
+   "raw_ic": 0.0088,
+   "raw_t": 1.44,
+   "n": 117,
+   "resid_ic": 0.0089,
+   "resid_t": 0.66,
+   "r2_on_pair": 0.026,
+   "kept": 1.011,
+   "median_coverage": 819
+  },
+  "org_chg": {
+   "raw_ic": 0.0289,
+   "raw_t": 2.86,
+   "n": 48,
+   "resid_ic": 0.0004,
+   "resid_t": 0.05,
+   "r2_on_pair": 0.026,
+   "kept": 0.014,
+   "median_coverage": 2488
+  }
+ }
+}
