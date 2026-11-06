@@ -27,7 +27,7 @@ def _ret(P):
     R[ok] = P[1:][ok] / P[:-1][ok] - 1
     return R
 
-def _nav(sig, R, topk, cost_bp, lag=1, block=None):
+def _nav(sig, R, topk, cost_bp, lag=1, block=None, strict=False):
     T, N = sig.shape
     s = np.where(np.isfinite(sig), sig, -1e9)
     eq = [1.0]; prev = None; blocked = 0
@@ -45,20 +45,38 @@ def _nav(sig, R, topk, cost_bp, lag=1, block=None):
         if block is not None:
             blocked += int((~np.isfinite(block[k + 1, top]) |
                             (block[k + 1, top] > 0.095)).sum())
-        r = np.nanmean(R[k, top])
-        r = 0.0 if not np.isfinite(r) else r
-        tv = 1.0 if prev is None else len(set(top) ^ set(prev)) / topk
+        if strict and block is not None:
+            # 被屏蔽的格子不许「买次优」：收益置 NaN，全被屏蔽则当日空仓
+            rr = R[k, top].copy()
+            bad = ~np.isfinite(block[k + 1, top]) | (block[k + 1, top] > 0.095)
+            rr[bad] = np.nan
+            good = top[~bad]
+            r = float(np.nanmean(rr)) if np.isfinite(rr).any() else 0.0
+            if not np.isfinite(r): r = 0.0
+            tv = 0.0 if len(good) == 0 else (
+                1.0 if prev is None else len(set(good) ^ set(prev)) / topk)
+            prev = good if len(good) else None
+        else:
+            r = np.nanmean(R[k, top])
+            r = 0.0 if not np.isfinite(r) else r
+            tv = 1.0 if prev is None else len(set(top) ^ set(prev)) / topk
+            prev = top
         r -= cost_bp / 1e4 * tv
-        prev = top
         eq.append(eq[-1] * (1 + r))
     return float(eq[-1]), blocked
 
 def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
-          limit_gap=0.095, signal_index=None):
-    """signal_index: 可选，(datetime, instrument) 的 MultiIndex（或等长二元组列表）。
-    传入后逐格核对信号是否落在期望的 (cal x codes) 网格上；不传则只能靠统计特征间接推断。
-    这是抓「按行号截断导致整体错位」的唯一可靠办法。
+          limit_gap=0.095, signal_index=None, capital=None, max_participation=0.10):
+    """capital / max_participation: 可选的真实容量约束（默认关闭）。
+
+    capital 是策略本金（元）。每只标的等权分配 capital/topk，若该金额超过
+    当日成交额的 max_participation 比例，就认为这一格吃不下，从候选剔除。
+    这补上 L3 只查涨停/停牌的缺口：小 ETF / 低流动性股票按收盘价全额成交
+    在实盘做不到。默认 capital=None 时行为与旧版完全一致，不改动既有结论。
     """
+    # signal_index: 可选，(datetime, instrument) 的 MultiIndex（或等长二元组列表）。
+    # 传入后逐格核对信号是否落在期望的 (cal x codes) 网格上；不传则只能靠统计特征间接推断。
+    # 这是抓「按行号截断导致整体错位」的唯一可靠办法。
     S = np.asarray(signal, dtype=np.float64)
     C = np.asarray(close, dtype=np.float64)
     O = np.asarray(open_, dtype=np.float64)
@@ -174,10 +192,19 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
     out["L2_alignment"]["survivor_note"] = "池子只含首末日都有价的股票 = 潜在幸存者偏差；应核对 instruments 真实起止日"
 
     # --- 层 3：不可买股票 ---
+    # 容量约束：成交额的 max_participation 是单只下单额上限
+    cap_gap = GAP.copy()
+    cap_blocked = 0
+    if capital is not None and capital > 0:
+        per_name = float(capital) / max(topk, 1)
+        too_big = ~np.isfinite(A) | (A <= 0) | (A * float(max_participation) < per_name)
+        cap_gap[too_big] = np.nan
+        cap_blocked = int(too_big.sum())
     n_c2c, _ = _nav(S, RCC, topk, cost_bp, lag=1)
     n_c2c_f, bl_c = _nav(S, RCC, topk, cost_bp, lag=1, block=GAP)
     n_o2o, _ = _nav(S, ROO, topk, cost_bp, lag=1)
     n_o2o_f, bl_o = _nav(S, ROO, topk, cost_bp, lag=1, block=GAP)
+    n_cap, bl_cap = _nav(S, ROO, topk, cost_bp, lag=1, block=cap_gap, strict=True)
     # 被排除股票在 top50 里的日均收益 vs 留下的
     s = np.where(finite, S, -1e9)
     ex_r, kept_r, overlap = [], [], []
@@ -202,6 +229,16 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
         "excluded_mean_daily_ret": round(ex, 6),
         "kept_mean_daily_ret": round(kp, 6),
         "excluded_slots_blocked": int(bl_c),
+        "capacity": {
+            "enabled": capital is not None and capital > 0,
+            "capital": capital, "max_participation": max_participation,
+            "per_name": (float(capital)/max(topk,1)) if capital else None,
+            "cap_blocked_cells": cap_blocked,
+            "o2o_nav_with_capacity": round(n_cap, 4),
+            "capacity_drop": round(n_o2o_f - n_cap, 4),
+            "note": ("本金等权下单，单只金额超过当日成交额 max_participation 即视为不可成交；"
+                     "capacity_drop 越大说明回测越吃流动性红利"),
+        },
         "note": "排除次日高开>9.5%或无开盘价/零成交的股票；若只换极少量持仓却大幅掉净值，说明超额全来自买不进去的涨停股",
         # 只判"过滤是否戳破虚假收益"，不判策略本身赚不赚钱：
         # 随机数据净值低于 1 是正常的，那属于 alpha 问题，不是可信度问题。

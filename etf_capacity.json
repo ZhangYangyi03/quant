@@ -1,0 +1,65 @@
+{
+ "1000000": {
+  "exec": 2.6676,
+  "with_cap": 2.5771,
+  "drop": 0.0905,
+  "blocked_cells": 282
+ },
+ "10000000": {
+  "exec": 2.6676,
+  "with_cap": 2.0714,
+  "drop": 0.5962,
+  "blocked_cells": 2186
+ },
+ "100000000": {
+  "exec": 2.6676,
+  "with_cap": 1.6761,
+  "drop": 0.9915,
+  "blocked_cells": 8283
+ },
+ "1000000000": {
+  "exec": 2.6676,
+  "with_cap": 1.666,
+  "drop": 1.0016,
+  "blocked_cells": 19136
+ },
+ "yearly_1e7": {
+  "years": [
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025,
+   2026
+  ],
+  "executable_nav": [
+   1.0329,
+   0.8936,
+   1.0986,
+   1.1795,
+   1.0426,
+   1.0159,
+   1.1325,
+   1.1052,
+   1.2302,
+   1.0672
+  ],
+  "positive_years": 9,
+  "total_years": 10,
+  "compound_nav": 2.0817,
+  "best_year": 2025,
+  "best_year_nav": 1.2302,
+  "compound_excluding_best": 1.6921,
+  "all_three_layers_pass": true,
+  "min_years": 3,
+  "min_ex_best": 1.1951,
+  "min_annual_return": 0.02,
+  "note": "单年三层通过不代表可信：样本至少 3 年、至多 1 年为负，且去掉最好一年后年化 >= 2%，否则只是接近零的噪声",
+  "pass": true,
+  "verdict": "有稳定可执行 alpha"
+ }
+}

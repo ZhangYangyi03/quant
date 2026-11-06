@@ -13,5 +13,12 @@
   "total_years": 10,
   "compound_excluding_best": 2.1703
  },
- "note": "同一套 audit_backtest.py 判据。个股被涨停/停牌不可买判负；ETF 无一字板，lowvol60 通过全部审计。见 ETF_ALPHA.md / EXEC_CONSTRAINTS.md"
+ "etf_with_capacity_1e7": {
+  "verdict": "有稳定可执行 alpha",
+  "pass": true,
+  "compound_excluding_best": 1.6921,
+  "positive_years": 9,
+  "note": "1000 万本金、单只下单不超过当日成交额 10% 的容量约束"
+ },
+ "note": "同一套 audit_backtest.py 判据。个股被涨停/停牌不可买判负；ETF 无一字板，lowvol60 通过全部审计；容量约束下结论仍成立但净值衰减。见 ETF_ALPHA.md / ETF_CAPACITY.md / EXEC_CONSTRAINTS.md"
 }

@@ -49,5 +49,13 @@
   "verdict": "换池子不成立，依赖国债+黄金压舱石",
   "doc": "ETF_EXPANDED.md"
  },
- "verdict_rule_version": "2026-11-07: min 3 years + ex_best > 1.02**(n-1)"
+ "verdict_rule_version": "2026-11-07: min 3 years + ex_best > 1.02**(n-1)",
+ "capacity_1e7": {
+  "compound_nav": 2.0817,
+  "compound_excluding_best": 1.6921,
+  "positive_years": "9/10",
+  "verdict": "pass",
+  "note": "2.6699 是无容量约束口径，容量后 2.0817 更接近实盘",
+  "doc": "ETF_CAPACITY.md"
+ }
 }

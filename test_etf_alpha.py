@@ -8,6 +8,7 @@
   D 单日截 ±1% 后净值仍 > 2.0（不靠极端日）
   E 留一法至少 6/8 通过
   F 严格时间外样本 3/3 通过且夏普不低于设计期
+  G 1000 万本金容量约束下仍通过、且净值确实衰减（不是假装无影响）
 """
 import os, sys, json
 import numpy as np
@@ -105,8 +106,20 @@ def test_E_leave_one_out():
     print("[E] leave-one-out ->", passed, "/", N)
 
 
+def test_G_capacity():
+    c = json.load(open(os.path.join(Q, "etf_capacity.json"), encoding="utf-8"))
+    v = c["yearly_1e7"]
+    assert v["pass"] and v["all_three_layers_pass"], v
+    assert v["compound_excluding_best"] > v["min_ex_best"], v
+    assert v["compound_excluding_best"] < 2.1703, "容量约束应让净值衰减"
+    assert c["1000000"]["with_cap"] > c["10000000"]["with_cap"] > c["100000000"]["with_cap"], c
+    assert c["1000000000"]["with_cap"] < c["100000000"]["with_cap"], "10 亿不得虚高"
+    print("[G] capacity -> cap1e7 ex-best", v["compound_excluding_best"],
+          "vs baseline 2.1703, monotone", [round(c[k]["with_cap"], 3) for k in
+          ("1000000","10000000","100000000","1000000000")])
+
 if __name__ == "__main__":
     for fn in (test_A_full_audit, test_B_yearly, test_C_cost, test_D_tail,
-               test_E_leave_one_out, test_F_holdout):
+               test_E_leave_one_out, test_F_holdout, test_G_capacity):
         fn()
     print("ALL ETF TESTS PASSED")

@@ -17,8 +17,15 @@ def main():
             "positive_years": e["positive_years"], "total_years": e["total_years"],
             "compound_excluding_best": e["compound_excluding_best"],
         },
+        "etf_with_capacity_1e7": (lambda c: {
+            "verdict": c["yearly_1e7"]["verdict"], "pass": c["yearly_1e7"]["pass"],
+            "compound_excluding_best": c["yearly_1e7"]["compound_excluding_best"],
+            "positive_years": c["yearly_1e7"]["positive_years"],
+            "note": "1000 万本金、单只下单不超过当日成交额 10% 的容量约束",
+        })(json.load(open(os.path.join(Q, "etf_capacity.json"), encoding="utf-8"))),
         "note": ("同一套 audit_backtest.py 判据。个股被涨停/停牌不可买判负；"
-                 "ETF 无一字板，lowvol60 通过全部审计。见 ETF_ALPHA.md / EXEC_CONSTRAINTS.md"),
+                 "ETF 无一字板，lowvol60 通过全部审计；容量约束下结论仍成立但净值衰减。"
+                 "见 ETF_ALPHA.md / ETF_CAPACITY.md / EXEC_CONSTRAINTS.md"),
     }
     print(json.dumps(out, ensure_ascii=False, indent=1))
     json.dump(out, open(os.path.join(Q, "verdict_all.json"), "w", encoding="utf-8"),
