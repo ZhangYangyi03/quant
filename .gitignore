@@ -9,6 +9,7 @@ store/
 shards/
 live/
 data/
+!data/*.csv
 __pycache__/
 
 # 日志与诊断
