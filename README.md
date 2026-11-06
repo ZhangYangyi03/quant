@@ -19,7 +19,7 @@
     pip install -r requirements-qlib.txt
 
 注意 `pyqlib 0.9.7` 只有 cp311 Windows 预编译 wheel，Linux/macOS 需源码编译。
-`check_env.py` 会逐项告诉你哪一段可用。
+`check_env.py` 会逐项告诉你哪一段可用；重建顺序与现实约束见 `DATA.md`
 
 一键判定与回归测试：
 
