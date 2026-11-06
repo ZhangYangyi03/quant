@@ -39,6 +39,14 @@
   "lookahead_ratio": 0.355,
   "note": "lag=0 用当日收盘信号赚当日收益即前视；qlib shift=1 对应 lag=1",
   "pass": false,
+  "rankic_by_lag": {
+   "0": 0.05744,
+   "1": 0.05109,
+   "2": 0.04799,
+   "3": 0.04648,
+   "5": 0.03643
+  },
+  "ic_collapse": false,
   "survivor_fraction": 0.987,
   "survivor_note": "池子只含首末日都有价的股票 = 潜在幸存者偏差；应核对 instruments 真实起止日"
  },

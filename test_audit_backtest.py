@@ -115,6 +115,19 @@ def test_G_index_ok():
     assert r["L1_signal_index"]["pass"]
     print("[G] index ok ->", r["verdict"])
 
+def test_H_ic_fingerprint():
+    C, O, A, cal, codes = base()
+    S = np.full((T, N), np.nan)
+    R = np.diff(C, axis=0) / C[:-1]
+    S[:T-1] = R                       # 完美前视
+    r = audit(S, C, O, A, cal, codes, topk=TOPK, cost_bp=COST)
+    ic = r["L2_alignment"]["rankic_by_lag"]
+    assert ic[0] is not None and abs(ic[0]) > 0.5, ic
+    assert r["L2_alignment"]["ic_collapse"] or abs(ic[1]) < abs(ic[0])*0.4, ic
+    assert not r["L2_alignment"]["pass"]
+    print("[H] IC fingerprint ->", ic, "collapse",
+          r["L2_alignment"]["ic_collapse"])
+
 def test_E_multi_year():
     reps = [(2022, {"executable_alpha_nav": 0.94, "fails": ["L3_untradable"]}),
             (2023, {"executable_alpha_nav": 1.20, "fails": []}),
@@ -129,6 +142,6 @@ def test_E_multi_year():
 if __name__ == "__main__":
     for fn in (test_A_clean, test_B_index_shift, test_C_lookahead,
                test_D_untradable, test_E_multi_year, test_F_index_mismatch,
-               test_G_index_ok):
+               test_G_index_ok, test_H_ic_fingerprint):
         fn()
     print("ALL TESTS PASSED")

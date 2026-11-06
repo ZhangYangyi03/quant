@@ -141,6 +141,34 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
     }
     # 池子本身收益 vs 可交易状态
     alive = np.isfinite(C[0]) & np.isfinite(C[-1])
+    # 统计指纹：逐 lag 算信号与未来收益的横截面 Spearman 相关均值。
+    # 真 alpha 应在 lag>=1 仍有正/负 IC 且衰减平缓；
+    # 只有 lag=0 强、lag>=1 塌到 0 = 信号里含当日价格信息（前视）。
+    def _rankic(sig_row, ret_row):
+        m = np.isfinite(sig_row) & np.isfinite(ret_row)
+        if m.sum() < 20:
+            return np.nan
+        a, b = sig_row[m], ret_row[m]
+        ra = np.argsort(np.argsort(a)).astype(float)
+        rb = np.argsort(np.argsort(b)).astype(float)
+        ra -= ra.mean(); rb -= rb.mean()
+        den = np.sqrt((ra*ra).sum() * (rb*rb).sum())
+        return float((ra*rb).sum()/den) if den > 0 else np.nan
+    ic_by_lag = {}
+    for lag in (0, 1, 2, 3, 5):
+        vals = []
+        for k in range(lag, T-1):
+            v = _rankic(S[k-lag], RCC[k])
+            if np.isfinite(v): vals.append(v)
+        ic_by_lag[lag] = round(float(np.mean(vals)), 5) if vals else None
+    out["L2_alignment"]["rankic_by_lag"] = ic_by_lag
+    ic0 = ic_by_lag.get(0); ic1 = ic_by_lag.get(1)
+    ic_collapse = (ic0 is not None and ic1 is not None and abs(ic0) > 0.05
+                   and abs(ic1) < abs(ic0) * 0.4)
+    out["L2_alignment"]["ic_collapse"] = bool(ic_collapse)
+    if ic_collapse:
+        out["L2_alignment"]["pass"] = False
+        out["L2_alignment"]["note"] += "；RankIC 在 lag=0 强、lag=1 塌，统计指纹指向前视"
     out["L2_alignment"]["survivor_fraction"] = round(float(alive.mean()), 4)
     out["L2_alignment"]["survivor_note"] = "池子只含首末日都有价的股票 = 潜在幸存者偏差；应核对 instruments 真实起止日"
 

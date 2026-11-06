@@ -33,6 +33,13 @@ L1 不传索引是**降级模式**：统计特征抓不到"整体滚动一格"�
 三层各自只判"回测是否可信"，不判"策略是否赚钱"——
 随机数据净值低于 1 是可信的回测，不该被误判为不可信。
 
+L2 另加**统计指纹**：逐 lag 算信号与未来收益的横截面 RankIC。
+真 alpha 在 lag>=1 仍有 IC 且衰减平缓；只有 lag=0 强、lag=1 塌到近 0
+（`ic_collapse=True`）说明信号含当日价格信息，即使没传索引也能判前视。
+合成数据里完美前视的 RankIC 是 lag0 1.0 -> lag1 -0.0003。
+本项目真实五年数据 RankIC 稳定在 0.04~0.06 且衰减平缓，`ic_collapse=False`，
+说明 lag=0 的虚高主要来自 L3 的涨停不可买，不是信号偷看——两层互相印证。
+
 `multi_year_verdict()` 加跨年度判据：单年通过不算数，
 要求所有年三层都过、多数年为正、且去掉最好一年后合计仍 > 1。
 
@@ -44,7 +51,7 @@ L1 不传索引是**降级模式**：统计特征抓不到"整体滚动一格"�
     DY_YEAR=2022 python qlib_bridge/audit_year.py
     # 跨年度判定
     python audit_all.py
-    # 合成数据单元测试（7 个用例）
+    # 合成数据单元测试（8 个用例）
     python test_audit_backtest.py
 
 ## 当前判定
@@ -64,5 +71,6 @@ L1 不传索引是**降级模式**：统计特征抓不到"整体滚动一格"�
     E 跨年度 2/5 正       -> 无稳定 alpha
     F 显式索引错配        -> L1 不通过
     G 显式索引正确        -> 三层通过
+    H 完美前视 IC 指纹    -> lag0 RankIC 1.0, lag1 -0.0003, ic_collapse=True
 
 注意：本机 `miniconda3` 的 numpy 导入即 OOM，用 `.qlibenv/Scripts/python.exe` 跑。

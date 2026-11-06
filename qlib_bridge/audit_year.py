@@ -31,5 +31,7 @@ print(f"[audit] YEAR={YEAR} verdict={r['verdict']} fails={r['fails']} "
       f"lag_nav={r['L2_alignment']['nav_by_lag']} "
       f"c2c={r['L3_untradable']['c2c_nav']} c2c_f={r['L3_untradable']['c2c_filtered_nav']} "
       f"o2o_f={r['L3_untradable']['o2o_filtered_nav']} "
-      f"exec_alpha={r['executable_alpha_nav']}",flush=True)
+      f"exec_alpha={r['executable_alpha_nav']} "
+      f"rankic={r['L2_alignment']['rankic_by_lag']} "
+      f"ic_collapse={r['L2_alignment']['ic_collapse']}",flush=True)
 json.dump(r,open(os.path.join(Q,f"audit_{YEAR}.json"),"w",encoding="utf-8"),ensure_ascii=False,indent=1)
