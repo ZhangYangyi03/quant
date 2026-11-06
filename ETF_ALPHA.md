@@ -54,6 +54,23 @@ RankIC 各 lag 稳定在 0.023~0.026 且**不衰减**，是慢变量，
   因为慢信号晚一点执行反而避开了短期噪声）；IC 指纹 ic_collapse=False；
 - L3：ETF 无一字板，排除零成交/无开盘价后净值几乎不掉（filtered_drop < 0.10）。
 
+## 严格时间外样本（2026-11-07 补）
+
+设计期 2016-08-08 ~ 2023-12-29（1797 天），检验期 2024-01-02 ~ 2026-11-02（684 天）。
+检验期不参与任何参数选择——lowvol 60 日 / top2 / 20 日调仓 / 5bp 这些设定
+在 2024 之前就已写进 `run_backtest.py`。
+
+| | 设计期 | 样本外 holdout |
+|---|---|---|
+| 净值 | 1.9655 | **1.5340** |
+| 年化夏普 | 1.187 | **1.586** |
+| 三层审计 | 通过 | **通过** |
+| 逐年 | — | 2024 +21.4% / 2025 +13.5% / 2026 +11.4%，3/3 通过 |
+| 跨年度判定 | — | `pass: true`，去掉 2025 后仍 1.1842 |
+
+**样本外夏普比设计期还高**，这不是过拟合到设计期的特征。
+`python etf_holdout.py` → `etf_holdout.json`。
+
 ## 仍未解决 / 必须写清的
 
 1. **PBO 0.571 偏高**。但 lowvol60 不是从 10 个配置里挑出来的最优者，
@@ -93,6 +110,7 @@ BENCHMARK.md 里「独立可交易 alpha：没有」这句现在要限定为
     python etf_stats.py          # DSR / NW-t / PSR / 尾部
     python etf_oos.py            # 留一法 + 随机半池
     python etf_tail.py           # 极端日 winsorize
+    python etf_holdout.py        # 严格时间外样本（设计期/检验期分段）
 
 注意：本机 numpy 偶尔导入即 OOM，用 `.qlibenv/Scripts/python.exe`
 并设 `NUMPY_DISABLE_CPU_FEATURES=AVX512F,AVX512CD,AVX512_SKX`。

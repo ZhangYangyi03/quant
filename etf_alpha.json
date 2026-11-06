@@ -28,5 +28,17 @@
   "PBO 偏高但单策略 DSR 0.9934",
   "共同交易日交集口径比并集严格"
  ],
- "docs": "ETF_ALPHA.md"
+ "docs": "ETF_ALPHA.md",
+ "time_holdout": {
+  "design": "2016-08-08~2023-12-29",
+  "test": "2024-01-02~2026-11-02",
+  "design_nav": 1.9655,
+  "design_sharpe": 1.187,
+  "test_nav": 1.534,
+  "test_sharpe": 1.586,
+  "test_years_pass": "3/3",
+  "test_excluding_best": 1.1842,
+  "verdict": "pass",
+  "note": "样本外夏普高于设计期，非过拟合"
+ }
 }
