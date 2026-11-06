@@ -1,0 +1,16 @@
+{
+ "raw_label_nav": 4.277446,
+ "resid_label_nav": 2.89677,
+ "test": "2022-01-04~2026-10-20",
+ "days": 1159,
+ "topk": 50,
+ "pred_corr": 0.852121,
+ "label_std_raw": 0.06832,
+ "label_std_resid": 0.05469,
+ "top50_overlap_mean": 29.1,
+ "turnover_raw": 239.414,
+ "turnover_resid": 239.508,
+ "cost_model": "absent",
+ "index_fix": "pred index cached instead of cartesian truncation",
+ "note": "prior 1.1298/1.0400 were signal-index misalignment artifacts, void"
+}

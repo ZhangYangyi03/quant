@@ -80,12 +80,13 @@ model.fit(ds)
 pred = model.predict(ds)
 print("[bridge] pred", pred.shape, pred.head(2).to_string(), flush=True)
 import pickle
+_pred_index = getattr(pred, "index", None)
 pred = np.nan_to_num(np.asarray(pred, dtype=np.float64), nan=0.0, posinf=0.0, neginf=0.0)
 pred = np.clip(pred, -10, 10)
 pred = pd.Series(pred, index=None) if False else pred
 with open(os.path.join(HERE, "pred_cache.pkl"), "wb") as _pf:
     pickle.dump({"pool": pool, "te_start": te_start, "te_end": te_end,
-                 "pred": pred}, _pf)
+                 "pred": pred, "index": _pred_index}, _pf)
 print("[bridge] pred cached, finite", int(np.isfinite(pred).sum()), flush=True)
 
 

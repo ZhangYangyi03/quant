@@ -1,0 +1,15 @@
+{
+ "raw": {
+  "cagr": 0.3583,
+  "vol": 0.2626,
+  "sharpe": 1.299,
+  "mdd": -0.3688
+ },
+ "resid": {
+  "cagr": 0.2512,
+  "vol": 0.2364,
+  "sharpe": 1.067,
+  "mdd": -0.3375
+ },
+ "caveat": "zero cost, close fill, survivor-biased 300 pool; not tradeable evidence"
+}

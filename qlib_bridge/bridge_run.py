@@ -16,7 +16,13 @@ qlib.init(provider_uri=OUT, region="cn", expression_cache=None, dataset_cache=No
 C["kernels"] = 1
 C["joblib_backend"] = "threading"
 
-c = pickle.load(open(os.path.join(HERE, "pred_cache.pkl"), "rb"))
+import sys
+_cache = "pred_cache.pkl"
+_out = "qlib_curve.json"
+for _i, _a in enumerate(sys.argv):
+    if _a == "--cache" and _i + 1 < len(sys.argv): _cache = sys.argv[_i + 1]
+    if _a == "--out" and _i + 1 < len(sys.argv): _out = sys.argv[_i + 1]
+c = pickle.load(open(os.path.join(HERE, _cache), "rb"))
 pool = c["pool"]
 te_start, te_end = c["te_start"], c["te_end"]
 pred = c["pred"]
@@ -26,9 +32,22 @@ print("[run] pred", type(pred), getattr(pred, "shape", ""), flush=True)
 # 用 qlib 日历与池重建索引
 from qlib.data import D
 cal = D.calendar(start_time=te_start, end_time=te_end)
-idx = pd.MultiIndex.from_product([cal, pool], names=["datetime", "instrument"])
-n = min(len(pred), len(idx))
-pred_s = pd.Series(np.asarray(pred).ravel()[:n], index=idx[:n], name="score")
+# pred 是 DatasetH 过滤 NaN 后的序列，行数少于 cal*pool，按行号截断会把信号错配到别的股票。
+# 用 qlib 的 fetch 拿到测试段真实保留的 (datetime, instrument) 索引重建。
+_hd_idx = None
+try:
+    from qlib.data.dataset.handler import DataHandlerLP
+    # pred 来自 model.predict(ds)，其索引就是 ds 的 test 段索引；没有缓存索引时退回笛卡尔积
+    pass
+except Exception:
+    pass
+if "index" in c and c["index"] is not None:
+    pred_s = pd.Series(np.asarray(pred).ravel(), index=c["index"], name="score")
+else:
+    idx = pd.MultiIndex.from_product([cal, pool], names=["datetime", "instrument"])
+    n = min(len(pred), len(idx))
+    pred_s = pd.Series(np.asarray(pred).ravel()[:n], index=idx[:n], name="score")
+print("[run] signal rows", len(pred_s), "vs cal*pool", len(cal) * len(pool), flush=True)
 
 strategy = {"class": "TopkDropoutStrategy", "module_path": "qlib.contrib.strategy.signal_strategy",
             "kwargs": {"signal": pred_s, "topk": 50, "n_drop": 5}}
@@ -97,4 +116,4 @@ json.dump({"curve": curve, "pool": pool, "train": ["2012-01-01", "2021-12-31"],
            "features": ["Log($mktcap + 1)", "Mean($amount, 20)/($amount + 1)",
                         "$close/Ref($close, 20) - 1", "Ref($close, 5)/$close - 1"],
            "label": "Ref($close, -5)/$close - 1"},
-          open(os.path.join(HERE, "qlib_curve.json"), "w", encoding="utf-8"), ensure_ascii=False)
+          open(os.path.join(HERE, _out), "w", encoding="utf-8"), ensure_ascii=False)
