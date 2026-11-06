@@ -1,6 +1,6 @@
 {
  "stock_cross_section_alpha": {
-  "verdict": "无稳定可执行 alpha：2/5 年为正，去掉 2025 后合计 0.8642",
+  "verdict": "无稳定可执行 alpha：2/5 年为正，去掉 2025 后合计 0.8642 （门槛 1.0824）",
   "pass": false,
   "positive_years": 2,
   "total_years": 5,

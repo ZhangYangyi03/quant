@@ -86,6 +86,7 @@ def test_F_holdout():
     assert v["positive_years"] == v["total_years"] == 3, v
     assert v["all_three_layers_pass"] and v["pass"]
     assert v["compound_excluding_best"] > 1.10
+    assert v["min_ex_best"] > 1.0 and v["total_years"] >= 3
     h = json.load(open(os.path.join(Q, "etf_alpha.json"), encoding="utf-8"))["time_holdout"]
     assert h["test_sharpe"] > h["design_sharpe"], "样本外夏普应不低于设计期"
     print("[F] holdout ->", v["verdict"], "test_sharpe", h["test_sharpe"],

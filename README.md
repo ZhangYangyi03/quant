@@ -35,6 +35,7 @@
     python audit_all.py                       # 个股跨年度可信度判定
     python test_audit_backtest.py             # 三层审计的 9 个单元测试
     python etf_year_audit.py                  # ETF 低波轮动：跨年度判定（有稳定 alpha）
+    python etf_universe_expanded.py          # 扩池检验：29 只 ETF，换池子后判负
     python qlib_bridge/train_dyn_year.py      # DY_YEAR=2022..2026 逐年训练
     python qlib_bridge/audit_year.py          # DY_YEAR=2022..2026 逐年三层审计
     python qlib_bridge/run_qlib_audit.py      # qlib 原生回测接审计（2022，约 38s）
@@ -42,7 +43,7 @@
     python run_institutional.py               # quantlab 机构级端到端演示
     python -m unittest discover -s tests -v   # quantlab 测试
 
-文档：ETF_ALPHA.md（ETF 可执行 alpha）、AUDIT_TOOL.md（审计工具）、QLIB_AUDIT.md（qlib 接审计）、
+文档：ETF_ALPHA.md（ETF 可执行 alpha）、ETF_EXPANDED.md（扩池负面结果与判据修正）、AUDIT_TOOL.md（审计工具）、QLIB_AUDIT.md（qlib 接审计）、
 EXEC_CONSTRAINTS.md（交易约束）、DYNAMIC_UNIVERSE.md（无幸存者偏差复核）、
 BENCHMARK.md（开源对标标尺）、INSTITUTIONAL.md（机构级框架）。
 

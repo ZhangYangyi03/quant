@@ -40,5 +40,14 @@
   "test_excluding_best": 1.1842,
   "verdict": "pass",
   "note": "样本外夏普高于设计期，非过拟合"
- }
+ },
+ "expanded_universe": {
+  "codes": 29,
+  "source": "sina 不复权",
+  "period": "2022-09-16~2026-11-05",
+  "full_pool_exec": 0.9344,
+  "verdict": "换池子不成立，依赖国债+黄金压舱石",
+  "doc": "ETF_EXPANDED.md"
+ },
+ "verdict_rule_version": "2026-11-07: min 3 years + ex_best > 1.02**(n-1)"
 }

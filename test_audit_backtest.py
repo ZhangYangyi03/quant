@@ -152,9 +152,26 @@ def test_E_multi_year():
     assert v["positive_years"] == 2
     print("[E] multi-year ->", v["verdict"])
 
+def test_J_multi_year_noise_gate():
+    """2026-11-07：扩池检验里 2 年 +0.34%/+0.83% 曾被判 pass，补回归测试。"""
+    def rep(nav, fails=None):
+        return {"executable_alpha_nav": nav, "fails": fails or []}
+    v = multi_year_verdict([(2025, rep(1.0034)), (2026, rep(1.0083))])
+    assert not v["pass"], v
+    assert "无法判定" in v["verdict"], v["verdict"]
+    assert v["min_years"] == 3 and v["min_ex_best"] == 1.02
+    # 3 年但年化不足 2% 也不能过
+    v2 = multi_year_verdict([(2024, rep(1.001)), (2025, rep(1.002)), (2026, rep(1.003))])
+    assert not v2["pass"], v2
+    # 3 年年化够则过
+    v3 = multi_year_verdict([(2024, rep(1.10)), (2025, rep(1.30)), (2026, rep(1.05))])
+    assert v3["pass"], v3
+    print("[J] noise gate ->", v["verdict"], "|", v3["verdict"])
+
+
 if __name__ == "__main__":
     for fn in (test_A_clean, test_B_index_shift, test_C_lookahead,
                test_D_untradable, test_E_multi_year, test_F_index_mismatch,
-               test_G_index_ok, test_H_ic_fingerprint, test_I_remedies):
+               test_G_index_ok, test_H_ic_fingerprint, test_I_remedies, test_J_multi_year_noise_gate):
         fn()
     print("ALL TESTS PASSED")

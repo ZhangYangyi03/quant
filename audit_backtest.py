@@ -264,7 +264,16 @@ def multi_year_verdict(reports):
 
     reports: [(year, audit_result), ...]
     返回 dict，含逐年可执行净值、正收益年数、去掉最好一年后的合计，
-    以及最终判定。经验阈值：至少 4/5 年正、去掉最好一年后仍 > 1.0。
+    以及最终判定。
+
+    判据（先验设定，不随结果调）：
+      1. 全部年份三层审计通过；
+      2. 至少 3 年样本 —— 2 年不足以判「稳定」；
+      3. 至多 1 年为负；
+      4. 去掉最好一年后，年化复合收益 >= 2%（约货币基金门槛），
+         即 ex_best > (1.02 ** (n-1))。低于这个不值得叫「可执行 alpha」。
+         第 4 条是 2026-11-07 补的：扩池检验里 2 年 +0.34%/+0.83%
+         被旧判据判成 pass，说明接近零的噪声也能过。
     """
     ys = [y for y, _ in reports]
     navs = [r["executable_alpha_nav"] for _, r in reports]
@@ -273,6 +282,8 @@ def multi_year_verdict(reports):
     prod = float(navs_arr.prod())
     best = int(np.argmax(navs_arr))
     ex_best = float(np.delete(navs_arr, best).prod())
+    n_years = len(navs)
+    min_ex_best = float(1.02 ** (n_years - 1)) if n_years > 1 else float("inf")
     res = {
         "years": ys, "executable_nav": [round(x, 4) for x in navs],
         "positive_years": pos, "total_years": len(navs),
@@ -280,14 +291,23 @@ def multi_year_verdict(reports):
         "best_year": ys[best], "best_year_nav": round(float(navs_arr[best]), 4),
         "compound_excluding_best": round(ex_best, 4),
         "all_three_layers_pass": all(not r["fails"] for _, r in reports),
-        "note": ("单年三层通过不代表可信：多数年份不通过、或收益全靠最好一年，"
-                 "都说明没有稳定可交易 alpha"),
+        "min_years": 3,
+        "min_ex_best": round(min_ex_best, 4),
+        "min_annual_return": 0.02,
+        "note": ("单年三层通过不代表可信：样本至少 3 年、至多 1 年为负，"
+                 "且去掉最好一年后年化 >= 2%，否则只是接近零的噪声"),
     }
-    res["pass"] = bool(res["all_three_layers_pass"] and pos >= len(navs) - 1
-                       and ex_best > 1.0 and prod > 1.0)
-    res["verdict"] = ("有稳定可执行 alpha" if res["pass"]
-                      else "无稳定可执行 alpha：%d/%d 年为正，去掉 %s 后合计 %.4f"
-                           % (pos, len(navs), ys[best], ex_best))
+    res["pass"] = bool(res["all_three_layers_pass"] and n_years >= 3
+                       and pos >= n_years - 1
+                       and ex_best > min_ex_best and prod > 1.0)
+    if res["pass"]:
+        res["verdict"] = "有稳定可执行 alpha"
+    elif n_years < 3:
+        res["verdict"] = ("无法判定：仅 %d 年样本（最少 3 年），去掉 %s 后合计 %.4f"
+                          % (n_years, ys[best], ex_best))
+    else:
+        res["verdict"] = ("无稳定可执行 alpha：%d/%d 年为正，去掉 %s 后合计 %.4f "
+                          "（门槛 %.4f）" % (pos, n_years, ys[best], ex_best, min_ex_best))
     return res
 
 if __name__ == "__main__":
