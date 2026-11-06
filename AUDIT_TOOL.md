@@ -86,4 +86,4 @@ L2 另加**统计指纹**：逐 lag 算信号与未来收益的横截面 RankIC�
     H 完美前视 IC 指纹    -> lag0 RankIC 1.0, lag1 -0.0003, ic_collapse=True
     I 修复建议 remedies    -> L2 提示含 shift=1 与量化掉水
 
-注意：本机 `miniconda3` 的 numpy 导入即 OOM，用 `.qlibenv/Scripts/python.exe` 跑。
+环境：Python 3.11 + `pip install -r requirements.txt`。某些机器上 numpy 导入可能因 AVX512 OOM，可设 `NUMPY_DISABLE_CPU_FEATURES=AVX512F,AVX512CD,AVX512_SKX`。

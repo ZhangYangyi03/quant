@@ -1,3 +1,40 @@
+# quant
+
+回测可信度审计工具 + 可复现的量化研究底座。**不是能赚钱的策略库**，
+核心价值是把「回测里那些假的收益」一层层查出来，并把正面和负面结论一起留下。
+
+## 部署（clone 后三步）
+
+    git clone https://github.com/ZhangYangyi03/quant.git
+    cd quant
+    pip install -r requirements.txt       # 核心层：numpy / scipy / pandas
+    python check_env.py                  # 自检：缺什么、哪些能跑
+
+核心层（ETF 审计、三层审计、110 个测试、一键判定）**开箱即跑**，
+`data/*.csv`(8 只) 与 `data_extra/*.csv`(29 只) 已入库。
+
+个股线 / qlib 线额外需要 `stockdata/`、`store/`、`qlib_bridge/qlib_data/`、
+`m_compact.bin`（约 1.9GB，本机重建产物，未入库），且 qlib 层需：
+
+    pip install -r requirements-qlib.txt
+
+注意 `pyqlib 0.9.7` 只有 cp311 Windows 预编译 wheel，Linux/macOS 需源码编译。
+`check_env.py` 会逐项告诉你哪一段可用。
+
+一键判定与回归测试：
+
+    python verdict_all.py                          # 三条结论（个股/ETF/ETF容量）
+    python test_audit_backtest.py                  # 10 个审计单元测试
+    python test_etf_alpha.py                      # 7 个 ETF 回归测试
+    python -m unittest discover -s tests          # 110 个 quantlab 测试
+
+结论文档：`ETF_ALPHA.md`（正面结论）、`ETF_EXPANDED.md`（换池子判负与判据修正）、
+`ETF_CAPACITY.md`（容量上限）、`BENCHMARK.md`（对标标尺）、`QLIB_AUDIT.md`（qlib 接审计）。
+
+---
+
+以下是研究日志，保留原貌不删改；其中较早的数字已被后续修订取代，见各文档。
+
 > **2026-11-05 机构级改造说明**：本仓库已新增 `quantlab/`（PIT 数据层、事件驱动执行、
 > 成本/冲击模型、组合优化、统计检验、无未来函数验收）。下方是本项目的**历史研究日志**，
 > 保留原貌不删改，但其中三个数字已确认存在实现缺陷、不能继续引用：
@@ -31,9 +68,9 @@
 
 ## 该跑哪个（入口表）
 
-    python verdict_all.py                    # 两条赛道最终判定（最先跑这个）
+    python verdict_all.py                    # 三条结论最终判定（最先跑这个）
     python audit_all.py                       # 个股跨年度可信度判定
-    python test_audit_backtest.py             # 三层审计的 9 个单元测试
+    python test_audit_backtest.py             # 三层审计的 10 个单元测试
     python etf_year_audit.py                  # ETF 低波轮动：跨年度判定（有稳定 alpha）
     python etf_universe_expanded.py          # 扩池检验：29 只 ETF，换池子后判负
     python etf_capacity.py                    # 容量约束：这条 alpha 能吃下多少钱

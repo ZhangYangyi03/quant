@@ -37,7 +37,7 @@
   用 `str(d)[:10]` 字符串会与 `pd.to_datetime(cal)` 对不上，导致信号全 NaN。
 - `run_qlib_backtest=True` 时 handler 构建 + 审计 + 原生回测串在一起会超时；
   原生对照拆成 `native_backtest_2022.py` 独立跑，19s 完成。
-- 本机 `miniconda3` 的 numpy 导入即 OOM，全程用 `.qlibenv/Scripts/python.exe`。
+- qlib 层需 `pip install -r requirements-qlib.txt`；Linux 上 pyqlib 0.9.7 无预编译 wheel，需源码编译。Windows 上设 `C["kernels"]=1`、`joblib_backend="threading"` 避开进程配额。
 
 ## 意义
 

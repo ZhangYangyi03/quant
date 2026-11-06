@@ -4,7 +4,8 @@
 """
 import os, subprocess, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__))
-VENV = os.path.join(os.path.dirname(HERE), ".qlibenv", "Scripts", "python.exe")
+# 用当前解释器；本机若保留 .qlibenv 且当前不是它，也可通过 PYTHON 环境变量覆盖。
+VENV = os.environ.get("PYTHON") or sys.executable
 env = dict(os.environ, OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1",
            MKL_NUM_THREADS="1", PYTHONDONTWRITEBYTECODE="1")
 ALL = ["export.py", "bridge_train.py", "bridge_run.py", "reconcile.py"]

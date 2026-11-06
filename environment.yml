@@ -1,0 +1,13 @@
+name: quant
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - numpy=1.26.4
+  - scipy=1.17.1
+  - pandas=2.2.3
+  - pip
+  - pip:
+    - -r requirements.txt
+# 可选 qlib 层：conda env update -f environment.yml 后
+#   pip install -r requirements-qlib.txt
+# Linux 上 pyqlib 需源码编译，先装 cython 与 C++ 工具链。

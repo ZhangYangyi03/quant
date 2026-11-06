@@ -112,5 +112,5 @@ BENCHMARK.md 里「独立可交易 alpha：没有」这句现在要限定为
     python etf_tail.py           # 极端日 winsorize
     python etf_holdout.py        # 严格时间外样本（设计期/检验期分段）
 
-注意：本机 numpy 偶尔导入即 OOM，用 `.qlibenv/Scripts/python.exe`
-并设 `NUMPY_DISABLE_CPU_FEATURES=AVX512F,AVX512CD,AVX512_SKX`。
+环境：`pip install -r requirements.txt`（核心层只需 numpy/scipy/pandas）。
+少数机器上 numpy 导入可能因 AVX512 OOM，可设 `NUMPY_DISABLE_CPU_FEATURES=AVX512F,AVX512CD,AVX512_SKX`。

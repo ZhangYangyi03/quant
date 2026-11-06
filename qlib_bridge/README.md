@@ -5,7 +5,7 @@
 
 ## 目录
 
-    .qlibenv/                 3.11 venv（pyqlib 0.9.7 的 cp311 win wheel，无需编译）
+    .qlibenv/                 可选的本机 3.11 venv；新环境用 requirements-qlib.txt
     qlib_bridge/export.py    把 m_compact.bin 导成 qlib 的 calendars/instruments/features
     qlib_bridge/qlib_data/   导出的数据目录（不进 git，2.1GB）
     qlib_bridge/bridge_backtest.py
@@ -41,10 +41,10 @@
 
 一层命令跑完整条链：
 
-    .qlibenv/Scripts/python.exe -u export.py          # 导出，26s
-    .qlibenv/Scripts/python.exe -u bridge_train.py    # handler + LGB，29s
-    .qlibenv/Scripts/python.exe -u bridge_run.py      # TopkDropout 回测，25s
-    .qlibenv/Scripts/python.exe -u reconcile.py       # 对账，6s
+    python -u export.py          # 导出，26s
+    python -u bridge_train.py    # handler + LGB，29s
+    python -u bridge_run.py      # TopkDropout 回测，25s
+    python -u reconcile.py       # 对账，6s
 （每个脚本前设 OPENBLAS/OMP/MKL_NUM_THREADS=1、PYTHONDONTWRITEBYTECODE=1，
  cwd 必须是 qlib_bridge/，不能是项目根。）
 
