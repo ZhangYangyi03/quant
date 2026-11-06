@@ -1,0 +1,76 @@
+{
+ "universe": "dynamic yearly, 1000 random from all listed incl. delisted",
+ "train_window": "Y-3 ~ Y-1, test Y",
+ "cost_bp": 3.65,
+ "topk": 50,
+ "WRONG_lag0": [
+  {
+   "year": 2022,
+   "zero": 1.4975,
+   "cost": 1.3468,
+   "shuf": 0.7544
+  },
+  {
+   "year": 2023,
+   "zero": 1.6169,
+   "cost": 1.5103,
+   "shuf": 0.8671
+  },
+  {
+   "year": 2024,
+   "zero": 1.3588,
+   "cost": 1.2521,
+   "shuf": 0.8639
+  },
+  {
+   "year": 2025,
+   "zero": 2.2611,
+   "cost": 2.0297,
+   "shuf": 1.1855
+  },
+  {
+   "year": 2026,
+   "zero": 1.1438,
+   "cost": 1.0873,
+   "shuf": 0.7946
+  }
+ ],
+ "CORRECT_lag1_lag2": [
+  {
+   "year": 2022,
+   "lag1_real": 1.1023,
+   "lag1_shuffle": 0.7904,
+   "lag2_real": 1.1272,
+   "lag2_shuffle": 0.7667
+  },
+  {
+   "year": 2023,
+   "lag1_real": 1.3499,
+   "lag1_shuffle": 0.8681,
+   "lag2_real": 1.2772,
+   "lag2_shuffle": 0.8604
+  },
+  {
+   "year": 2024,
+   "lag1_real": 1.1016,
+   "lag1_shuffle": 0.8416,
+   "lag2_real": 0.9212,
+   "lag2_shuffle": 0.8627
+  },
+  {
+   "year": 2025,
+   "lag1_real": 1.6671,
+   "lag1_shuffle": 1.1933,
+   "lag2_real": 1.6121,
+   "lag2_shuffle": 1.1992
+  },
+  {
+   "year": 2026,
+   "lag1_real": 1.0096,
+   "lag1_shuffle": 0.7974,
+   "lag2_real": 0.9368,
+   "lag2_shuffle": 0.748
+  }
+ ],
+ "note": "lag0 = signal[d] against return[d] is look-ahead (feature uses same-day close). qlib shift=1 == lag1."
+}

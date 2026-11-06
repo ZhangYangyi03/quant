@@ -1,0 +1,14 @@
+{
+ "year": 2022,
+ "universe": 3478,
+ "sample": 1000,
+ "days": 242,
+ "real_nav_zero_cost": 1.4975,
+ "real_nav_with_cost": 1.3468,
+ "xs_shuffle_nav": 0.7544,
+ "market_median_ret": -0.195,
+ "survivor300_median_ret": -0.03,
+ "daily_turnover": 1.207,
+ "cost_bp": 3.65,
+ "note": "random sample incl. delisted stocks; train 2019-2021 test 2022"
+}
