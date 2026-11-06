@@ -41,10 +41,12 @@ np.random.seed(20261105)
 
 
 def visible_date(rp, code: str, period: str) -> str:
-    """真实公告日优先，缺失时退回法定披露截止日（覆盖 54.4% 的真实公告）。
+    """真实公告日优先，缺失时退回法定披露截止日。
 
-    report_ann_dates.json 由 fund_parts/NOTICE_DATE 清洗而来：只保留相对报告期
-    0~法定上限+余量天内的公告日，剔除明显错位（如 000001 的 2010 年报写成 2012-03-09）。
+    真实公告覆盖率 72.66%（2026-11-06 补齐年报后重算，见 ANNUAL_PIT.md）：
+    一季 75.5% / 半年 74.6% / 三季 75.9% / 年报 65.8%。
+    年报分片里 REPORT_DATE 有值的是更正/追溯稿，不是首次披露，清洗时一律丢弃；
+    详见 build_annual_ann.py。
     """
     nd = rp.ann(code, period)
     if nd:
@@ -640,10 +642,10 @@ def main():
                      "risk": "单票4%/行业20%/ADV参与率10%/涨跌停/现金/整手/T+1",
                      "resolved": ["真实 high/low 一字板判定（hl_exec.npz）",
                                   "HML 改用 BPS/收盘价 BM，Fama-French 标准口径",
-                                  "54.4% 财报用真实 NOTICE_DATE，其余法定截止日兜底",
+                                  "72.66% 财报用真实 NOTICE_DATE（年报已补齐），其余法定截止日兜底",
                                   "DSR / PBO / White Reality Check / walk-forward 检验"],
                      "known_gaps": ["历史 ST 名单：fund_parts 的 SECURITY_NAME_ABBR 是当前简称回填（202/202 只全期同名），仍需外部源",
-                                    "真实公告日覆盖 54.4%，其余仍用法定截止日",
+                                    "真实公告日覆盖 72.66%（年报 65.8% 最低），其余仍用法定截止日兜底",
                                     "价格源为前复权，未用不复权价重拉",
                                     "持有期停牌沿用最后已知价",
                                     "未做真正 OOS（walk-forward 仅在同一批配置上滚动选参）"]},

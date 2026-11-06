@@ -11,5 +11,13 @@
  "annual_codes": 4920,
  "build_script": "build_annual_ann.py",
  "rule": "只取 REPORT_DATE 为空且 NOTICE_DATE 在报告期后 0~180 天的行；REPORT_DATE 有值且 NOTICE_DATE 晚 1~2 年的 DATA_STATE=2 行是更正/追溯稿，一律丢弃",
- "quality_note": "晚于 4-30 的多为 ST/退市股延迟披露；早于 30 天的多为业绩快报，均保留为真实披露日"
+ "quality_note": "晚于 4-30 的多为 ST/退市股延迟披露；早于 30 天的多为业绩快报，均保留为真实披露日",
+ "real_ann_coverage_pct": 72.66,
+ "coverage_by_period_pct": {
+  "03-31": 75.5,
+  "06-30": 74.6,
+  "09-30": 75.9,
+  "12-31": 65.8
+ },
+ "coverage_before_pct": 54.4
 }
