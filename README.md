@@ -10,8 +10,9 @@
 
 本项目的定位是**回测可信度审计工具 + 可复现的量化研究底座**，不是"能赚钱的策略库"。
 
-一句话结论（机器可复跑，`python audit_all.py`）：
-无稳定可执行 alpha：五年 2 年为正，去掉 2025 后合计 0.8642。
+一句话结论（机器可复跑）：个股 `python audit_all.py` → 无稳定可执行 alpha
+（五年 2 年为正，去掉 2025 后合计 0.8642）；ETF `python etf_year_audit.py` →
+有稳定可执行 alpha（10/10 年通过、合计 2.6699、DSR 0.9934，见 ETF_ALPHA.md）。
 
 三层审计（`audit_backtest.py`）自动检查主流框架都没内置的三个致命假阳性来源：
 1. 信号索引错配——pred 行数不足时按行号对齐会静默把分数配到别的股票；
@@ -31,7 +32,8 @@
 ## 该跑哪个（入口表）
 
     python audit_all.py                       # 跨年度可信度判定（最先跑这个）
-    python test_audit_backtest.py             # 三层审计的 7 个单元测试
+    python test_audit_backtest.py             # 三层审计的 9 个单元测试
+    python etf_year_audit.py                  # ETF 低波轮动：跨年度判定（有稳定 alpha）
     python qlib_bridge/train_dyn_year.py      # DY_YEAR=2022..2026 逐年训练
     python qlib_bridge/audit_year.py          # DY_YEAR=2022..2026 逐年三层审计
     python qlib_bridge/run_qlib_audit.py      # qlib 原生回测接审计（2022，约 38s）
@@ -39,7 +41,7 @@
     python run_institutional.py               # quantlab 机构级端到端演示
     python -m unittest discover -s tests -v   # quantlab 测试
 
-文档：AUDIT_TOOL.md（审计工具）、QLIB_AUDIT.md（qlib 接审计）、
+文档：ETF_ALPHA.md（ETF 可执行 alpha）、AUDIT_TOOL.md（审计工具）、QLIB_AUDIT.md（qlib 接审计）、
 EXEC_CONSTRAINTS.md（交易约束）、DYNAMIC_UNIVERSE.md（无幸存者偏差复核）、
 BENCHMARK.md（开源对标标尺）、INSTITUTIONAL.md（机构级框架）。
 

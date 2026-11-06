@@ -10,16 +10,19 @@
 | 因子正交检验 | factor_orth / alt_orth 已落，负面结论留档 | alphalens 有 IC 分解，无 style 残差 A/B | 脚本可跑 |
 | 回测可信度审计 | 三层判据 + RankIC 指纹 + 显式索引核对 + 跨年度判定 + 自动修复建议 + qlib wrapper + 9 个单元测试 | qlib / backtrader / vnpy / Lean 均无内置这三类检测 | `python audit_all.py`、`python test_audit_backtest.py` |
 | 数据覆盖 | 日频 OHLCV + 4 类非价量 + qlib 桥接 | 多数开源只提供框架，不带数据 | alt_data 行数 |
-| 独立可交易 alpha | **没有**：机器可复跑判定 2/5 年为正、去掉 2025 后合计 0.8642 | 多数开源不宣称有 alpha | `python audit_all.py` |
+| 独立可交易 alpha（个股） | **没有**：机器判定 2/5 年为正、去掉 2025 后合计 0.8642 | 多数开源不宣称有 alpha | `python audit_all.py` |
+| 独立可交易 alpha（ETF） | **有**：lowvol60 三层审计通过、10/10 年正、合计 2.6699、DSR 0.9934 | 多数开源不宣称有 alpha | `python etf_year_audit.py` / `ETF_ALPHA.md` |
 | 工程成熟度 / 社区 | 单人 20+ commit，无 CI 发布 | qlib 20k+ stars、Lean/freqtrade 50k+ | 客观差距，不追 |
 
 **诚实判定**：研究纪律、防自欺、PIT、正交检验、数据覆盖、回测可信度审计
 这 6 项已可量化地强于主流开源，其中「回测可信度审计」是独有的：
 同模型 qlib 原生报 1.3365，过三层审计后可执行 0.9415，差 -39.5pp。
 
-独立可交易 alpha **没有**（机器判定，不是主观判断），且多数开源也不提供；
+个股横截面 alpha **没有**（机器判定，不是主观判断）；ETF 低波轮动是第一条
+通过同一套审计的可执行 alpha，但依赖国债/黄金压舱石、只有 8 只 10 年、PBO 0.571 偏高；
 工程成熟度/社区差距是数量级的，不靠代码追。
-所以"超过"必须限定在研究质量维度，且必须诚实写出 alpha 为负这一条，否则不可证伪。
+所以"超过"必须限定在研究质量维度，且必须同时写出「个股 alpha 为负」与
+「ETF alpha 通过但有边界」这两条，否则不可证伪。
 
 
 ## 2026-11-06 更新
