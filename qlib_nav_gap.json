@@ -1,0 +1,10 @@
+{
+ "year": 2022,
+ "qlib_native_nav": 1.3365,
+ "audited_executable_nav": 0.9415,
+ "gap_pp": -39.5,
+ "L1": "pass",
+ "L2": "fail (lookahead)",
+ "L3": "fail (untradable)",
+ "source": "qlib_native_2022.json + qlib_audit_2022.json"
+}

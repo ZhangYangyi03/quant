@@ -1,0 +1,75 @@
+{
+ "segment": [
+  "2022-01-04",
+  "2022-12-30"
+ ],
+ "T": 242,
+ "N": 999,
+ "signal_pairs": 237637,
+ "expected_pairs": 241758,
+ "audit": {
+  "shape": [
+   242,
+   999
+  ],
+  "cal": [
+   "2022-01-04",
+   "2022-12-30"
+  ],
+  "codes": 999,
+  "topk": 50,
+  "cost_bp": 3.65,
+  "L1_signal_index": {
+   "finite_cells": 237637,
+   "expected_cells": 241758,
+   "missing": 4121,
+   "missing_pct": 1.705,
+   "note": "行数不足却按行号对齐会静默错配；必须用原始 (datetime,instrument) 索引重建",
+   "pass": true,
+   "per_day_min": 965,
+   "per_day_max": 996,
+   "per_day_cv": 0.0072,
+   "pairs": 241758,
+   "unique_pairs": 241758,
+   "bad_datetime": 0,
+   "bad_code": 0,
+   "expected_grid": 241758,
+   "index_checked": true,
+   "index_mismatch": false
+  },
+  "L2_alignment": {
+   "nav_by_lag": {
+    "0": 1.3512,
+    "1": 1.1017,
+    "2": 1.1162,
+    "5": 0.9485
+   },
+   "lag0_minus_lag1": 0.2495,
+   "lookahead_ratio": 2.453,
+   "note": "lag=0 用当日收盘信号赚当日收益即前视；qlib shift=1 对应 lag=1",
+   "pass": false,
+   "survivor_fraction": 0.982,
+   "survivor_note": "池子只含首末日都有价的股票 = 潜在幸存者偏差；应核对 instruments 真实起止日"
+  },
+  "L3_untradable": {
+   "c2c_nav": 1.1017,
+   "c2c_filtered_nav": 0.9635,
+   "o2o_nav": 1.1221,
+   "o2o_filtered_nav": 0.9415,
+   "filtered_drop": 0.1381,
+   "top50_overlap_mean": 49.58,
+   "excluded_mean_daily_ret": 0.090365,
+   "kept_mean_daily_ret": 0.000446,
+   "excluded_slots_blocked": 0,
+   "note": "排除次日高开>9.5%或无开盘价/零成交的股票；若只换极少量持仓却大幅掉净值，说明超额全来自买不进去的涨停股",
+   "pass": false
+  },
+  "fails": [
+   "L2_alignment",
+   "L3_untradable"
+  ],
+  "verdict": "回测不可信：L2_alignment, L3_untradable 未通过",
+  "executable_alpha_nav": 0.9415,
+  "scope_warning": "单年结果不构成可信度结论：需逐年 audit 后看跨年度稳定性，一年通过不等于策略可用"
+ }
+}
