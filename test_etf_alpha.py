@@ -7,6 +7,7 @@
   C 成本 50bp 下净值仍 > 2.0
   D 单日截 ±1% 后净值仍 > 2.0（不靠极端日）
   E 留一法至少 6/8 通过
+  F 严格时间外样本 3/3 通过且夏普不低于设计期
 """
 import os, sys, json
 import numpy as np
@@ -80,6 +81,16 @@ def test_D_tail():
     print("[D] winsor 1% ->", round(nav, 4))
 
 
+def test_F_holdout():
+    v = json.load(open(os.path.join(Q, "etf_holdout.json"), encoding="utf-8"))
+    assert v["positive_years"] == v["total_years"] == 3, v
+    assert v["all_three_layers_pass"] and v["pass"]
+    assert v["compound_excluding_best"] > 1.10
+    h = json.load(open(os.path.join(Q, "etf_alpha.json"), encoding="utf-8"))["time_holdout"]
+    assert h["test_sharpe"] > h["design_sharpe"], "样本外夏普应不低于设计期"
+    print("[F] holdout ->", v["verdict"], "test_sharpe", h["test_sharpe"],
+          ">", "design", h["design_sharpe"])
+
 def test_E_leave_one_out():
     passed = 0
     for j in range(N):
@@ -95,6 +106,6 @@ def test_E_leave_one_out():
 
 if __name__ == "__main__":
     for fn in (test_A_full_audit, test_B_yearly, test_C_cost, test_D_tail,
-               test_E_leave_one_out):
+               test_E_leave_one_out, test_F_holdout):
         fn()
     print("ALL ETF TESTS PASSED")
