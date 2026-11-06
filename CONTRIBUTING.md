@@ -19,15 +19,21 @@ An event-driven A-share research codebase with point-in-time data, T+1/limit/sus
 
 ## Reproduce it
 
-No API key or special hardware is needed for the checks below (standard library
-plus, where noted, pytest):
+The reproducible core is standard-library only; the full 110-test suite also
+needs numpy for the legacy `strategy_layer` regression tests:
 
 ```bash
+python -m pip install -r requirements.txt
 python -B -m unittest discover -s tests -v
 python -B run_institutional.py --codes 20 --days 200 --out /tmp/institutional_run.json
 ```
 
-CI runs the unit suite on Python 3.11 and 3.13 and the six-gate institutional demo on synthetic data. Two tests skip when the 1.9 GB external dataset is absent; see DATA.md for the reconstruction chain.
+The third command needs no third-party package at all. CI asserts this *before*
+installing anything by importing the core quantlab modules and checking that
+numpy/pandas never enter `sys.modules`; only then does it install the declared
+dependencies for the legacy test layer. CI runs the unit suite on Python 3.11 and
+3.13 plus the six-gate institutional demo on synthetic data. Two tests skip when
+the 1.9 GB external dataset is absent; see DATA.md for the reconstruction chain.
 
 ## Reporting an independent reproduction
 

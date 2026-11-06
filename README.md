@@ -5,9 +5,12 @@
 回测可信度审计工具 + 可复现的量化研究底座。**不是能赚钱的策略库**，
 核心价值是把「回测里那些假的收益」一层层查出来，并把正面和负面结论一起留下。
 
-CI 每次 push 会在 Python 3.11 / 3.13 上跑完 110 个单元测试（缺 1.9GB 矩阵时
-2 个自动 skip），再用合成数据跑一遍六道闸门（无前视 / 选参不用未来 / 真 walk-forward /
-可复现 / 基准非固定篮子 / 运行留痕）。核心层只依赖标准库，clone 后不需要装包就能验。
+CI 每次 push 会在 Python 3.11 / 3.13 上装好 requirements.txt 后跑完 110 个单元测试
+（缺 1.9GB 矩阵时 2 个自动 skip），再用合成数据跑一遍六道闸门（无前视 / 选参不用未来 /
+真 walk-forward / 可复现 / 基准非固定篮子 / 运行留痕）。**可复现核心层**只依赖标准库，
+CI 会先断言 import quantlab 核心模块不触发 numpy/pandas；但遗留的 strategy_layer
+回归测试需要 numpy，跑完整套件前先 `pip install -r requirements.txt`（旧的
+`numpy<2.0` 上限已放宽，因为 Python 3.13 没有对应 wheel）。
 
 ## 部署（clone 后三步）
 

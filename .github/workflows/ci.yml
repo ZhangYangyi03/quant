@@ -18,12 +18,25 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "${{ matrix.python-version }}"}
 
-      # The reproducible core is standard library only. If a test ever starts
-      # importing numpy/pandas, this fails before the suite does.
-      - name: the core needs no third-party package
-        run: python -c "import sys; assert 'numpy' not in sys.modules and 'pandas' not in sys.modules"
+      # The reproducible core is standard library only. Import the modules that
+      # actually do the work, so this fails if any of them start pulling in
+      # numpy/pandas (a bare `assert` on a fresh interpreter proved nothing).
+      - name: the reproducible core needs no third-party package
+        run: |
+          python -c "import sys, quantlab.config, quantlab.data.panel, quantlab.backtest.engine, quantlab.validate.walkforward; assert 'numpy' not in sys.modules and 'pandas' not in sys.modules"
 
-      - name: quantlab unit tests
+      # The legacy strategy-layer regression tests import strategy_layer, which
+      # imports numpy at module level. The first CI run failed here with
+      # ModuleNotFoundError: No module named 'numpy' on the 3.11 job.
+      # requirements.txt pinned numpy<2.0, which has no wheel on Python 3.13;
+      # that pin is now relaxed, so the declared dependencies are installable
+      # on both matrix entries and are exercised by CI rather than just listed.
+      - name: install the declared dependencies for the legacy test layer
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: quantlab unit tests (110)
         run: python -B -m unittest discover -s tests -v
 
       # Six gates: no lookahead, no future-dependent tuning, true walk-forward,
