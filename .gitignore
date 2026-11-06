@@ -16,6 +16,8 @@ __pycache__/
 *.txt
 *.stdout
 *.csv
+!data/*.csv
+!data_extra/*.csv
 dbg_*
 diag_*
 memscan*
