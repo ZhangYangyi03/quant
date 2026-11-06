@@ -1,0 +1,8 @@
+# quant —— 核心审计层依赖
+# Python 3.11 实测（3.10/3.12 理论可用，未测）
+# 只装这些就能跑：verdict_all.py / audit_backtest.py / 全部 ETF 审计 /
+#                 etf_universe_expanded.py / etf_capacity.py / etf_holdout.py /
+#                 test_audit_backtest.py / test_etf_alpha.py / tests/ (110)
+numpy>=1.24,<2.0
+scipy>=1.10
+pandas>=2.0

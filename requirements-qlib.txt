@@ -1,0 +1,15 @@
+# 可选：qlib 桥接层（qlib_bridge/*.py、qlib_audit.py）
+# 注意 pyqlib 0.9.7 在本机是 cp311 Windows wheel；Linux/macOS 无预编译包，
+# 需 Cython + C++ 编译器从源码构建，且 qlib 0.9.7 不支持 numpy 2.x。
+# 不装这组不影响核心审计层。
+pyqlib==0.9.7
+lightgbm==4.7.0
+mlflow==2.20.3
+scikit-learn==1.9.1
+joblib==1.6.0
+filelock==4.2.9
+tqdm==4.70.1
+fire==0.7.1
+loguru==0.7.3
+ruamel.yaml==0.19.1
+cvxpy==1.6.4

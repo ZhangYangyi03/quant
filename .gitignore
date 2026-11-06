@@ -18,6 +18,8 @@ __pycache__/
 # 日志与诊断
 *.log
 *.txt
+!requirements.txt
+!requirements-qlib.txt
 *.stdout
 *.csv
 !data/*.csv
