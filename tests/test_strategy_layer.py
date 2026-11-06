@@ -5,6 +5,11 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, HERE)
 import strategy_layer as SL
 
+# RealPanel 依赖本机重建的 m_compact.bin（约 1.9GB，未入库）。
+# 缺数据时跳过而非报错：这是可选大数据，不是核心层的依赖。
+_NEEDS_PANEL = os.path.isfile(os.path.join(HERE, "m_compact.bin"))
+needs_panel = unittest.skipUnless(_NEEDS_PANEL, "需要本机重建的 m_compact.bin（可选大数据）")
+
 
 class TestAnnDates(unittest.TestCase):
     def test_report_ann_dates_clean(self):
@@ -20,6 +25,7 @@ class TestAnnDates(unittest.TestCase):
         self.assertIn("UNUSABLE", v["verdict"])
         self.assertIn("回填", v["reason"])
 
+    @needs_panel
     def test_visible_date_uses_real_ann(self):
         rp = SL.RealPanel()
         d = rp.ann("000001", "2010-03-31")
@@ -40,6 +46,7 @@ class TestHighLow(unittest.TestCase):
         self.assertTrue(np.all(z["high"][np.isfinite(z["high"])] >=
                                z["low"][np.isfinite(z["high"])] - 1e-6))
 
+    @needs_panel
     def test_flags_at_uses_high_low(self):
         rp = SL.RealPanel()
         M = __import__("fraw").meta_unique()
