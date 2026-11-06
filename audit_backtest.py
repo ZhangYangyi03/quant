@@ -146,7 +146,8 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
     # 只有 lag=0 强、lag>=1 塌到 0 = 信号里含当日价格信息（前视）。
     def _rankic(sig_row, ret_row):
         m = np.isfinite(sig_row) & np.isfinite(ret_row)
-        if m.sum() < 20:
+        # 小池子（ETF 轮动常只有 6~10 只）也必须有统计指纹，阈值降到 5
+        if m.sum() < 5:
             return np.nan
         a, b = sig_row[m], ret_row[m]
         ra = np.argsort(np.argsort(a)).astype(float)

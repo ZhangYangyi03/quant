@@ -1,0 +1,32 @@
+{
+ "asset_class": "ETF low-vol rotation",
+ "universe_codes": 8,
+ "period": "2016-08-08 ~ 2026-11-02",
+ "common_days": 2481,
+ "full_audit": "pass",
+ "yearly_pass": "10/10",
+ "positive_years": "10/10",
+ "compound_nav": 2.6699,
+ "compound_excluding_best": 2.1703,
+ "machine_verdict": "有稳定可执行 alpha",
+ "rebal20_net_nav": 3.078,
+ "cost_50bp_rebal20_nav": 2.762,
+ "annual_sharpe": 1.331,
+ "nw_t": 3.921,
+ "psr": 1.0,
+ "dsr_trials10": 0.9934,
+ "winsor_1pct_nav": 2.6708,
+ "winsor_1pct_sharpe": 1.546,
+ "rankic_lag1": 0.02338,
+ "rankic_lag5": 0.02608,
+ "leave_one_out_pass": "6/8",
+ "pbo_6configs": 0.571,
+ "caveats": [
+  "依赖国债/黄金低波压舱石",
+  "8 只 ETF 10 年",
+  "未建模申赎溢价与价差",
+  "PBO 偏高但单策略 DSR 0.9934",
+  "共同交易日交集口径比并集严格"
+ ],
+ "docs": "ETF_ALPHA.md"
+}
