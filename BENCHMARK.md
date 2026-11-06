@@ -9,7 +9,7 @@
 | 多重检验闸门 | DSR / PBO / NW-t / 正交检验已落 | qlib 有 IC/回测，无 DSR/PBO；绝大多数开源无 | 工具存在且可复跑 |
 | 因子正交检验 | factor_orth / alt_orth 已落，负面结论留档 | alphalens 有 IC 分解，无 style 残差 A/B | 脚本可跑 |
 | 数据覆盖 | 日频 OHLCV + 4 类非价量 + qlib 桥接 | 多数开源只提供框架，不带数据 | alt_data 行数 |
-| 独立 alpha | 残差标签后 2.8968（原始 4.2774），零成本口径，待补成本模型 | 多数开源不宣称有 alpha | RESID_LABEL.md |
+| 独立可交易 alpha | **没有**：排除涨停/停牌后 2022 -2.7%，五年收益几乎全来自 2025 | 多数开源不宣称有 alpha | RESID_LABEL.md |
 | 工程成熟度 / 社区 | 单人 20+ commit，无 CI 发布 | qlib 20k+ stars、Lean/freqtrade 50k+ | 客观差距，不追 |
 
 **诚实判定**：前 5 项（研究纪律、防自欺、PIT、正交检验、数据覆盖）
@@ -17,3 +17,11 @@
 且多数开源也不提供；第 7 项（工程成熟度/社区）差距是数量级的，不靠代码追。
 
 所以"超过"必须限定在前 6 项的**研究质量**维度，否则这句话不可证伪。
+
+
+## 2026-11-06 更新
+
+三层审计（信号索引错配 / 幸存者偏差+前视 / 不可买股票）均已落地并留档：
+RESID_LABEL.md、DYNAMIC_UNIVERSE.md、EXEC_CONSTRAINTS.md。
+结果是可执行 alpha ≈ 0。这反而把第 1 项「防自欺」做成了本项目最独特的能力：
+qlib / backtrader / vnpy / Lean 都没有内置的这三类检测。

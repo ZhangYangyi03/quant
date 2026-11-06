@@ -1,0 +1,44 @@
+{
+ "cost_bp": 3.65,
+ "topk": 50,
+ "lag": 1,
+ "limit_gap": 0.095,
+ "yearly": {
+  "2022": {
+   "c2c": 1.1017,
+   "c2c_filtered": 0.9732,
+   "o2o": 1.12,
+   "o2o_filtered": 1.0375
+  },
+  "2023": {
+   "c2c": 1.3352,
+   "c2c_filtered": 1.2656,
+   "o2o": 1.2912,
+   "o2o_filtered": 1.2463
+  },
+  "2024": {
+   "c2c": 1.1116,
+   "c2c_filtered": 1.0052,
+   "o2o": 1.0388,
+   "o2o_filtered": 0.9832
+  },
+  "2025": {
+   "c2c": 1.7594,
+   "c2c_filtered": 1.7202,
+   "o2o": 1.751,
+   "o2o_filtered": 1.7338
+  },
+  "2026": {
+   "c2c": 0.9755,
+   "c2c_filtered": 0.9431,
+   "o2o": 1.0136,
+   "o2o_filtered": 1.0081
+  }
+ },
+ "diagnosis_2022": {
+  "top50_overlap": 49.42,
+  "excluded_per_day": 14.8,
+  "excluded_mean_daily_ret": 0.04875,
+  "kept_mean_daily_ret": 0.00052
+ }
+}
