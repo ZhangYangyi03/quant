@@ -24,8 +24,8 @@
 
 复跑：
 
-    python qlib_bridge/_run_qlib_audit.py    # 三层审计，约 38s（pred 已缓存）
-    python qlib_bridge/_native_only.py       # qlib 原生对照，约 19s
+    python qlib_bridge/run_qlib_audit.py    # 三层审计，约 38s（pred 已缓存）
+    python qlib_bridge/native_backtest_2022.py       # qlib 原生对照，约 19s
     # 或用库
     from qlib_audit import qlib_audit_dataset
     rep = qlib_audit_dataset(ds, model, ("2022-01-04","2022-12-30"),
@@ -36,7 +36,7 @@
 - `_signal_from_pred` 必须把 pred 索引统一成 `pd.Timestamp` 再 reindex，
   用 `str(d)[:10]` 字符串会与 `pd.to_datetime(cal)` 对不上，导致信号全 NaN。
 - `run_qlib_backtest=True` 时 handler 构建 + 审计 + 原生回测串在一起会超时；
-  原生对照拆成 `_native_only.py` 独立跑，19s 完成。
+  原生对照拆成 `native_backtest_2022.py` 独立跑，19s 完成。
 - 本机 `miniconda3` 的 numpy 导入即 OOM，全程用 `.qlibenv/Scripts/python.exe`。
 
 ## 意义
