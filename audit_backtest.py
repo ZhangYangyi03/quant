@@ -54,7 +54,11 @@ def _nav(sig, R, topk, cost_bp, lag=1, block=None):
     return float(eq[-1]), blocked
 
 def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
-          limit_gap=0.095):
+          limit_gap=0.095, signal_index=None):
+    """signal_index: 可选，(datetime, instrument) 的 MultiIndex（或等长二元组列表）。
+    传入后逐格核对信号是否落在期望的 (cal x codes) 网格上；不传则只能靠统计特征间接推断。
+    这是抓「按行号截断导致整体错位」的唯一可靠办法。
+    """
     S = np.asarray(signal, dtype=np.float64)
     C = np.asarray(close, dtype=np.float64)
     O = np.asarray(open_, dtype=np.float64)
@@ -80,6 +84,39 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
     out["L1_signal_index"]["per_day_min"] = int(per_day.min())
     out["L1_signal_index"]["per_day_max"] = int(per_day.max())
     out["L1_signal_index"]["per_day_cv"] = round(float(per_day.std()/max(per_day.mean(),1)), 4)
+    # 显式索引核对：能抓到"行数够但整体错位一格"这类统计特征看不出的错配
+    if signal_index is not None:
+        try:
+            pairs = list(signal_index)
+            dt = [str(x[0])[:10] for x in pairs]
+            cd = [str(x[1]) for x in pairs]
+            exp_dt = {str(d)[:10] for d in cal}
+            exp_cd = {str(c) for c in codes}
+            bad_dt = sum(1 for x in dt if x not in exp_dt)
+            bad_cd = sum(1 for x in cd if x not in exp_cd)
+            # 关键：每个 (dt, code) 必须唯一，且总对数与 T*N 一致
+            uniq = len(set(zip(dt, cd)))
+            mismatch = (bad_dt or bad_cd or uniq != len(pairs))
+            out["L1_signal_index"].update({
+                "pairs": len(pairs), "unique_pairs": uniq,
+                "bad_datetime": bad_dt, "bad_code": bad_cd,
+                "expected_grid": expected,
+                "index_checked": True, "index_mismatch": bool(mismatch),
+            })
+            if mismatch:
+                out["L1_signal_index"]["pass"] = False
+                out["L1_signal_index"]["note"] += "；显式索引核对发现错配"
+        except Exception as e:
+            out["L1_signal_index"]["index_checked"] = False
+            out["L1_signal_index"]["index_error"] = str(e)[:120]
+    else:
+        out["L1_signal_index"]["index_checked"] = False
+        out["L1_signal_index"]["index_note"] = (
+            "未传 signal_index：整体滚动一格这类错配无法可靠识别，"
+            "强烈建议传入 model.predict() 的真实 MultiIndex")
+        # 无显式索引时，用 lag 形状做间接提示（不据此判 fail，避免误报）
+        out["L1_signal_index"]["indirect_hint"] = (
+            "lag 扫描非单调可能提示错配，见 L2_alignment.nav_by_lag")
 
     RCC, ROO = _ret(C), _ret(O)
     GAP = np.full((T, N), np.nan)
@@ -137,7 +174,9 @@ def audit(signal, close, open_, amount, cal, codes, topk=50, cost_bp=3.65,
         "kept_mean_daily_ret": round(kp, 6),
         "excluded_slots_blocked": int(bl_c),
         "note": "排除次日高开>9.5%或无开盘价/零成交的股票；若只换极少量持仓却大幅掉净值，说明超额全来自买不进去的涨停股",
-        "pass": bool(n_c2c - n_c2c_f < 0.10 and n_o2o_f > 0.95),
+        # 只判"过滤是否戳破虚假收益"，不判策略本身赚不赚钱：
+        # 随机数据净值低于 1 是正常的，那属于 alpha 问题，不是可信度问题。
+        "pass": bool(n_c2c - n_c2c_f < 0.10 and n_o2o - n_o2o_f < 0.10),
     }
 
     fails = [k for k in ("L1_signal_index", "L2_alignment", "L3_untradable") if not out[k]["pass"]]

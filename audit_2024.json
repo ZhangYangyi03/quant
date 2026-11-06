@@ -19,7 +19,14 @@
   "pass": true,
   "per_day_min": 970,
   "per_day_max": 998,
-  "per_day_cv": 0.0073
+  "per_day_cv": 0.0073,
+  "pairs": 242000,
+  "unique_pairs": 242000,
+  "bad_datetime": 0,
+  "bad_code": 0,
+  "expected_grid": 242000,
+  "index_checked": true,
+  "index_mismatch": false
  },
  "L2_alignment": {
   "nav_by_lag": {
@@ -52,5 +59,6 @@
   "L3_untradable"
  ],
  "verdict": "回测不可信：L3_untradable 未通过",
- "executable_alpha_nav": 0.7948
+ "executable_alpha_nav": 0.7948,
+ "scope_warning": "单年结果不构成可信度结论：需逐年 audit 后看跨年度稳定性，一年通过不等于策略可用"
 }

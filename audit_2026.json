@@ -19,7 +19,14 @@
   "pass": true,
   "per_day_min": 0,
   "per_day_max": 998,
-  "per_day_cv": 0.1623
+  "per_day_cv": 0.1623,
+  "pairs": 200000,
+  "unique_pairs": 200000,
+  "bad_datetime": 0,
+  "bad_code": 0,
+  "expected_grid": 200000,
+  "index_checked": true,
+  "index_mismatch": false
  },
  "L2_alignment": {
   "nav_by_lag": {
@@ -50,5 +57,6 @@
  },
  "fails": [],
  "verdict": "三层审计通过",
- "executable_alpha_nav": 0.9576
+ "executable_alpha_nav": 0.9576,
+ "scope_warning": "单年结果不构成可信度结论：需逐年 audit 后看跨年度稳定性，一年通过不等于策略可用"
 }
