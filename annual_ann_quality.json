@@ -1,0 +1,15 @@
+{
+ "old_annual_entries": 288,
+ "new_annual_entries": 56224,
+ "total_pit_pairs_before": 184379,
+ "total_pit_pairs_after": 240315,
+ "annual_compliant": 54022,
+ "annual_late_after_0430": 1966,
+ "annual_early_lt30d": 236,
+ "annual_outliers": 0,
+ "universe_codes": 5251,
+ "annual_codes": 4920,
+ "build_script": "build_annual_ann.py",
+ "rule": "只取 REPORT_DATE 为空且 NOTICE_DATE 在报告期后 0~180 天的行；REPORT_DATE 有值且 NOTICE_DATE 晚 1~2 年的 DATA_STATE=2 行是更正/追溯稿，一律丢弃",
+ "quality_note": "晚于 4-30 的多为 ST/退市股延迟披露；早于 30 天的多为业绩快报，均保留为真实披露日"
+}
