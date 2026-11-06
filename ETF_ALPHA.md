@@ -76,7 +76,16 @@ BENCHMARK.md 里「独立可交易 alpha：没有」这句现在要限定为
 **个股横截面策略没有**；ETF 低波轮动是第一条通过同一套审计的。
 这不是推翻前面的结论，是换了一个不受涨停约束的资产类别。
 
-## 复跑
+## 一键判定与回归测试
+
+    python verdict_all.py            # 两条赛道最终判定 → verdict_all.json
+    python test_etf_alpha.py         # 5 个回归测试（全审计/跨年度/成本/尾部/留一法）
+    python test_audit_backtest.py    # 9 个审计单元测试
+    python -m unittest discover -s tests   # 110 个 quantlab 测试
+
+全套实测：verdict_all / 9 / 5 / 110 全部 rc=0。
+
+## 复跑（分项）
 
     python audit_etf.py          # 全样本三层审计
     python etf_year_audit.py     # 逐年 + 跨年度判定 → etf_verdict.json

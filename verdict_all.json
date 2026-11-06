@@ -1,0 +1,17 @@
+{
+ "stock_cross_section_alpha": {
+  "verdict": "无稳定可执行 alpha：2/5 年为正，去掉 2025 后合计 0.8642",
+  "pass": false,
+  "positive_years": 2,
+  "total_years": 5,
+  "compound_excluding_best": 0.8642
+ },
+ "etf_lowvol_rotation_alpha": {
+  "verdict": "有稳定可执行 alpha",
+  "pass": true,
+  "positive_years": 10,
+  "total_years": 10,
+  "compound_excluding_best": 2.1703
+ },
+ "note": "同一套 audit_backtest.py 判据。个股被涨停/停牌不可买判负；ETF 无一字板，lowvol60 通过全部审计。见 ETF_ALPHA.md / EXEC_CONSTRAINTS.md"
+}

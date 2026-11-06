@@ -31,7 +31,8 @@
 
 ## 该跑哪个（入口表）
 
-    python audit_all.py                       # 跨年度可信度判定（最先跑这个）
+    python verdict_all.py                    # 两条赛道最终判定（最先跑这个）
+    python audit_all.py                       # 个股跨年度可信度判定
     python test_audit_backtest.py             # 三层审计的 9 个单元测试
     python etf_year_audit.py                  # ETF 低波轮动：跨年度判定（有稳定 alpha）
     python qlib_bridge/train_dyn_year.py      # DY_YEAR=2022..2026 逐年训练
