@@ -500,3 +500,26 @@ turnover / abnormal_turnover / asset_growth / accruals / noa / illiquidity / rev
     4. field 参数传 "ep"/"bm" 但函数里判断的是 "eps"/"bps"，结果三个信号
        落到同一个 else 分支全取了 roe —— 表现是 ep 和 bm 的数字一模一样。
        这个 bug 是靠"两个不该相同的数字相同"发现的，不是靠读代码。
+
+
+## 2026-11-06 定位更新
+
+本项目的定位是**回测可信度审计工具 + 可复现的量化研究底座**，不是"能赚钱的策略库"。
+
+一句话结论（机器可复跑，`python audit_all.py`）：
+无稳定可执行 alpha：五年 2 年为正，去掉 2025 后合计 0.8642。
+
+三层审计（`audit_backtest.py`）自动检查主流框架都没内置的三个致命假阳性来源：
+1. 信号索引错配——pred 行数不足时按行号对齐会静默把分数配到别的股票；
+2. 前视对齐 + 幸存者偏差——当日收盘信号赚当日收益、池子只含活到末期；
+3. 不可买股票——涨停/停牌股按收盘价成交，而它们往往贡献了几乎全部超额。
+
+`multi_year_verdict()` 再加一条跨年度稳定性判据：单年通过不算数。
+配套逐年结果在 `audit_2022.json` ~ `audit_2026.json`，
+完整链条见 `RESID_LABEL.md`、`DYNAMIC_UNIVERSE.md`、`EXEC_CONSTRAINTS.md`、
+标尺见 `BENCHMARK.md`。
+
+一键复跑：
+    python qlib_bridge/train_dyn_year.py    # DY_YEAR=2022..2026
+    python qlib_bridge/audit_year.py        # DY_YEAR=2022..2026
+    python audit_all.py                     # 跨年度判定

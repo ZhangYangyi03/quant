@@ -1,0 +1,26 @@
+{
+ "years": [
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "executable_nav": [
+  0.9451,
+  1.2014,
+  0.7948,
+  1.6189,
+  0.9576
+ ],
+ "positive_years": 2,
+ "total_years": 5,
+ "compound_nav": 1.399,
+ "best_year": 2025,
+ "best_year_nav": 1.6189,
+ "compound_excluding_best": 0.8642,
+ "all_three_layers_pass": false,
+ "note": "单年三层通过不代表可信：多数年份不通过、或收益全靠最好一年，都说明没有稳定可交易 alpha",
+ "pass": false,
+ "verdict": "无稳定可执行 alpha：2/5 年为正，去掉 2025 后合计 0.8642"
+}

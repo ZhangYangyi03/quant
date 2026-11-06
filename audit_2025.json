@@ -1,0 +1,57 @@
+{
+ "shape": [
+  243,
+  1000
+ ],
+ "cal": [
+  "2025-01-02",
+  "2025-12-31"
+ ],
+ "codes": 1000,
+ "topk": 50,
+ "cost_bp": 3.65,
+ "L1_signal_index": {
+  "finite_cells": 239715,
+  "expected_cells": 243000,
+  "missing": 3285,
+  "missing_pct": 1.352,
+  "note": "行数不足却按行号对齐会静默错配；必须用原始 (datetime,instrument) 索引重建",
+  "pass": true,
+  "per_day_min": 978,
+  "per_day_max": 994,
+  "per_day_cv": 0.0036
+ },
+ "L2_alignment": {
+  "nav_by_lag": {
+   "0": 2.0289,
+   "1": 1.7594,
+   "2": 1.713,
+   "5": 1.4564
+  },
+  "lag0_minus_lag1": 0.2695,
+  "lookahead_ratio": 0.355,
+  "note": "lag=0 用当日收盘信号赚当日收益即前视；qlib shift=1 对应 lag=1",
+  "pass": false,
+  "survivor_fraction": 0.987,
+  "survivor_note": "池子只含首末日都有价的股票 = 潜在幸存者偏差；应核对 instruments 真实起止日"
+ },
+ "L3_untradable": {
+  "c2c_nav": 1.7594,
+  "c2c_filtered_nav": 1.6507,
+  "o2o_nav": 1.751,
+  "o2o_filtered_nav": 1.6189,
+  "filtered_drop": 0.1087,
+  "top50_overlap_mean": 49.77,
+  "excluded_mean_daily_ret": 0.098418,
+  "kept_mean_daily_ret": 0.002661,
+  "excluded_slots_blocked": 0,
+  "note": "排除次日高开>9.5%或无开盘价/零成交的股票；若只换极少量持仓却大幅掉净值，说明超额全来自买不进去的涨停股",
+  "pass": false
+ },
+ "fails": [
+  "L2_alignment",
+  "L3_untradable"
+ ],
+ "verdict": "回测不可信：L2_alignment, L3_untradable 未通过",
+ "executable_alpha_nav": 1.6189
+}
